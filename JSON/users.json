@@ -1,31 +1,31 @@
 [
   {
     "username": "admin",
-    "email": "admin@quizapp.vn",
+    "email": "admin@gmail.com",
     "password": "123456",
     "role": "admin"
   },
   {
     "username": "thanh",
-    "email": "thanh@quizapp.vn",
+    "email": "thanh@gmail.com",
     "password": "123456",
     "role": "student"
   },
   {
     "username": "linh",
-    "email": "linh@quizapp.vn",
+    "email": "linh@gmail.com",
     "password": "123456",
     "role": "student"
   },
   {
     "username": "minh",
-    "email": "minh@quizapp.vn",
+    "email": "minh@gmail.com",
     "password": "123456",
     "role": "student"
   },
   {
     "username": "phuong",
-    "email": "phuong@quizapp.vn",
+    "email": "phuong@gmail.com",
     "password": "123456",
     "role": "student"
   }
