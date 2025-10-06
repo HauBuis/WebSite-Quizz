@@ -1,0 +1,37 @@
+[
+  {
+    "user": "thanh",
+    "quiz": "Đề 01 – Mảng & Danh sách liên kết",
+    "score": 26,
+    "total": 30,
+    "submittedAt": "2025-10-05T18:30:00Z"
+  },
+  {
+    "user": "linh",
+    "quiz": "Đề 02 – Ngăn xếp & Hàng đợi",
+    "score": 20,
+    "total": 25,
+    "submittedAt": "2025-10-05T19:10:00Z"
+  },
+  {
+    "user": "minh",
+    "quiz": "Đề 03 – Lập trình C cơ bản",
+    "score": 18,
+    "total": 20,
+    "submittedAt": "2025-10-06T19:00:00Z"
+  },
+  {
+    "user": "phuong",
+    "quiz": "Đề 04 – Mạng máy tính",
+    "score": 22,
+    "total": 25,
+    "submittedAt": "2025-10-06T20:20:00Z"
+  },
+  {
+    "user": "thanh",
+    "quiz": "Đề 05 – Cơ sở dữ liệu",
+    "score": 27,
+    "total": 30,
+    "submittedAt": "2025-10-06T21:00:00Z"
+  }
+]

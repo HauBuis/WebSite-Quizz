@@ -431,6 +431,29 @@ body {
   color: #0f172a;
   border: 1px solid #cbd5e1;
 }
+/* Hiển thị user trên menu */
+.menu-user {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.menu-user-email {
+  background: #eef2ff;
+  color: #1e3a8a;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+}
+
+/* Thông báo nhỏ trong form */
+.form-msg {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #991b1b;
+}
+.form-msg.ok {
+  color: #166534;
+}
 
 /* ====== FOOTER ====== */
 .footer {

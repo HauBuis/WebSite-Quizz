@@ -1,0 +1,92 @@
+[
+  {
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "questionText": "Ngăn xếp hoạt động theo nguyên tắc nào?",
+    "options": ["FIFO", "LIFO", "Random", "Circular"],
+    "correctAnswer": "LIFO",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "questionText": "Thuật toán sắp xếp nào có độ phức tạp trung bình O(n log n)?",
+    "options": [
+      "Bubble Sort",
+      "Quick Sort",
+      "Insertion Sort",
+      "Selection Sort"
+    ],
+    "correctAnswer": "Quick Sort",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Lập trình C cơ bản",
+    "questionText": "Hàm nào dùng để xuất dữ liệu ra màn hình trong C?",
+    "options": ["scanf()", "printf()", "input()", "cout"],
+    "correctAnswer": "printf()",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Lập trình C cơ bản",
+    "questionText": "Toán tử nào dùng để lấy địa chỉ của biến trong C?",
+    "options": ["*", "&", "%", "@"],
+    "correctAnswer": "&",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Mạng máy tính",
+    "questionText": "Tầng nào trong mô hình OSI chịu trách nhiệm định tuyến?",
+    "options": ["Tầng mạng", "Tầng vận chuyển", "Tầng ứng dụng", "Tầng vật lý"],
+    "correctAnswer": "Tầng mạng",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Cơ sở dữ liệu",
+    "questionText": "Câu lệnh SQL nào dùng để truy xuất dữ liệu?",
+    "options": ["SELECT", "INSERT", "UPDATE", "DELETE"],
+    "correctAnswer": "SELECT",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cơ sở dữ liệu",
+    "questionText": "Ràng buộc khóa chính (PRIMARY KEY) dùng để làm gì?",
+    "options": [
+      "Đảm bảo giá trị duy nhất và không null",
+      "Cho phép trùng lặp",
+      "Chỉ lưu trữ khóa ngoại",
+      "Không liên quan đến tính duy nhất"
+    ],
+    "correctAnswer": "Đảm bảo giá trị duy nhất và không null",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Hệ điều hành",
+    "questionText": "Tiến trình là gì?",
+    "options": [
+      "Một chương trình đang thực thi",
+      "Một tệp dữ liệu",
+      "Một module phần mềm",
+      "Một đoạn mã lỗi"
+    ],
+    "correctAnswer": "Một chương trình đang thực thi",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Hệ điều hành",
+    "questionText": "Bộ nhớ ảo dùng để làm gì?",
+    "options": [
+      "Tăng dung lượng lưu trữ vật lý",
+      "Cho phép chạy nhiều tiến trình hơn RAM thực tế",
+      "Giảm tốc độ CPU",
+      "Dừng tiến trình khi đầy RAM"
+    ],
+    "correctAnswer": "Cho phép chạy nhiều tiến trình hơn RAM thực tế",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Mạng máy tính",
+    "questionText": "Giao thức nào dùng để gửi email?",
+    "options": ["HTTP", "FTP", "SMTP", "DNS"],
+    "correctAnswer": "SMTP",
+    "difficulty": "easy"
+  }
+]

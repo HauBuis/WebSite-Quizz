@@ -11,11 +11,25 @@
     <!-- Header -->
     <header class="header">
       <h1 class="logo">Quiz CNTT</h1>
+
       <nav class="menu">
         <a class="menu-btn" href="#home">Trang chủ</a>
         <a class="menu-btn" href="#quizzes">Đề thi</a>
         <a class="menu-btn" href="#history">Lịch sử</a>
-        <a class="menu-btn" href="#login">Đăng nhập</a>
+
+        <!-- Khi CHƯA đăng nhập -->
+        <a id="menu-login" class="menu-btn" href="#login">Đăng nhập</a>
+        <a id="menu-register" class="menu-btn" href="#register">Đăng ký</a>
+
+        <!-- Khi ĐÃ đăng nhập -->
+        <span id="menu-user" class="menu-user" style="display: none">
+          <span id="menu-user-email" class="menu-user-email"
+            >user@mail.com</span
+          >
+          <button id="btn-logout" class="menu-btn" type="button">
+            Đăng xuất
+          </button>
+        </span>
       </nav>
     </header>
 
@@ -188,7 +202,6 @@
     <section id="login" class="overlay">
       <div class="overlay-card">
         <h3 class="overlay-title">Đăng nhập</h3>
-        <p class="overlay-desc">Demo giao diện (chưa xử lý tài khoản).</p>
         <form class="login-form">
           <input class="input-box" type="email" placeholder="Email" />
           <input class="input-box" type="password" placeholder="Mật khẩu" />
@@ -197,7 +210,59 @@
         <a class="overlay-close" href="#home">Đóng</a>
       </div>
     </section>
+    <!-- ====== REGISTER  ====== -->
+    <section id="register" class="overlay">
+      <div class="overlay-card overlay-large">
+        <div class="overlay-top">
+          <div>
+            <h3 class="overlay-title">Đăng ký tài khoản</h3>
+            <div class="overlay-sub">Tạo tài khoản để lưu lịch sử làm bài.</div>
+          </div>
+          <a class="overlay-close" href="#home">Đóng</a>
+        </div>
 
+        <form id="register-form" class="login-form" onsubmit="return false;">
+          <input
+            id="reg-name"
+            class="input-box"
+            type="text"
+            placeholder="Họ và tên"
+            required
+          />
+          <input
+            id="reg-email"
+            class="input-box"
+            type="email"
+            placeholder="Email"
+            required
+          />
+          <input
+            id="reg-pass"
+            class="input-box"
+            type="password"
+            placeholder="Mật khẩu (>= 6 ký tự)"
+            minlength="6"
+            required
+          />
+          <input
+            id="reg-pass2"
+            class="input-box"
+            type="password"
+            placeholder="Nhập lại mật khẩu"
+            minlength="6"
+            required
+          />
+          <button id="btn-register" class="primary-btn" type="submit">
+            Đăng ký
+          </button>
+          <div id="reg-msg" class="form-msg"></div>
+        </form>
+
+        <p style="font-size: 13px; color: #6b7280">
+          Đã có tài khoản? <a class="link-btn" href="#login">Đăng nhập</a>
+        </p>
+      </div>
+    </section>
     <!-- Footer -->
     <footer class="footer">
       <p>© 2025 Ứng dụng luyện thi CNTT</p>

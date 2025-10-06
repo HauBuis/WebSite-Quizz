@@ -1,0 +1,62 @@
+[
+  {
+    "title": "Đề 01 – Mảng & Danh sách liên kết",
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "duration": 30,
+    "totalMarks": 30
+  },
+  {
+    "title": "Đề 02 – Ngăn xếp & Hàng đợi",
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "duration": 25,
+    "totalMarks": 25
+  },
+  {
+    "title": "Đề 03 – Lập trình C cơ bản",
+    "subject": "Lập trình C cơ bản",
+    "duration": 30,
+    "totalMarks": 30
+  },
+  {
+    "title": "Đề 04 – Mạng máy tính",
+    "subject": "Mạng máy tính",
+    "duration": 25,
+    "totalMarks": 25
+  },
+  {
+    "title": "Đề 05 – Cơ sở dữ liệu",
+    "subject": "Cơ sở dữ liệu",
+    "duration": 30,
+    "totalMarks": 30
+  },
+  {
+    "title": "Đề 06 – Hệ điều hành",
+    "subject": "Hệ điều hành",
+    "duration": 30,
+    "totalMarks": 30
+  },
+  {
+    "title": "Đề 07 – Giải thuật nâng cao",
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "duration": 30,
+    "totalMarks": 30
+  },
+  {
+    "title": "Đề 08 – SQL nâng cao",
+    "subject": "Cơ sở dữ liệu",
+    "duration": 25,
+    "totalMarks": 25
+  },
+  {
+    "title": "Đề 09 – IP và TCP",
+    "subject": "Mạng máy tính",
+    "duration": 20,
+    "totalMarks": 20
+  },
+  {
+    "title": "Đề 10 – Tiến trình & Luồng",
+    "subject": "Hệ điều hành",
+    "duration": 30,
+    "totalMarks": 30
+  }
+]
