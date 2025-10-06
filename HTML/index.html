@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ứng dụng luyện thi trắc nghiệm CNTT</title>
+    <link rel="stylesheet" href="index.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <h1 class="logo">Quiz CNTT</h1>
+      <nav class="menu">
+        <a class="menu-btn" href="#home">Trang chủ</a>
+        <a class="menu-btn" href="#quizzes">Đề thi</a>
+        <a class="menu-btn" href="#history">Lịch sử</a>
+        <a class="menu-btn" href="#login">Đăng nhập</a>
+      </nav>
+    </header>
+
+    <!-- ====== HOME ====== -->
+    <main id="home" class="section container">
+      <h2 class="section-title">Danh sách môn học</h2>
+      <p class="section-desc">Chọn môn để bắt đầu luyện tập.</p>
+
+      <div class="card-grid">
+        <article class="subject-card">
+          <h3 class="subject-title">Cấu trúc dữ liệu & Giải thuật</h3>
+          <p class="subject-info">20 đề • Độ khó: Trung bình</p>
+          <a class="primary-btn" href="#quizzes">Xem đề</a>
+        </article>
+
+        <article class="subject-card">
+          <h3 class="subject-title">Mạng máy tính</h3>
+          <p class="subject-info">15 đề • Độ khó: Khó</p>
+          <a class="primary-btn" href="#quizzes">Xem đề</a>
+        </article>
+
+        <article class="subject-card">
+          <h3 class="subject-title">Hệ điều hành</h3>
+          <p class="subject-info">10 đề • Độ khó: Dễ</p>
+          <a class="primary-btn" href="#quizzes">Xem đề</a>
+        </article>
+      </div>
+    </main>
+
+    <!-- ====== QUIZZES ====== -->
+    <section id="quizzes" class="section container">
+      <div class="section-header">
+        <h2 class="section-title">
+          Đề luyện tập – Cấu trúc dữ liệu & Giải thuật
+        </h2>
+        <a class="link-btn" href="#home">← Quay lại môn học</a>
+      </div>
+
+      <div class="card-grid">
+        <article class="quiz-card">
+          <h3 class="quiz-title">Đề 01 – Mảng & Danh sách liên kết</h3>
+          <p class="quiz-info">30 câu • 30 phút</p>
+          <a class="primary-btn" href="#quiz">Bắt đầu</a>
+        </article>
+
+        <article class="quiz-card">
+          <h3 class="quiz-title">Đề 02 – Ngăn xếp & Hàng đợi</h3>
+          <p class="quiz-info">25 câu • 25 phút</p>
+          <a class="primary-btn" href="#quiz">Bắt đầu</a>
+        </article>
+
+        <article class="quiz-card">
+          <h3 class="quiz-title">Đề 03 – Cây & Đồ thị</h3>
+          <p class="quiz-info">35 câu • 40 phút</p>
+          <a class="primary-btn" href="#quiz">Bắt đầu</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- ====== QUIZ ====== -->
+    <section id="quiz" class="section container">
+      <div class="section-header">
+        <h2 class="section-title">Đề 01 – Mảng & Danh sách liên kết</h2>
+        <a class="link-btn" href="#quizzes">← Quay lại danh sách đề</a>
+      </div>
+
+      <!-- Thanh thông tin đề -->
+      <div class="quiz-topbar">
+        <div class="quiz-chip">30 câu</div>
+        <div class="quiz-chip">Thời gian: 30 phút</div>
+        <div class="quiz-timer">
+          <div class="quiz-timer-fill" style="width: 60%"></div>
+        </div>
+      </div>
+
+      <!-- Danh sách câu hỏi -->
+      <article class="question-card">
+        <div class="question-number">Câu 1</div>
+        <div class="question-text">
+          Cấu trúc dữ liệu nào cho phép chèn/xóa ở cuối với thời gian O(1)?
+        </div>
+        <ul class="answer-list">
+          <li class="answer-option">
+            <label><input type="radio" name="q1" /> Mảng tĩnh</label>
+          </li>
+          <li class="answer-option">
+            <label
+              ><input type="radio" name="q1" /> Danh sách liên kết đơn</label
+            >
+          </li>
+          <li class="answer-option">
+            <label><input type="radio" name="q1" /> Ngăn xếp (Stack)</label>
+          </li>
+          <li class="answer-option">
+            <label><input type="radio" name="q1" /> Hàng đợi ưu tiên</label>
+          </li>
+        </ul>
+        <div class="question-actions">
+          <button class="small-btn">🔖 Lưu câu</button>
+          <button class="small-btn">🚩 Báo lỗi</button>
+        </div>
+      </article>
+
+      <article class="question-card">
+        <div class="question-number">Câu 2</div>
+        <div class="question-text">
+          Cấu trúc dữ liệu nào phù hợp để duyệt BFS trên đồ thị?
+        </div>
+        <ul class="answer-list">
+          <li class="answer-option">
+            <label><input type="radio" name="q2" /> Ngăn xếp</label>
+          </li>
+          <li class="answer-option">
+            <label><input type="radio" name="q2" /> Hàng đợi</label>
+          </li>
+          <li class="answer-option">
+            <label><input type="radio" name="q2" /> Cây nhị phân</label>
+          </li>
+          <li class="answer-option">
+            <label><input type="radio" name="q2" /> Bảng băm</label>
+          </li>
+        </ul>
+        <div class="question-actions">
+          <button class="small-btn">🔖 Lưu câu</button>
+          <button class="small-btn">🚩 Báo lỗi</button>
+        </div>
+      </article>
+
+      <!-- Nộp bài -->
+      <div class="submit-area">
+        <a class="secondary-btn" href="#quizzes">Hủy</a>
+        <a class="primary-btn" href="#history">Nộp bài</a>
+      </div>
+    </section>
+
+    <!-- ====== HISTORY ====== -->
+    <section id="history" class="section container">
+      <div class="section-header">
+        <h2 class="section-title">Lịch sử làm bài</h2>
+        <a class="link-btn" href="#home">← Về trang chủ</a>
+      </div>
+
+      <div id="history-empty" class="history-empty">
+        Chưa có lịch sử làm bài.
+      </div>
+
+      <div id="history-list" class="history-list"></div>
+    </section>
+
+    <!-- ====== OVERLAY ====== -->
+    <section id="review" class="overlay">
+      <div class="overlay-card overlay-large">
+        <div class="overlay-top">
+          <div>
+            <h3 id="review-title" class="overlay-title">Xem lại đề</h3>
+            <div id="review-sub" class="overlay-sub">
+              Điểm: --/-- • Thời gian: --
+            </div>
+          </div>
+          <a class="overlay-close" href="#history">Đóng</a>
+        </div>
+
+        <div id="review-questions" class="review-questions">
+          <!-- JS sẽ đổ danh sách câu hỏi + đáp án vào đây -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== LOGIN  ====== -->
+    <section id="login" class="overlay">
+      <div class="overlay-card">
+        <h3 class="overlay-title">Đăng nhập</h3>
+        <p class="overlay-desc">Demo giao diện (chưa xử lý tài khoản).</p>
+        <form class="login-form">
+          <input class="input-box" type="email" placeholder="Email" />
+          <input class="input-box" type="password" placeholder="Mật khẩu" />
+          <button class="primary-btn" type="button">Đăng nhập</button>
+        </form>
+        <a class="overlay-close" href="#home">Đóng</a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>© 2025 Ứng dụng luyện thi CNTT</p>
+    </footer>
+  </body>
+</html>
