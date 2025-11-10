@@ -140,8 +140,20 @@ async function renderHistory() {
     return;
   }
 
-  const res = await fetch(`${API_BASE}/attempts/${auth.email}`);
-  const list = await res.json();
+  let list = [];
+  try {
+    const res = await fetch(`${API_BASE}/attempts/${auth.email}`);
+    if (res.ok) {
+      list = await res.json();
+    } else {
+      console.warn("Failed to load attempts from server, status:", res.status);
+      list = [];
+    }
+  } catch (err) {
+    // Network or other error - fall back to offline attempts only
+    console.warn("Error fetching attempts from server:", err.message);
+    list = [];
+  }
   // merge server list with any locally-saved offline attempts
   const offlineAll = JSON.parse(
     localStorage.getItem(ATTEMPTS_OFFLINE_KEY) || "[]"
@@ -456,6 +468,10 @@ async function submitCurrentQuiz(e) {
   // Calculate score
   let score = 0;
   const answers = [];
+  console.debug(
+    "Submitting quiz, currentRenderedQuestions:",
+    currentRenderedQuestions
+  );
   for (let i = 0; i < currentRenderedQuestions.length; i++) {
     const sel = document.querySelector(`input[name="q${i}"]:checked`);
     const selectedIndex = sel ? parseInt(sel.value, 10) : null;
@@ -463,6 +479,12 @@ async function submitCurrentQuiz(e) {
       selectedIndex !== null &&
       currentRenderedQuestions[i].options[selectedIndex] &&
       currentRenderedQuestions[i].options[selectedIndex].isCorrect;
+    console.debug(
+      `q${i}: selectedIndex=`,
+      selectedIndex,
+      "isCorrect=",
+      isCorrect
+    );
     if (isCorrect) score++;
     answers.push({
       selected: selectedIndex,
@@ -486,6 +508,8 @@ async function submitCurrentQuiz(e) {
     timeSpent: timeSpentSec,
     timeText,
     answers,
+    // include question text & options so offline attempts can be reviewed fully
+    questions: currentRenderedQuestions,
     createdAt: new Date().toISOString(),
   };
 
