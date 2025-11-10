@@ -142,33 +142,57 @@ async function renderHistory() {
 
   const res = await fetch(`${API_BASE}/attempts/${auth.email}`);
   const list = await res.json();
-  if (!Array.isArray(list) || list.length === 0) {
+  // merge server list with any locally-saved offline attempts
+  const offlineAll = JSON.parse(
+    localStorage.getItem(ATTEMPTS_OFFLINE_KEY) || "[]"
+  );
+  const offlineForUser = offlineAll.filter((a) => a.email === auth.email);
+
+  let merged = Array.isArray(list) ? list.slice() : [];
+  merged = merged.concat(offlineForUser);
+
+  if (!Array.isArray(merged) || merged.length === 0) {
     empty.style.display = "block";
     empty.textContent = "Chưa có lịch sử làm bài.";
+    MERGED_ATTEMPTS = [];
     return;
   }
 
+  // Keep merged attempts globally so review can access them
+  MERGED_ATTEMPTS = merged.slice();
+
   empty.style.display = "none";
-  list.reverse().forEach((att) => {
-    const item = document.createElement("article");
-    item.className = "history-item";
-    item.innerHTML = `
+  // Render in reverse chronological order (recent first)
+  merged
+    .slice()
+    .reverse()
+    .forEach((att) => {
+      const item = document.createElement("article");
+      item.className = "history-item";
+      const itemId =
+        att._id || att.createdAt || Math.random().toString(36).slice(2);
+      const offlineFlag = att._id ? "" : " (offline)";
+      item.innerHTML = `
       <div>
-        <div class="history-title">${att.quizTitle}</div>
-        <div class="history-time">${att.timeText}</div>
+        <div class="history-title">${att.quizTitle}${offlineFlag}</div>
+        <div class="history-time">${att.timeText || ""}</div>
       </div>
       <div style="display:flex; align-items:center; gap:8px;">
         <div class="history-score">${att.score}/${att.total}</div>
-        <a href="#review" class="review-btn" data-id="${att._id}">Xem lại</a>
+        <a href="#review" class="review-btn" data-id="${itemId}">Xem lại</a>
       </div>`;
-    wrap.appendChild(item);
-  });
+      // attach a stable id on the attempt so review can locate it
+      att._localId = itemId;
+      wrap.appendChild(item);
+    });
 
-  wrap
-    .querySelectorAll(".review-btn")
-    .forEach((b) =>
-      b.addEventListener("click", (e) => openReview(e.target.dataset.id))
-    );
+  wrap.querySelectorAll(".review-btn").forEach((b) =>
+    b.addEventListener("click", (e) => {
+      e.preventDefault();
+      const id = e.currentTarget.dataset.id;
+      openReview(id);
+    })
+  );
 }
 
 // =============================================================
@@ -179,11 +203,13 @@ let ALL_QUESTIONS = [];
 let currentQuiz = null;
 let currentRenderedQuestions = [];
 let currentQuizStartTime = null;
+const ATTEMPTS_OFFLINE_KEY = "quiz_attempts_offline";
+let MERGED_ATTEMPTS = [];
 
 async function loadDataFiles() {
   const [qz, qs] = await Promise.all([
     fetch(`${API_BASE}/quizzes`).then((r) => r.json()),
-    fetch("questions.json")
+    fetch("../JSON/questions.json")
       .then((r) => r.json())
       .catch(() => []),
   ]);
@@ -207,8 +233,6 @@ function setupSubjectButtons() {
         location.hash = "#login";
         return;
       }
-      // Use hash navigation so browser back/forward and anchor links work.
-      // Set hash to #quizzes and then render the quizzes for the subject.
       location.hash = "#quizzes";
       renderQuizzes(subjectTitle);
     });
@@ -276,7 +300,6 @@ function setupStartButtons() {
         subject: "",
         totalMarks: 10,
       };
-      // Set current quiz state and navigate via hash so UI routing is consistent
       currentQuiz = quiz;
       currentQuizStartTime = Date.now();
       location.hash = "#quiz";
@@ -291,10 +314,26 @@ function renderQuiz(quiz) {
   titleEl.textContent = quiz.title;
 
   quizSection.querySelectorAll(".question-card").forEach((e) => e.remove());
-
   let pool = ALL_QUESTIONS.filter((q) => q.subject === quiz.subject);
   if (pool.length === 0) pool = ALL_QUESTIONS;
   const selected = pool.slice(0, quiz.totalMarks || 10);
+
+  // Update topbar: question count and duration
+  const topbar = quizSection.querySelector(".quiz-topbar");
+  if (topbar) {
+    const chips = topbar.querySelectorAll(".quiz-chip");
+    if (chips[0]) chips[0].textContent = `${selected.length} câu`;
+    const minutes = quiz.duration || 30;
+    if (chips[1]) chips[1].textContent = `Thời gian: ${minutes} phút`;
+
+    const fill = topbar.querySelector(".quiz-timer-fill");
+    if (fill) {
+      fill.style.animation = "none";
+      fill.offsetWidth;
+      fill.style.width = "100%";
+      fill.style.animation = `timerFill ${minutes * 60}s linear forwards`;
+    }
+  }
 
   currentRenderedQuestions = selected.map((q) => ({
     text: q.questionText,
@@ -305,6 +344,14 @@ function renderQuiz(quiz) {
   }));
 
   const submitArea = quizSection.querySelector(".submit-area");
+  if (selected.length === 0) {
+    const msg = document.createElement("div");
+    msg.style.padding = "12px";
+    msg.style.color = "#555";
+    msg.textContent = "Không có câu hỏi cho đề này.";
+    quizSection.insertBefore(msg, submitArea);
+    return;
+  }
   currentRenderedQuestions.forEach((q, i) => {
     const card = document.createElement("article");
     card.className = "question-card";
@@ -352,11 +399,8 @@ function afterLogin() {
   document
     .querySelectorAll(".overlay")
     .forEach((ov) => (ov.style.display = "none"));
-  // Remove any overlay-body class so background is not blurred after login
   document.body.classList.remove("overlay-open");
-  // Clear any hash from URL without triggering hashchange (keeps history clean)
   history.pushState("", document.title, window.location.pathname);
-  // Ensure UI is synced with the (now cleared) hash and auth state
   navigateToHash();
 }
 
@@ -364,7 +408,6 @@ function afterLogout() {
   updateHeaderAuthUI();
   controlAccessUI();
   location.hash = "#";
-  // Ensure overlay class is removed on logout
   document.body.classList.remove("overlay-open");
 }
 // =============================================================
@@ -384,6 +427,184 @@ document.addEventListener("DOMContentLoaded", () => {
       location.hash = "#register";
     });
 });
+// -------------------------------------------------------------
+// Quiz submit / scoring utilities
+// -------------------------------------------------------------
+function formatTimeText(seconds) {
+  const m = Math.floor(seconds / 60)
+    .toString()
+    .padStart(2, "0");
+  const s = Math.floor(seconds % 60)
+    .toString()
+    .padStart(2, "0");
+  return `${m}:${s}`;
+}
+
+async function submitCurrentQuiz(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const auth = getAuth();
+  if (!auth) {
+    alert("Vui lòng đăng nhập trước khi nộp bài.");
+    location.hash = "#login";
+    return;
+  }
+  if (!currentRenderedQuestions || currentRenderedQuestions.length === 0) {
+    alert("Không có câu hỏi để nộp.");
+    return;
+  }
+
+  // Calculate score
+  let score = 0;
+  const answers = [];
+  for (let i = 0; i < currentRenderedQuestions.length; i++) {
+    const sel = document.querySelector(`input[name="q${i}"]:checked`);
+    const selectedIndex = sel ? parseInt(sel.value, 10) : null;
+    const isCorrect =
+      selectedIndex !== null &&
+      currentRenderedQuestions[i].options[selectedIndex] &&
+      currentRenderedQuestions[i].options[selectedIndex].isCorrect;
+    if (isCorrect) score++;
+    answers.push({
+      selected: selectedIndex,
+      correct: currentRenderedQuestions[i].options.findIndex(
+        (opt) => opt.isCorrect
+      ),
+    });
+  }
+
+  const total = currentRenderedQuestions.length;
+  const timeSpentSec = currentQuizStartTime
+    ? Math.floor((Date.now() - currentQuizStartTime) / 1000)
+    : 0;
+  const timeText = formatTimeText(timeSpentSec);
+
+  const attempt = {
+    email: auth.email,
+    quizTitle: currentQuiz?.title || "(Không tiêu đề)",
+    score,
+    total,
+    timeSpent: timeSpentSec,
+    timeText,
+    answers,
+    createdAt: new Date().toISOString(),
+  };
+
+  try {
+    const res = await fetch(`${API_BASE}/attempts`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(attempt),
+    });
+    if (!res.ok) throw new Error("Server returned error");
+    location.hash = "#history";
+    await renderHistory();
+    alert(`Nộp bài thành công. Điểm của bạn: ${score}/${total}`);
+  } catch (err) {
+    // Save offline
+    const offlineAll = JSON.parse(
+      localStorage.getItem(ATTEMPTS_OFFLINE_KEY) || "[]"
+    );
+    offlineAll.push(attempt);
+    localStorage.setItem(ATTEMPTS_OFFLINE_KEY, JSON.stringify(offlineAll));
+    location.hash = "#history";
+    await renderHistory();
+    alert(
+      `Không thể lưu trên server, đã lưu tạm. Điểm của bạn: ${score}/${total}`
+    );
+  }
+}
+
+function setupSubmitButton() {
+  const submitBtn = document.querySelector(".submit-area .primary-btn");
+  if (submitBtn) submitBtn.addEventListener("click", submitCurrentQuiz);
+}
+// -------------------------------------------------------------
+// Open and render a review overlay for a saved attempt
+// -------------------------------------------------------------
+function openReview(id) {
+  if (!id) {
+    alert("Không tìm thấy kết quả để xem lại.");
+    return;
+  }
+
+  // Find attempt by server _id, createdAt, or local generated id (_localId)
+  const attempt = MERGED_ATTEMPTS.find(
+    (a) => a._id === id || a.createdAt === id || a._localId === id
+  );
+
+  if (!attempt) {
+    alert("Không tìm thấy dữ liệu để xem lại.");
+    return;
+  }
+
+  const titleEl = document.getElementById("review-title");
+  const subEl = document.getElementById("review-sub");
+  const qWrap = document.getElementById("review-questions");
+  if (titleEl) titleEl.textContent = attempt.quizTitle || "Xem lại đề";
+  if (subEl)
+    subEl.textContent = `Điểm: ${attempt.score}/${attempt.total} • Thời gian: ${
+      attempt.timeText || formatTimeText(attempt.timeSpent || 0)
+    }`;
+
+  if (!qWrap) return;
+  qWrap.innerHTML = "";
+
+  if (Array.isArray(attempt.questions) && attempt.questions.length > 0) {
+    attempt.questions.forEach((q, i) => {
+      const card = document.createElement("div");
+      card.className = "question-card";
+      const optionsHtml = (q.options || [])
+        .map((opt, idx) => {
+          const isCorrect = !!opt.isCorrect;
+          const selectedIdx =
+            Array.isArray(attempt.answers) && attempt.answers[i]
+              ? attempt.answers[i].selected
+              : null;
+          const isSelected = selectedIdx === idx;
+          const classes = [];
+          if (isCorrect) classes.push("correct");
+          if (isSelected) classes.push("selected");
+          return `<li class="answer-option ${classes.join(" ")}">${
+            isSelected ? "✓ " : ""
+          }${opt.text}${isCorrect ? " (Đúng)" : ""}</li>`;
+        })
+        .join("");
+
+      card.innerHTML = `
+        <div class="question-number">Câu ${i + 1}</div>
+        <div class="question-text">${q.text}</div>
+        <ul class="answer-list">${optionsHtml}</ul>
+      `;
+      qWrap.appendChild(card);
+    });
+  } else if (Array.isArray(attempt.answers) && attempt.answers.length > 0) {
+    // We have answers but not the question texts/options; show answers only
+    attempt.answers.forEach((ans, i) => {
+      const card = document.createElement("div");
+      card.className = "question-card";
+      const selected =
+        ans.selected === null
+          ? "(Không trả lời)"
+          : `Lựa chọn ${ans.selected + 1}`;
+      const correct =
+        typeof ans.correct === "number"
+          ? `Đáp án đúng: ${ans.correct + 1}`
+          : "";
+      card.innerHTML = `
+        <div class="question-number">Câu ${i + 1}</div>
+        <div class="question-text">${selected}</div>
+        <div class="question-text">${correct}</div>
+      `;
+      qWrap.appendChild(card);
+    });
+  } else {
+    qWrap.innerHTML =
+      "<div style='padding:12px;color:#555;'>Không có dữ liệu chi tiết để xem lại.</div>";
+  }
+
+  // Open overlay via hash so CSS shows it and body class is toggled
+  location.hash = "#review";
+}
 // -------------------------------------------------------------
 // Overlay body-class toggle: keep a class on <body> when an overlay
 // is opened (via hash) so CSS can manage backdrop blur reliably.
@@ -465,6 +686,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupAuthForms();
   await loadDataFiles();
   setupSubjectButtons();
+  setupSubmitButton();
   renderHistory();
   controlAccessUI();
   if (["#login", "#register", "#review"].includes(location.hash)) {
