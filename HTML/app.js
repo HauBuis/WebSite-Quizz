@@ -207,11 +207,9 @@ function setupSubjectButtons() {
         location.hash = "#login";
         return;
       }
-
-      document.getElementById("home").style.display = "none";
-      document.getElementById("quiz").style.display = "none"; // ✅ ẩn phần thi
-      document.getElementById("quizzes").style.display = "block"; // ✅ chỉ hiển thị danh sách đề
-
+      // Use hash navigation so browser back/forward and anchor links work.
+      // Set hash to #quizzes and then render the quizzes for the subject.
+      location.hash = "#quizzes";
       renderQuizzes(subjectTitle);
     });
   });
@@ -278,12 +276,11 @@ function setupStartButtons() {
         subject: "",
         totalMarks: 10,
       };
-      renderQuiz(quiz);
+      // Set current quiz state and navigate via hash so UI routing is consistent
       currentQuiz = quiz;
       currentQuizStartTime = Date.now();
-
-      document.getElementById("quizzes").style.display = "none";
-      document.getElementById("quiz").style.display = "block";
+      location.hash = "#quiz";
+      renderQuiz(quiz);
     })
   );
 }
@@ -357,7 +354,10 @@ function afterLogin() {
     .forEach((ov) => (ov.style.display = "none"));
   // Remove any overlay-body class so background is not blurred after login
   document.body.classList.remove("overlay-open");
+  // Clear any hash from URL without triggering hashchange (keeps history clean)
   history.pushState("", document.title, window.location.pathname);
+  // Ensure UI is synced with the (now cleared) hash and auth state
+  navigateToHash();
 }
 
 function afterLogout() {
@@ -407,6 +407,56 @@ function updateOverlayBodyClass() {
 
 window.addEventListener("hashchange", updateOverlayBodyClass);
 document.addEventListener("DOMContentLoaded", updateOverlayBodyClass);
+// -------------------------------------------------------------
+// Navigation handler: show/hide main sections based on the hash.
+// This keeps UI state consistent with anchor links and browser history.
+// -------------------------------------------------------------
+function navigateToHash() {
+  const auth = getAuth();
+  // Ensure baseline visibility according to auth
+  controlAccessUI();
+
+  // Elements we manage
+  const home = document.getElementById("home");
+  const quizzes = document.getElementById("quizzes");
+  const quiz = document.getElementById("quiz");
+  const historySec = document.getElementById("history");
+
+  // If user not authenticated, leave control to controlAccessUI and overlays
+  if (!auth) {
+    updateOverlayBodyClass();
+    return;
+  }
+
+  // Hide the main content sections we toggle manually
+  [home, quizzes, quiz, historySec].forEach((el) => {
+    if (el) el.style.display = "none";
+  });
+
+  const h = location.hash || "#home";
+  if (h === "" || h === "#" || h === "#home") {
+    if (home) home.style.display = "block";
+  } else if (h.startsWith("#quizzes")) {
+    if (quizzes) quizzes.style.display = "block";
+  } else if (h.startsWith("#quiz")) {
+    if (quiz) quiz.style.display = "block";
+  } else if (h === "#history") {
+    if (historySec) historySec.style.display = "block";
+  }
+
+  // Update header / overlay class as needed
+  updateHeaderAuthUI();
+  updateOverlayBodyClass();
+}
+
+window.addEventListener("hashchange", () => {
+  updateOverlayBodyClass();
+  navigateToHash();
+});
+document.addEventListener("DOMContentLoaded", () => {
+  updateOverlayBodyClass();
+  navigateToHash();
+});
 // =============================================================
 // 🚀 KHỞI TẠO
 // =============================================================
