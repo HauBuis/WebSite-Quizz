@@ -1,9 +1,6 @@
 const API_BASE = "http://localhost:5000/api";
-const AUTH_KEY = "quiz_auth"; // lưu trạng thái đăng nhập trong localStorage
+const AUTH_KEY = "quiz_auth";
 
-// =============================================================
-// 🔧 HÀM TRỢ GIÚP
-// =============================================================
 function getAuth() {
   try {
     return JSON.parse(localStorage.getItem(AUTH_KEY));
@@ -16,9 +13,6 @@ function setAuth(auth) {
   else localStorage.removeItem(AUTH_KEY);
 }
 
-// =============================================================
-// 🧭 HEADER AUTH UI
-// =============================================================
 function updateHeaderAuthUI() {
   const auth = getAuth();
   const elLogin = document.getElementById("menu-login");
@@ -39,9 +33,6 @@ function updateHeaderAuthUI() {
   }
 }
 
-// =============================================================
-// 👤 AUTH API
-// =============================================================
 async function registerUser({ name, email, password }) {
   if (!name || !email || !password)
     throw new Error("Vui lòng nhập đủ thông tin.");
@@ -75,9 +66,6 @@ function logoutUser() {
   setAuth(null);
 }
 
-// =============================================================
-// 🧩 GÁN SỰ KIỆN LOGIN / REGISTER / LOGOUT
-// =============================================================
 function setupAuthForms() {
   const btnLogout = document.getElementById("btn-logout");
   if (btnLogout)
@@ -124,9 +112,6 @@ function setupAuthForms() {
     });
 }
 
-// =============================================================
-// 📜 LỊCH SỬ LÀM BÀI
-// =============================================================
 async function renderHistory() {
   const auth = getAuth();
   const wrap = document.getElementById("history-list");
@@ -150,11 +135,9 @@ async function renderHistory() {
       list = [];
     }
   } catch (err) {
-    // Network or other error - fall back to offline attempts only
     console.warn("Error fetching attempts from server:", err.message);
     list = [];
   }
-  // merge server list with any locally-saved offline attempts
   const offlineAll = JSON.parse(
     localStorage.getItem(ATTEMPTS_OFFLINE_KEY) || "[]"
   );
@@ -170,11 +153,9 @@ async function renderHistory() {
     return;
   }
 
-  // Keep merged attempts globally so review can access them
   MERGED_ATTEMPTS = merged.slice();
 
   empty.style.display = "none";
-  // Render in reverse chronological order (recent first)
   merged
     .slice()
     .reverse()
@@ -193,7 +174,6 @@ async function renderHistory() {
         <div class="history-score">${att.score}/${att.total}</div>
         <a href="#review" class="review-btn" data-id="${itemId}">Xem lại</a>
       </div>`;
-      // attach a stable id on the attempt so review can locate it
       att._localId = itemId;
       wrap.appendChild(item);
     });
@@ -207,9 +187,6 @@ async function renderHistory() {
   );
 }
 
-// =============================================================
-// 🧠 QUIZZES
-// =============================================================
 let ALL_QUIZZES = [];
 let ALL_QUESTIONS = [];
 let currentQuiz = null;
@@ -229,9 +206,6 @@ async function loadDataFiles() {
   ALL_QUESTIONS = qs;
 }
 
-// =============================================================
-// 📘 XEM ĐỀ THEO MÔN
-// =============================================================
 function setupSubjectButtons() {
   document.querySelectorAll(".btn-view-quizzes").forEach((btn) => {
     btn.addEventListener("click", (e) => {
@@ -286,9 +260,6 @@ function renderQuizzes(subjectTitle) {
   setupStartButtons();
 }
 
-// =============================================================
-// ⚙️ BẮT ĐẦU THI (CHỈ KHI XÁC NHẬN)
-// =============================================================
 function findQuizByTitle(title) {
   return ALL_QUIZZES.find((q) => q.title.trim() === title.trim());
 }
@@ -330,7 +301,6 @@ function renderQuiz(quiz) {
   if (pool.length === 0) pool = ALL_QUESTIONS;
   const selected = pool.slice(0, quiz.totalMarks || 10);
 
-  // Update topbar: question count and duration
   const topbar = quizSection.querySelector(".quiz-topbar");
   if (topbar) {
     const chips = topbar.querySelectorAll(".quiz-chip");
@@ -382,9 +352,6 @@ function renderQuiz(quiz) {
   });
 }
 
-// =============================================================
-// 🔄 LOGIN / LOGOUT & HIỂN THỊ
-// =============================================================
 function controlAccessUI() {
   const auth = getAuth();
   const landing = document.getElementById("landing");
@@ -422,9 +389,7 @@ function afterLogout() {
   location.hash = "#";
   document.body.classList.remove("overlay-open");
 }
-// =============================================================
-// 💫 NÚT MỞ OVERLAY LOGIN / REGISTER Ở LANDING PAGE
-// =============================================================
+
 document.addEventListener("DOMContentLoaded", () => {
   const btnOpenLogin = document.getElementById("btn-open-login");
   const btnOpenRegister = document.getElementById("btn-open-register");
@@ -439,9 +404,7 @@ document.addEventListener("DOMContentLoaded", () => {
       location.hash = "#register";
     });
 });
-// -------------------------------------------------------------
-// Quiz submit / scoring utilities
-// -------------------------------------------------------------
+
 function formatTimeText(seconds) {
   const m = Math.floor(seconds / 60)
     .toString()
@@ -465,7 +428,6 @@ async function submitCurrentQuiz(e) {
     return;
   }
 
-  // Calculate score
   let score = 0;
   const answers = [];
   console.debug(
@@ -508,7 +470,6 @@ async function submitCurrentQuiz(e) {
     timeSpent: timeSpentSec,
     timeText,
     answers,
-    // include question text & options so offline attempts can be reviewed fully
     questions: currentRenderedQuestions,
     createdAt: new Date().toISOString(),
   };
@@ -542,16 +503,13 @@ function setupSubmitButton() {
   const submitBtn = document.querySelector(".submit-area .primary-btn");
   if (submitBtn) submitBtn.addEventListener("click", submitCurrentQuiz);
 }
-// -------------------------------------------------------------
-// Open and render a review overlay for a saved attempt
-// -------------------------------------------------------------
+
 function openReview(id) {
   if (!id) {
     alert("Không tìm thấy kết quả để xem lại.");
     return;
   }
 
-  // Find attempt by server _id, createdAt, or local generated id (_localId)
   const attempt = MERGED_ATTEMPTS.find(
     (a) => a._id === id || a.createdAt === id || a._localId === id
   );
@@ -602,7 +560,6 @@ function openReview(id) {
       qWrap.appendChild(card);
     });
   } else if (Array.isArray(attempt.answers) && attempt.answers.length > 0) {
-    // We have answers but not the question texts/options; show answers only
     attempt.answers.forEach((ans, i) => {
       const card = document.createElement("div");
       card.className = "question-card";
@@ -626,13 +583,8 @@ function openReview(id) {
       "<div style='padding:12px;color:#555;'>Không có dữ liệu chi tiết để xem lại.</div>";
   }
 
-  // Open overlay via hash so CSS shows it and body class is toggled
   location.hash = "#review";
 }
-// -------------------------------------------------------------
-// Overlay body-class toggle: keep a class on <body> when an overlay
-// is opened (via hash) so CSS can manage backdrop blur reliably.
-// -------------------------------------------------------------
 function updateOverlayBodyClass() {
   try {
     const hash = location.hash;
@@ -652,28 +604,18 @@ function updateOverlayBodyClass() {
 
 window.addEventListener("hashchange", updateOverlayBodyClass);
 document.addEventListener("DOMContentLoaded", updateOverlayBodyClass);
-// -------------------------------------------------------------
-// Navigation handler: show/hide main sections based on the hash.
-// This keeps UI state consistent with anchor links and browser history.
-// -------------------------------------------------------------
 function navigateToHash() {
   const auth = getAuth();
-  // Ensure baseline visibility according to auth
   controlAccessUI();
-
-  // Elements we manage
   const home = document.getElementById("home");
   const quizzes = document.getElementById("quizzes");
   const quiz = document.getElementById("quiz");
   const historySec = document.getElementById("history");
 
-  // If user not authenticated, leave control to controlAccessUI and overlays
   if (!auth) {
     updateOverlayBodyClass();
     return;
   }
-
-  // Hide the main content sections we toggle manually
   [home, quizzes, quiz, historySec].forEach((el) => {
     if (el) el.style.display = "none";
   });
@@ -689,7 +631,6 @@ function navigateToHash() {
     if (historySec) historySec.style.display = "block";
   }
 
-  // Update header / overlay class as needed
   updateHeaderAuthUI();
   updateOverlayBodyClass();
 }
@@ -702,9 +643,7 @@ document.addEventListener("DOMContentLoaded", () => {
   updateOverlayBodyClass();
   navigateToHash();
 });
-// =============================================================
-// 🚀 KHỞI TẠO
-// =============================================================
+
 document.addEventListener("DOMContentLoaded", async () => {
   updateHeaderAuthUI();
   setupAuthForms();

@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// 1️⃣ KẾT NỐI MONGODB
+//  KẾT NỐI MONGODB
 mongoose
   .connect("mongodb://localhost:27017/quiz_app", {
     useNewUrlParser: true,
@@ -17,7 +17,7 @@ mongoose
   .then(() => console.log("✅ Kết nối MongoDB thành công"))
   .catch((err) => console.error("❌ Lỗi kết nối MongoDB:", err));
 
-// 2️⃣ ĐỊNH NGHĨA CÁC SCHEMA
+//  ĐỊNH NGHĨA CÁC SCHEMA
 const User = mongoose.model("users", {
   name: String,
   email: String,
@@ -45,7 +45,7 @@ const Attempt = mongoose.model("history", {
   questions: Array,
 });
 
-// 3️⃣ API ENDPOINTS
+// API ENDPOINTS
 
 // Đăng ký
 app.post("/api/register", async (req, res) => {
