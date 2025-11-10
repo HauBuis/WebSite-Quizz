@@ -42,123 +42,48 @@
         <article class="subject-card">
           <h3 class="subject-title">Cấu trúc dữ liệu & Giải thuật</h3>
           <p class="subject-info">20 đề • Độ khó: Trung bình</p>
-          <a class="primary-btn" href="#quizzes">Xem đề</a>
+          <button class="primary-btn btn-view-quizzes">Xem đề</button>
         </article>
 
         <article class="subject-card">
           <h3 class="subject-title">Mạng máy tính</h3>
           <p class="subject-info">15 đề • Độ khó: Khó</p>
-          <a class="primary-btn" href="#quizzes">Xem đề</a>
+          <button class="primary-btn btn-view-quizzes">Xem đề</button>
         </article>
 
         <article class="subject-card">
           <h3 class="subject-title">Hệ điều hành</h3>
           <p class="subject-info">10 đề • Độ khó: Dễ</p>
-          <a class="primary-btn" href="#quizzes">Xem đề</a>
+          <button class="primary-btn btn-view-quizzes">Xem đề</button>
         </article>
       </div>
     </main>
 
-    <!-- ====== QUIZZES ====== -->
-    <section id="quizzes" class="section container">
+    <!-- ====== QUIZZES (DANH SÁCH ĐỀ) ====== -->
+    <section id="quizzes" class="section container" style="display: none">
       <div class="section-header">
-        <h2 class="section-title">
-          Đề luyện tập – Cấu trúc dữ liệu & Giải thuật
-        </h2>
+        <h2 class="section-title">Đề luyện tập</h2>
         <a class="link-btn" href="#home">← Quay lại môn học</a>
       </div>
-
-      <div class="card-grid">
-        <article class="quiz-card">
-          <h3 class="quiz-title">Đề 01 – Mảng & Danh sách liên kết</h3>
-          <p class="quiz-info">30 câu • 30 phút</p>
-          <a class="primary-btn" href="#quiz">Bắt đầu</a>
-        </article>
-
-        <article class="quiz-card">
-          <h3 class="quiz-title">Đề 02 – Ngăn xếp & Hàng đợi</h3>
-          <p class="quiz-info">25 câu • 25 phút</p>
-          <a class="primary-btn" href="#quiz">Bắt đầu</a>
-        </article>
-
-        <article class="quiz-card">
-          <h3 class="quiz-title">Đề 03 – Cây & Đồ thị</h3>
-          <p class="quiz-info">35 câu • 40 phút</p>
-          <a class="primary-btn" href="#quiz">Bắt đầu</a>
-        </article>
-      </div>
+      <div class="card-grid"></div>
     </section>
 
-    <!-- ====== QUIZ ====== -->
-    <section id="quiz" class="section container">
+    <!-- ====== QUIZ (LÀM BÀI) ====== -->
+    <section id="quiz" class="section container" style="display: none">
       <div class="section-header">
-        <h2 class="section-title">Đề 01 – Mảng & Danh sách liên kết</h2>
+        <h2 class="section-title"></h2>
         <a class="link-btn" href="#quizzes">← Quay lại danh sách đề</a>
       </div>
 
-      <!-- Thanh thông tin đề -->
       <div class="quiz-topbar">
-        <div class="quiz-chip">30 câu</div>
-        <div class="quiz-chip">Thời gian: 30 phút</div>
+        <div class="quiz-chip">-- câu</div>
+        <div class="quiz-chip">Thời gian: -- phút</div>
         <div class="quiz-timer">
-          <div class="quiz-timer-fill" style="width: 60%"></div>
+          <div class="quiz-timer-fill" style="width: 100%"></div>
         </div>
       </div>
 
-      <!-- Danh sách câu hỏi -->
-      <article class="question-card">
-        <div class="question-number">Câu 1</div>
-        <div class="question-text">
-          Cấu trúc dữ liệu nào cho phép chèn/xóa ở cuối với thời gian O(1)?
-        </div>
-        <ul class="answer-list">
-          <li class="answer-option">
-            <label><input type="radio" name="q1" /> Mảng tĩnh</label>
-          </li>
-          <li class="answer-option">
-            <label
-              ><input type="radio" name="q1" /> Danh sách liên kết đơn</label
-            >
-          </li>
-          <li class="answer-option">
-            <label><input type="radio" name="q1" /> Ngăn xếp (Stack)</label>
-          </li>
-          <li class="answer-option">
-            <label><input type="radio" name="q1" /> Hàng đợi ưu tiên</label>
-          </li>
-        </ul>
-        <div class="question-actions">
-          <button class="small-btn">🔖 Lưu câu</button>
-          <button class="small-btn">🚩 Báo lỗi</button>
-        </div>
-      </article>
-
-      <article class="question-card">
-        <div class="question-number">Câu 2</div>
-        <div class="question-text">
-          Cấu trúc dữ liệu nào phù hợp để duyệt BFS trên đồ thị?
-        </div>
-        <ul class="answer-list">
-          <li class="answer-option">
-            <label><input type="radio" name="q2" /> Ngăn xếp</label>
-          </li>
-          <li class="answer-option">
-            <label><input type="radio" name="q2" /> Hàng đợi</label>
-          </li>
-          <li class="answer-option">
-            <label><input type="radio" name="q2" /> Cây nhị phân</label>
-          </li>
-          <li class="answer-option">
-            <label><input type="radio" name="q2" /> Bảng băm</label>
-          </li>
-        </ul>
-        <div class="question-actions">
-          <button class="small-btn">🔖 Lưu câu</button>
-          <button class="small-btn">🚩 Báo lỗi</button>
-        </div>
-      </article>
-
-      <!-- Nộp bài -->
+      <!-- JS sẽ tự động render câu hỏi tại đây -->
       <div class="submit-area">
         <a class="secondary-btn" href="#quizzes">Hủy</a>
         <a class="primary-btn" href="#history">Nộp bài</a>
@@ -179,7 +104,7 @@
       <div id="history-list" class="history-list"></div>
     </section>
 
-    <!-- ====== OVERLAY ====== -->
+    <!-- ====== OVERLAY REVIEW ====== -->
     <section id="review" class="overlay">
       <div class="overlay-card overlay-large">
         <div class="overlay-top">
@@ -193,24 +118,44 @@
         </div>
 
         <div id="review-questions" class="review-questions">
-          <!-- JS sẽ đổ danh sách câu hỏi + đáp án vào đây -->
+          <!-- danh sách câu hỏi + đáp án vào đây -->
         </div>
       </div>
     </section>
 
-    <!-- ====== LOGIN  ====== -->
+    <!-- ====== LOGIN ====== -->
     <section id="login" class="overlay">
       <div class="overlay-card">
         <h3 class="overlay-title">Đăng nhập</h3>
-        <form class="login-form">
-          <input class="input-box" type="email" placeholder="Email" />
-          <input class="input-box" type="password" placeholder="Mật khẩu" />
-          <button class="primary-btn" type="button">Đăng nhập</button>
+        <form id="login-form" class="login-form" onsubmit="return false;">
+          <input
+            id="login-email"
+            class="input-box"
+            type="email"
+            placeholder="Email"
+            required
+          />
+          <input
+            id="login-password"
+            class="input-box"
+            type="password"
+            placeholder="Mật khẩu (>= 6 ký tự)"
+            minlength="6"
+            required
+          />
+          <button id="btn-login" class="primary-btn" type="submit">
+            Đăng nhập
+          </button>
+          <div id="login-msg" class="form-msg"></div>
         </form>
+        <p style="font-size: 13px; color: #6b7280">
+          Chưa có tài khoản? <a class="link-btn" href="#register">Đăng ký</a>
+        </p>
         <a class="overlay-close" href="#home">Đóng</a>
       </div>
     </section>
-    <!-- ====== REGISTER  ====== -->
+
+    <!-- ====== REGISTER ====== -->
     <section id="register" class="overlay">
       <div class="overlay-card overlay-large">
         <div class="overlay-top">
@@ -263,6 +208,22 @@
         </p>
       </div>
     </section>
+
+    <!-- ====== LANDING PAGE ====== -->
+    <section id="landing" class="landing">
+      <div class="landing-content">
+        <h1 class="landing-title">Ứng dụng luyện thi trắc nghiệm CNTT</h1>
+        <p class="landing-desc">
+          Luyện tập, kiểm tra và nâng cao kiến thức Công nghệ Thông tin của bạn
+          thông qua các đề thi mô phỏng thực tế.
+        </p>
+        <div class="landing-buttons">
+          <button id="btn-open-login" class="primary-btn">Đăng nhập</button>
+          <button id="btn-open-register" class="secondary-btn">Đăng ký</button>
+        </div>
+      </div>
+    </section>
+
     <!-- Footer -->
     <footer class="footer">
       <p>© 2025 Ứng dụng luyện thi CNTT</p>

@@ -1,464 +1,448 @@
-/* ====== RESET CƠ BẢN ====== */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+/* ============================================================
+   1️⃣ RESET & CẤU HÌNH CHUNG
+============================================================ */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
+  font-family: "Poppins", sans-serif;
+  scroll-behavior: smooth;
 }
+
 body {
-  background: #f6f7fb;
-  color: #333;
+  background: linear-gradient(180deg, #f7f9fc 0%, #eef3ff 100%);
+  color: #1f2937;
   line-height: 1.5;
 }
 
-/* ====== HEADER ====== */
+/* ============================================================
+   2️⃣ HEADER & MENU
+============================================================ */
 .header {
-  background: #2563eb;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: linear-gradient(90deg, #2563eb, #1e40af);
   color: #fff;
-  padding: 14px 22px;
+  padding: 14px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(6px);
 }
+
 .logo {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
+
 .menu {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
 }
+
 .menu-btn {
-  background: #fff;
-  color: #2563eb;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-weight: 700;
-  text-decoration: none;
-  display: inline-block;
-}
-.menu-btn:hover {
-  background: #dce5ff;
-}
-
-/* ====== SECTIONS (điều hướng bằng :target) ====== */
-.section {
-  display: none;
-}
-#home.section {
-  display: block;
-} /* mặc định hiện trang chủ */
-.section:target {
-  display: block;
-}
-
-/* ====== CONTAINER & TIÊU ĐỀ ====== */
-.container {
-  max-width: 960px;
-  margin: 24px auto;
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-}
-.section-title {
-  color: #1e3a8a;
-  margin-bottom: 6px;
-  font-size: 22px;
-}
-.section-desc {
-  color: #555;
-  margin-bottom: 14px;
-}
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-.link-btn {
-  color: #2563eb;
-  text-decoration: none;
-}
-.link-btn:hover {
-  text-decoration: underline;
-}
-
-/* ====== LƯỚI THẺ ====== */
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 18px;
-}
-
-/* ====== THẺ MÔN HỌC ====== */
-.subject-card {
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 16px;
-  transition: 0.2s;
-}
-.subject-card:hover {
-  background: #eef4ff;
-  transform: translateY(-2px);
-}
-.subject-title {
-  color: #1e40af;
-  font-size: 18px;
-  margin-bottom: 6px;
-}
-.subject-info {
-  color: #555;
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-/* ====== THẺ ĐỀ THI ====== */
-.quiz-card {
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 16px;
-}
-.quiz-title {
-  color: #1e40af;
-  font-size: 18px;
-  margin-bottom: 6px;
-}
-.quiz-info {
-  color: #555;
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-/* ====== NÚT ====== */
-.primary-btn {
-  background: #2563eb;
+  background: rgba(255, 255, 255, 0.15);
   color: #fff;
   border: none;
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-weight: 500;
   text-decoration: none;
-  display: inline-block;
+  transition: all 0.25s ease;
 }
-.primary-btn:hover {
-  background: #1e40af;
+
+.menu-btn:hover {
+  background: #fff;
+  color: #2563eb;
+  transform: translateY(-2px);
 }
-.secondary-btn {
-  background: #eef2ff;
+
+.menu-user-email {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ============================================================
+   3️⃣ CONTAINER & SECTION TITLE
+============================================================ */
+.container {
+  max-width: 1100px;
+  margin: 32px auto;
+  background: #fff;
+  padding: 28px;
+  border-radius: 16px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.6s ease;
+}
+
+.section-title {
   color: #1e3a8a;
-  border: 1px solid #c7d2fe;
-  padding: 8px 12px;
-  border-radius: 8px;
-  text-decoration: none;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 6px;
 }
-.small-btn {
+
+.section-desc {
+  color: #4b5563;
+  margin-bottom: 18px;
+}
+
+/* ============================================================
+   4️⃣ BUTTONS
+============================================================ */
+.primary-btn {
+  display: inline-block;
+  background: linear-gradient(90deg, #2563eb, #1e3a8a);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  text-decoration: none;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+  transition: all 0.25s ease;
+}
+
+.primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.3);
+}
+
+.secondary-btn {
   background: #f3f4f6;
   color: #111827;
   border: 1px solid #e5e7eb;
-  padding: 6px 8px;
-  border-radius: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.25s ease;
 }
 
-/* ====== THANH THÔNG TIN ĐỀ ====== */
+.secondary-btn:hover {
+  background: #e5e7eb;
+}
+
+/* ============================================================
+   5️⃣ SUBJECT & QUIZ CARDS
+============================================================ */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.subject-card,
+.quiz-card {
+  background: linear-gradient(145deg, #ffffff, #f3f6ff);
+  border-radius: 16px;
+  padding: 22px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.subject-card:hover,
+.quiz-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.15);
+}
+
+.subject-title,
+.quiz-title {
+  color: #1e40af;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.subject-info,
+.quiz-info {
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+/* ============================================================
+   6️⃣ QUIZ UI
+============================================================ */
 .quiz-topbar {
   display: flex;
   gap: 10px;
   align-items: center;
-  margin: 12px 0 18px;
+  margin: 16px 0 20px;
   flex-wrap: wrap;
 }
+
 .quiz-chip {
   background: #eef2ff;
   color: #1e3a8a;
   border: 1px solid #c7d2fe;
-  padding: 6px 10px;
+  padding: 6px 12px;
   border-radius: 999px;
   font-size: 13px;
+  font-weight: 500;
 }
+
 .quiz-timer {
   flex: 1;
   height: 10px;
   background: #e5e7eb;
   border-radius: 999px;
   overflow: hidden;
-  min-width: 160px;
 }
+
 .quiz-timer-fill {
   height: 100%;
   background: #22c55e;
-  width: 100%;
-} /* đặt width % để giả lập thời gian */
+  width: 60%;
+  animation: timerFill 30s linear forwards;
+}
 
-/* ====== CÂU HỎI & ĐÁP ÁN ====== */
+@keyframes timerFill {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+/* ============================================================
+   7️⃣ QUESTIONS & HISTORY
+============================================================ */
 .question-card {
   background: #f9fafb;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
-  padding: 14px;
-  margin-bottom: 14px;
+  padding: 16px;
+  margin-bottom: 16px;
+  transition: 0.3s ease;
 }
-.question-number {
-  font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 4px;
+
+.question-card:hover {
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
 }
-.question-text {
-  color: #111827;
-  margin-bottom: 10px;
-}
-.answer-list {
-  list-style: none;
-  display: grid;
-  gap: 8px;
-}
+
 .answer-option {
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  margin-bottom: 6px;
+  transition: 0.25s;
+}
+
+.answer-option:hover {
+  background: #eef2ff;
+}
+
+/* Lịch sử làm bài */
+.history-item {
   background: #fff;
   border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 10px;
-}
-.answer-option:hover {
-  background: #f3f4f6;
-}
-.answer-option input {
-  margin-right: 8px;
-}
-
-.question-actions {
-  margin-top: 10px;
-  display: flex;
-  gap: 8px;
-}
-
-/* ====== NỘP BÀI ====== */
-.submit-area {
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-  margin-top: 16px;
-}
-
-/* ====== LỊCH SỬ ====== */
-.history-list {
-  display: grid;
-  gap: 12px;
-  margin-top: 8px;
-}
-.history-item {
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
   border-radius: 12px;
-  padding: 12px 14px;
+  padding: 12px 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: all 0.25s;
 }
+
+.history-item:hover {
+  background: #f9fafc;
+  transform: scale(1.01);
+}
+
 .history-title {
+  color: #1e40af;
   font-weight: 600;
-  color: #0f172a;
 }
+
 .history-time {
-  font-size: 13px;
   color: #6b7280;
+  font-size: 13px;
 }
+
 .history-score {
   font-weight: 700;
   color: #16a34a;
 }
 
-/* ====== OVERLAY LOGIN bằng :target ====== */
+/* ============================================================
+   8️⃣ OVERLAY LOGIN / REGISTER / REVIEW
+============================================================ */
 .overlay {
   position: fixed;
   inset: 0;
   display: none;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.35);
   padding: 20px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+  z-index: 2000;
 }
+
 .overlay:target {
   display: flex;
+  animation: fadeIn 0.3s ease;
 }
+
 .overlay-card {
   background: #fff;
   width: 100%;
-  max-width: 420px;
-  padding: 18px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-width: 450px;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  animation: popupZoom 0.35s ease;
+  position: relative;
+  z-index: 3000;
 }
-.overlay-title {
-  font-size: 18px;
-  margin-bottom: 6px;
-  color: #111827;
+
+.overlay-large {
+  max-width: 900px;
 }
-.overlay-desc {
-  font-size: 14px;
-  color: #6b7280;
-  margin-bottom: 12px;
-}
-.login-form {
-  display: grid;
-  gap: 10px;
-  margin-bottom: 10px;
-}
+
 .input-box {
   width: 100%;
   padding: 10px 12px;
   border: 1px solid #d1d5db;
-  border-radius: 10px;
-}
-.overlay-close {
-  display: inline-block;
-  margin-top: 6px;
-  color: #2563eb;
-  text-decoration: none;
-}
-/* ====== LỊCH SỬ (TRẠNG THÁI RỖNG) ====== */
-.history-empty {
-  background: #fff;
-  border: 1px dashed #cbd5e1;
-  color: #64748b;
-  padding: 14px;
-  border-radius: 12px;
-  text-align: center;
-}
-
-/* Nút xem lại */
-.review-btn {
-  background: #f3f4f6;
-  color: #111827;
-  border: 1px solid #e5e7eb;
-  padding: 6px 10px;
   border-radius: 8px;
-  text-decoration: none;
-  display: inline-block;
-}
-.review-btn:hover {
-  background: #e5e7eb;
-}
-
-/* ====== OVERLAY REVIEW ====== */
-.overlay-large {
-  max-width: 900px;
-}
-.overlay-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
   margin-bottom: 10px;
 }
-.overlay-sub {
-  color: #6b7280;
-  font-size: 14px;
-}
 
-.review-questions {
-  display: grid;
-  gap: 12px;
-  max-height: 70vh;
-  overflow: auto;
-  padding-right: 4px;
+/* Khi overlay mở, chỉ làm mờ phần nền phía sau */
+body:has(.overlay:target) main,
+body:has(.overlay:target) section:not(.overlay),
+body:has(.overlay:target) footer,
+body:has(.overlay:target) #landing {
+  filter: blur(4px);
+  pointer-events: none;
+  user-select: none;
 }
-.review-card {
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 12px;
-}
-.review-q-index {
-  font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 4px;
-}
-.review-q-text {
-  color: #111827;
-  margin-bottom: 8px;
-}
-
-.review-answers {
-  display: grid;
-  gap: 6px;
-  list-style: none;
-}
-.review-answer {
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  background: #fff;
-}
-
-/* Tô màu đáp án */
-.is-correct {
-  border-color: #86efac;
-  background: #f0fdf4;
-} /* xanh nhạt */
-.is-wrong {
-  border-color: #fecaca;
-  background: #fff1f2;
-} /* đỏ nhạt */
-.is-chosen {
-  outline: 2px solid #94a3b8;
-} /* đánh dấu đáp án đã chọn */
-
-/* Chip nhãn đúng/sai */
-.answer-badge {
-  display: inline-block;
-  font-size: 12px;
-  line-height: 1;
-  padding: 3px 6px;
-  border-radius: 999px;
-  margin-left: 6px;
-}
-.badge-true {
-  background: #dcfce7;
-  color: #166534;
-  border: 1px solid #86efac;
-}
-.badge-false {
-  background: #fee2e2;
-  color: #991b1b;
-  border: 1px solid #fecaca;
-}
-.badge-chosen {
-  background: #e2e8f0;
-  color: #0f172a;
-  border: 1px solid #cbd5e1;
-}
-/* Hiển thị user trên menu */
-.menu-user {
-  display: inline-flex;
+/* ============================================================
+   9️⃣ LANDING PAGE
+============================================================ */
+#landing {
+  position: fixed;
+  inset: 0;
+  display: flex;
   align-items: center;
-  gap: 8px;
-}
-.menu-user-email {
-  background: #eef2ff;
-  color: #1e3a8a;
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-size: 13px;
-}
-
-/* Thông báo nhỏ trong form */
-.form-msg {
-  margin-top: 6px;
-  font-size: 13px;
-  color: #991b1b;
-}
-.form-msg.ok {
-  color: #166534;
+  justify-content: center;
+  flex-direction: column;
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: white;
+  text-align: center;
+  padding: 20px;
+  animation: fadeIn 0.8s ease;
+  z-index: 1000;
 }
 
-/* ====== FOOTER ====== */
+.landing-content {
+  max-width: 600px;
+  padding: 20px;
+  border-radius: 16px;
+}
+
+.landing-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+  text-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+.landing-desc {
+  font-size: 1rem;
+  /* opacity: 0.9; */
+  margin-bottom: 20px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.landing-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.landing .primary-btn,
+.landing .secondary-btn {
+  padding: 12px 22px;
+  font-size: 1rem;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.landing .primary-btn {
+  background: #fff;
+  color: #1e40af;
+}
+
+.landing .primary-btn:hover {
+  background: #e0e7ff;
+}
+
+.landing .secondary-btn {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.landing .secondary-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ============================================================
+   🔟 FOOTER
+============================================================ */
 .footer {
   text-align: center;
-  margin: 24px 0;
-  color: #555;
+  color: #6b7280;
   font-size: 14px;
+  margin: 24px 0;
+}
+
+/* ============================================================
+   🔄 ANIMATIONS
+============================================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes popupZoom {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes timerFill {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
 }
