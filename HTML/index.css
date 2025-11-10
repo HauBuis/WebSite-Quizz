@@ -323,11 +323,13 @@ body {
   margin-bottom: 10px;
 }
 
-/* Khi overlay mở, chỉ làm mờ phần nền phía sau */
-body:has(.overlay:target) main,
-body:has(.overlay:target) section:not(.overlay),
-body:has(.overlay:target) footer,
-body:has(.overlay:target) #landing {
+/* Khi overlay mở, chỉ làm mờ phần nền phía sau
+   Sử dụng class trên body (body.overlay-open) để đảm bảo tương thích
+   và kiểm soát chính xác từ JavaScript. */
+body.overlay-open main,
+body.overlay-open section:not(.overlay),
+body.overlay-open footer,
+body.overlay-open #landing {
   filter: blur(4px);
   pointer-events: none;
   user-select: none;

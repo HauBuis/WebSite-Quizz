@@ -355,6 +355,8 @@ function afterLogin() {
   document
     .querySelectorAll(".overlay")
     .forEach((ov) => (ov.style.display = "none"));
+  // Remove any overlay-body class so background is not blurred after login
+  document.body.classList.remove("overlay-open");
   history.pushState("", document.title, window.location.pathname);
 }
 
@@ -362,6 +364,8 @@ function afterLogout() {
   updateHeaderAuthUI();
   controlAccessUI();
   location.hash = "#";
+  // Ensure overlay class is removed on logout
+  document.body.classList.remove("overlay-open");
 }
 // =============================================================
 // 💫 NÚT MỞ OVERLAY LOGIN / REGISTER Ở LANDING PAGE
@@ -380,6 +384,29 @@ document.addEventListener("DOMContentLoaded", () => {
       location.hash = "#register";
     });
 });
+// -------------------------------------------------------------
+// Overlay body-class toggle: keep a class on <body> when an overlay
+// is opened (via hash) so CSS can manage backdrop blur reliably.
+// -------------------------------------------------------------
+function updateOverlayBodyClass() {
+  try {
+    const hash = location.hash;
+    if (!hash) {
+      document.body.classList.remove("overlay-open");
+      return;
+    }
+    const target = document.querySelector(hash);
+    const isOverlay =
+      target && target.classList && target.classList.contains("overlay");
+    if (isOverlay) document.body.classList.add("overlay-open");
+    else document.body.classList.remove("overlay-open");
+  } catch (e) {
+    document.body.classList.remove("overlay-open");
+  }
+}
+
+window.addEventListener("hashchange", updateOverlayBodyClass);
+document.addEventListener("DOMContentLoaded", updateOverlayBodyClass);
 // =============================================================
 // 🚀 KHỞI TẠO
 // =============================================================
