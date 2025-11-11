@@ -65,12 +65,12 @@ async function seedUsersFromJson() {
         }));
         if (docs.length > 0) {
           await User.insertMany(docs);
-          console.log("✅ Seeded users into MongoDB from JSON/users.json");
+          console.log("✅ Đã chèn users vào MongoDB từ JSON/users.json");
         }
       }
     }
   } catch (err) {
-    console.error("❌ Error seeding users:", err);
+    console.error("❌ Lỗi khi seed users:", err);
   }
 }
 // Đảm bảo quá trình seed chạy sau khi mongoose đã kết nối. Nếu chưa kết nối, đợi sự kiện 'open'
@@ -91,12 +91,12 @@ async function seedQuizzesFromJson() {
         const arr = JSON.parse(raw);
         if (Array.isArray(arr) && arr.length > 0) {
           await Quiz.insertMany(arr);
-          console.log("✅ Seeded quizzes into MongoDB from JSON/quizzes.json");
+          console.log("✅ Đã chèn quizzes vào MongoDB từ JSON/quizzes.json");
         }
       }
     }
   } catch (err) {
-    console.error("❌ Error seeding quizzes:", err);
+    console.error("❌ Lỗi khi seed quizzes:", err);
   }
 }
 
@@ -111,12 +111,12 @@ async function seedQuestionsFromJson() {
         const arr = JSON.parse(raw);
         if (Array.isArray(arr) && arr.length > 0) {
           await Question.insertMany(arr);
-          console.log("✅ Seeded questions into MongoDB from JSON/questions.json");
+          console.log("✅ Đã chèn questions vào MongoDB từ JSON/questions.json");
         }
       }
     }
   } catch (err) {
-    console.error("❌ Error seeding questions:", err);
+    console.error("❌ Lỗi khi seed questions:", err);
   }
 }
 
@@ -146,11 +146,11 @@ async function generateMissingQuestionsForQuizzes() {
       }
       if (docs.length > 0) {
         await Question.insertMany(docs);
-        console.log(`✅ Generated ${docs.length} questions for quiz '${quiz.title}'`);
+        console.log(`✅ Đã sinh ${docs.length} câu hỏi cho đề '${quiz.title}'`);
       }
     }
   } catch (err) {
-    console.error("❌ Error generating missing questions:", err);
+    console.error("❌ Lỗi khi sinh các câu hỏi thiếu:", err);
   }
 }
 
@@ -265,7 +265,7 @@ app.get("/api/questions", async (req, res) => {
 });
 
 // Lưu lịch sử bài làm
-// legacy single route
+// route cũ (giữ tương thích)
 app.post("/api/attempt", async (req, res) => {
   const payload = req.body || {};
   const userEmail = payload.userEmail || payload.email || payload.user || "";
@@ -274,7 +274,7 @@ app.post("/api/attempt", async (req, res) => {
   res.json(att);
 });
 
-// accept plural /api/attempts to match client code
+// chấp nhận đường dẫn số nhiều /api/attempts để tương thích với client
 app.post("/api/attempts", async (req, res) => {
   const payload = req.body || {};
   const userEmail = payload.userEmail || payload.email || payload.user || "";
@@ -289,12 +289,12 @@ app.get("/api/attempts/:email", async (req, res) => {
   res.json(list);
 });
 
-// Admin: reseed DB from JSON files (safe: requires secret in body)
+// Admin: đồng bộ lại DB từ các file JSON (an toàn: yêu cầu secret trong body)
 app.post("/api/admin/reseed", async (req, res) => {
   try {
     const SECRET = process.env.RESEED_SECRET || "please-reseed";
     const { secret, dropHistory } = req.body || {};
-    if (secret !== SECRET) return res.status(403).json({ message: "Forbidden" });
+  if (secret !== SECRET) return res.status(403).json({ message: "Không được phép" });
 
     // Remove quizzes and questions so seeding will re-insert them
     await Quiz.deleteMany({});
@@ -313,8 +313,8 @@ app.post("/api/admin/reseed", async (req, res) => {
     const qsc = await Question.countDocuments();
   return res.json({ message: "Đã đồng bộ lại dữ liệu", quizzes: qc, questions: qsc });
   } catch (err) {
-    console.error('Error in reseed endpoint:', err);
-    return res.status(500).json({ message: 'Reseed failed', error: err.message });
+    console.error('❌ Lỗi tại endpoint reseed:', err);
+    return res.status(500).json({ message: 'Đồng bộ thất bại', error: err.message });
   }
 });
 

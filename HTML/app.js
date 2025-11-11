@@ -534,7 +534,7 @@ async function submitCurrentQuiz(e) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(attempt),
     });
-    if (!res.ok) throw new Error("Server returned error");
+  if (!res.ok) throw new Error("Lỗi từ server");
     location.hash = "#history";
     await renderHistory();
     alert(`Nộp bài thành công. Điểm của bạn: ${scaledScore}/10`);
@@ -565,6 +565,10 @@ function openReview(id, clickedEl) {
   }
 
   console.debug('openReview gọi với id=', id);
+  console.debug('MERGED_ATTEMPTS length=', Array.isArray(MERGED_ATTEMPTS) ? MERGED_ATTEMPTS.length : 0);
+  if (Array.isArray(MERGED_ATTEMPTS) && MERGED_ATTEMPTS.length > 0) {
+    console.debug('Ví dụ MERGED_ATTEMPTS:', MERGED_ATTEMPTS.slice(0,3).map(a=>({ _id: a._id, _localId: a._localId, quizTitle: a.quizTitle, timeText: a.timeText })));
+  }
   const attempt = MERGED_ATTEMPTS.find(
     (a) => a._id === id || a.createdAt === id || a._localId === id
   );
@@ -576,20 +580,25 @@ function openReview(id, clickedEl) {
       const item = clickedEl.closest('.history-item');
       const title = item.querySelector('.history-title')?.textContent.trim();
       const time = item.querySelector('.history-time')?.textContent.trim();
-      console.debug('openReview fallback search by title/time', title, time);
-      const fallback = MERGED_ATTEMPTS.find((a) => (a.quizTitle || '').trim() === (title || '').trim() && (a.timeText || '').trim() === (time || '').trim());
+  console.debug('openReview cố tìm bằng tiêu đề/thời gian', title, time);
+      // clean title (remove " (offline)" suffix if present)
+      const cleanedTitle = (title || '').replace(/\s*\(offline\)\s*$/, '').trim();
+      let fallback = MERGED_ATTEMPTS.find((a) => (a.quizTitle || '').trim() === cleanedTitle && (a.timeText || '').trim() === (time || '').trim());
+      // relaxed fallback: match by contains or by time only
+      if (!fallback) {
+        fallback = MERGED_ATTEMPTS.find((a) => (a.quizTitle || '').toLowerCase().includes((cleanedTitle || '').toLowerCase()) || (a.timeText || '').trim() === (time || '').trim());
+      }
       if (fallback) {
-        console.debug('openReview fallback found', fallback);
+        console.debug('openReview fallback đã tìm thấy', fallback);
         // use fallback as attempt
-        arguments[1] = clickedEl;
         return openReview(fallback._localId || fallback._id || fallback.createdAt, clickedEl);
       }
     } catch (e) {
-      console.warn('openReview fallback failed', e);
+      console.warn('openReview fallback thất bại', e);
     }
   }
-
   if (!attempt) {
+    console.warn('openReview: không tìm thấy attempt cho id=', id, 'MERGED_ATTEMPTS length=', MERGED_ATTEMPTS.length);
     alert("Không tìm thấy dữ liệu để xem lại.");
     return;
   }
@@ -609,24 +618,53 @@ function openReview(id, clickedEl) {
     attempt.questions.forEach((q, i) => {
       const card = document.createElement("div");
       card.className = "question-card";
-      const optionsHtml = (q.options || [])
-          .map((opt, idx) => {
-          const isCorrect = !!opt.isCorrect;
-          const selectedIdx =
-            Array.isArray(attempt.answers) && attempt.answers[i]
-              ? attempt.answers[i].selected
-              : null;
-          const isSelected = selectedIdx === idx;
+      const optsArr = Array.isArray(q.options) ? q.options : [];
+      const selectedIdx = Array.isArray(attempt.answers) && attempt.answers[i] ? attempt.answers[i].selected : null;
+      // If attempt.answers also stored selectedText, prefer that for fuzzy matching
+      const selectedText = Array.isArray(attempt.answers) && attempt.answers[i] ? attempt.answers[i].selectedText : null;
+
+      const answersEntry = Array.isArray(attempt.answers) && attempt.answers[i] ? attempt.answers[i] : null;
+      console.debug(`review: q=${i}, answersEntry=`, answersEntry, `optsArr=`, optsArr);
+      const optionsHtml = optsArr
+        .map((opt, idx) => {
+          // opt may be a string or an object { text, isCorrect }
+          const optText = typeof opt === 'string' ? opt : (opt && (opt.text || opt.value || opt.label)) || '';
+          let isCorrect = false;
+          if (opt && typeof opt === 'object' && ('isCorrect' in opt)) isCorrect = !!opt.isCorrect;
+          // fallback: if question has a correctAnswer field, compare texts
+          else if (q.correctAnswer) isCorrect = String(q.correctAnswer).trim() === String(optText).trim();
+          // fallback2: if attempt.answers stored correct index, use it
+          else if (answersEntry && typeof answersEntry.correct === 'number') isCorrect = (answersEntry.correct === idx);
+
+          // determine selected: either by index, or by matching text (resilient to data-shape changes)
+          let isSelected = false;
+          if (selectedIdx !== null && selectedIdx !== undefined && !isNaN(selectedIdx)) {
+            isSelected = Number(selectedIdx) === idx;
+          }
+          if (!isSelected && selectedText) {
+            isSelected = String(selectedText).trim() === String(optText).trim();
+          }
+
+          // Extra fallback: some attempts may store selectedAnswerText under different key names
+          if (!isSelected && answersEntry) {
+            const alt = answersEntry.selectedAnswer || answersEntry.selected_text || answersEntry.choice || null;
+            if (alt) isSelected = String(alt).trim() === String(optText).trim();
+          }
+
+          console.debug(`review q=${i} opt=${idx} text=`, optText, `isCorrect=`, isCorrect, `isSelected=`, isSelected);
+
           const classes = [];
           if (isCorrect) classes.push("correct");
           if (isSelected) classes.push("selected");
-          return `<li class="answer-option ${classes.join(" ")}">${opt.text}${isCorrect ? " (Đúng)" : ""}</li>`;
+          const selectedLabel = isSelected ? ' (Bạn chọn)' : '';
+          const correctLabel = isCorrect ? ' (Đáp án đúng)' : '';
+          return `<li class="answer-option ${classes.join(" ")}">${escapeHtml(optText)}${selectedLabel}${correctLabel}</li>`;
         })
         .join("");
 
       card.innerHTML = `
         <div class="question-number">Câu ${i + 1}</div>
-        <div class="question-text">${q.text}</div>
+        <div class="question-text">${escapeHtml(q.text || '')}</div>
         <ul class="answer-list">${optionsHtml}</ul>
       `;
       qWrap.appendChild(card);
@@ -659,22 +697,58 @@ function openReview(id, clickedEl) {
   }
 
   location.hash = "#review";
+  // Ensure overlay is visible even if hash didn't change (force update)
+    try {
+    updateOverlayBodyClass();
+    const reviewSection = document.getElementById('review');
+    if (reviewSection) reviewSection.style.display = 'flex';
+    document.body.classList.add('overlay-open');
+  } catch (e) {
+    console.warn('openReview: không thể bật overlay', e);
+  }
 }
 function updateOverlayBodyClass() {
   try {
     const hash = location.hash;
+    // Hiện / ẩn tất cả các overlay dựa trên hash hiện tại.
+    // Nếu hash trỏ tới một overlay (ví dụ '#review'), hiển thị overlay đó và thêm class body;
+    // ngược lại, ẩn tất cả overlay và bỏ class 'overlay-open'.
+    const overlays = document.querySelectorAll('.overlay');
+    overlays.forEach(ov => {
+      try {
+        const idHash = ov.id ? ('#' + ov.id) : null;
+        if (idHash && hash === idHash) {
+          ov.style.display = 'flex';
+        } else {
+          ov.style.display = 'none';
+        }
+      } catch (e) {
+        ov.style.display = 'none';
+      }
+    });
+
     if (!hash) {
       document.body.classList.remove("overlay-open");
       return;
     }
     const target = document.querySelector(hash);
-    const isOverlay =
-      target && target.classList && target.classList.contains("overlay");
+    const isOverlay = target && target.classList && target.classList.contains("overlay");
     if (isOverlay) document.body.classList.add("overlay-open");
     else document.body.classList.remove("overlay-open");
   } catch (e) {
     document.body.classList.remove("overlay-open");
+    document.querySelectorAll('.overlay').forEach(ov => ov.style.display = 'none');
   }
+}
+
+// tiny helper to escape HTML when injecting innerHTML
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
 window.addEventListener("hashchange", updateOverlayBodyClass);

@@ -247,6 +247,29 @@ body {
   background: #eef2ff;
 }
 
+/* Remove default list bullets for answer lists */
+.answer-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 8px 0 0 0;
+}
+
+/* Visual styles for review: selected vs correct */
+.answer-option.correct {
+  border-color: #16a34a;
+  background: #ecfdf5;
+}
+.answer-option.selected {
+  border-color: #2563eb;
+  background: #eef2ff;
+}
+.answer-option.selected.correct {
+  /* selected and correct: make both states visible (green bg + blue outline) */
+  border-color: #2563eb;
+  background: #bbf7d0; /* slightly stronger green to indicate correct+selected */
+  box-shadow: 0 0 0 3px rgba(34,197,94,0.06);
+}
+
 /* Lịch sử làm bài */
 .history-item {
   background: #fff;
@@ -313,6 +336,20 @@ body {
 
 .overlay-large {
   max-width: 900px;
+}
+
+/* Make overlay card scrollable and centered for large content */
+.overlay-card {
+  max-height: calc(90vh - 40px);
+  overflow: auto;
+}
+
+.review-questions {
+  margin-top: 12px;
+  display: block;
+  max-height: calc(70vh - 120px);
+  overflow: auto;
+  padding-right: 8px;
 }
 
 .input-box {

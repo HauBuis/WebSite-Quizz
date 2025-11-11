@@ -30,7 +30,7 @@ function readJson(filePath) {
       throw innerErr;
     }
   } catch (err) {
-    console.error('Failed to read or parse', filePath, err.message);
+    console.error('Không thể đọc hoặc phân tích', filePath, err.message);
     process.exit(2);
   }
 }
@@ -41,11 +41,11 @@ function writeJson(filePath, data) {
 
 function main() {
   if (!fs.existsSync(questionsFile)) {
-    console.error('Base questions file not found:', questionsFile);
+    console.error('Không tìm thấy file câu hỏi gốc:', questionsFile);
     process.exit(3);
   }
   if (!fs.existsSync(generatedFile)) {
-    console.error('Generated questions file not found:', generatedFile);
+    console.error('Không tìm thấy file câu hỏi sinh ra:', generatedFile);
     process.exit(4);
   }
 
@@ -53,7 +53,7 @@ function main() {
   const gen = readJson(generatedFile);
 
   if (!Array.isArray(base) || !Array.isArray(gen)) {
-    console.error('Expected both files to contain JSON arrays. Aborting.');
+    console.error('Cần cả hai file chứa mảng JSON. Huỷ bỏ.');
     process.exit(5);
   }
 
@@ -105,12 +105,12 @@ function main() {
 
   writeJson(questionsFile, base);
 
-  console.log('Merge complete. Summary:');
-  console.log('  originalCount:', map.size - added + (added ? 0 : 0));
-  console.log('  generatedProcessed:', processed);
-  console.log('  added:', added);
-  console.log('  enrichedExisting:', enriched);
-  console.log('  finalTotal:', base.length);
+  console.log('Hoàn tất merge. Tóm tắt:');
+  console.log('  originalCount (số ban đầu):', map.size - added + (added ? 0 : 0));
+  console.log('  generatedProcessed (đã xử lý từ file sinh):', processed);
+  console.log('  added (đã thêm):', added);
+  console.log('  enrichedExisting (đã bổ sung mục tồn tại):', enriched);
+  console.log('  finalTotal (tổng cuối):', base.length);
 }
 
 main();
