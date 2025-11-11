@@ -131,11 +131,11 @@ async function renderHistory() {
     if (res.ok) {
       list = await res.json();
     } else {
-      console.warn("Failed to load attempts from server, status:", res.status);
+      console.warn("Không tải được lịch sử từ server, mã trạng thái:", res.status);
       list = [];
     }
   } catch (err) {
-    console.warn("Error fetching attempts from server:", err.message);
+    console.warn("Lỗi khi gọi lịch sử từ server:", err.message);
     list = [];
   }
   const offlineAll = JSON.parse(
@@ -153,17 +153,22 @@ async function renderHistory() {
     return;
   }
 
-  MERGED_ATTEMPTS = merged.slice();
+  // Chuẩn hoá các attempt đã gộp và đảm bảo mỗi mục có một _localId ổn định để xem lại
+  MERGED_ATTEMPTS = merged.map((att) => {
+    const copy = Object.assign({}, att);
+    copy._localId = copy._id || copy.createdAt || Math.random().toString(36).slice(2);
+    return copy;
+  });
 
   empty.style.display = "none";
-  merged
+  // Dùng MERGED_ATTEMPTS để render (đã gán _localId) để data-id trên DOM khớp khi tìm kiếm
+  MERGED_ATTEMPTS
     .slice()
     .reverse()
     .forEach((att) => {
       const item = document.createElement("article");
       item.className = "history-item";
-      const itemId =
-        att._id || att.createdAt || Math.random().toString(36).slice(2);
+      const itemId = att._localId;
       const offlineFlag = att._id ? "" : " (offline)";
       item.innerHTML = `
       <div>
@@ -174,7 +179,6 @@ async function renderHistory() {
         <div class="history-score">${att.score}/${att.total}</div>
         <a href="#review" class="review-btn" data-id="${itemId}">Xem lại</a>
       </div>`;
-      att._localId = itemId;
       wrap.appendChild(item);
     });
 
@@ -182,7 +186,7 @@ async function renderHistory() {
     b.addEventListener("click", (e) => {
       e.preventDefault();
       const id = e.currentTarget.dataset.id;
-      openReview(id);
+      openReview(id, e.currentTarget);
     })
   );
 }
@@ -195,11 +199,20 @@ let currentQuizStartTime = null;
 const ATTEMPTS_OFFLINE_KEY = "quiz_attempts_offline";
 let MERGED_ATTEMPTS = [];
 
+function shuffleArray(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 async function loadDataFiles() {
+  // Tải quizzes và questions từ API (server sẽ seed DB từ JSON nếu rỗng).
   const [qz, qs] = await Promise.all([
-    fetch(`${API_BASE}/quizzes`).then((r) => r.json()),
-    fetch("../JSON/questions.json")
-      .then((r) => r.json())
+    fetch(`${API_BASE}/quizzes`).then((r) => (r.ok ? r.json() : [])),
+    fetch(`${API_BASE}/questions`)
+      .then((r) => (r.ok ? r.json() : []))
       .catch(() => []),
   ]);
   ALL_QUIZZES = qz;
@@ -245,13 +258,17 @@ function renderQuizzes(subjectTitle) {
   }
 
   subjectQuizzes.forEach((quiz) => {
-    const card = document.createElement("article");
+  const card = document.createElement("article");
     card.className = "quiz-card";
+  // tính chỉ số theo môn để hiển thị số thứ tự (reset cho mỗi môn)
+    const idx = subjectQuizzes.indexOf(quiz);
+    const displayIndex = String(idx + 1).padStart(2, "0");
+  const displayTitle = `Đề ${displayIndex} – ${quiz.subject}`;
+  // lưu quiz.title thực tế vào dataset để handler click có thể tìm đúng quiz
+    card.dataset.quizTitle = quiz.title;
     card.innerHTML = `
-      <div class="quiz-title">${quiz.title}</div>
-      <div class="quiz-info">${quiz.totalMarks} câu • ${
-      quiz.duration || 30
-    } phút</div>
+      <div class="quiz-title">${displayTitle}</div>
+      <div class="quiz-info">${quiz.totalMarks} câu - ${quiz.duration || 30} phút</div>
       <button class="primary-btn btn-start-quiz">Bắt đầu thi</button>
     `;
     grid.appendChild(card);
@@ -261,14 +278,16 @@ function renderQuizzes(subjectTitle) {
 }
 
 function findQuizByTitle(title) {
-  return ALL_QUIZZES.find((q) => q.title.trim() === title.trim());
+  const normalize = (s) => (s || '').toString().trim().replace(/\s+/g,' ').normalize();
+  return ALL_QUIZZES.find((q) => normalize(q.title) === normalize(title));
 }
 
 function setupStartButtons() {
   document.querySelectorAll(".btn-start-quiz").forEach((btn) =>
     btn.addEventListener("click", (e) => {
       const card = e.currentTarget.closest(".quiz-card");
-      const title = card.querySelector(".quiz-title")?.textContent.trim();
+  // dùng dataset.quizTitle (title gốc) để tìm object quiz
+      const title = card.dataset.quizTitle || card.querySelector(".quiz-title")?.textContent.trim();
       const auth = getAuth();
       if (!auth) {
         alert("Hãy đăng nhập để làm bài.");
@@ -294,11 +313,36 @@ function setupStartButtons() {
 function renderQuiz(quiz) {
   const quizSection = document.getElementById("quiz");
   const titleEl = quizSection.querySelector(".section-title");
-  titleEl.textContent = quiz.title;
+  // Hiển thị chỉ tên môn (loại bỏ tiền tố số trong quiz.title)
+  titleEl.textContent = quiz.subject || quiz.title;
 
   quizSection.querySelectorAll(".question-card").forEach((e) => e.remove());
-  let pool = ALL_QUESTIONS.filter((q) => q.subject === quiz.subject);
-  if (pool.length === 0) pool = ALL_QUESTIONS;
+  // Ưu tiên câu hỏi đã gán cho quiz này (quizTitle). Nếu không đủ,
+  // dùng kho câu hỏi theo môn làm dự phòng, đồng thời tránh trùng lặp.
+  const normalize = (s) => (s || '').toString().trim().replace(/\s+/g,' ').normalize();
+  const assigned = ALL_QUESTIONS.filter(
+    (q) => q.quizTitle && normalize(q.quizTitle) === normalize(quiz.title || "")
+  );
+  let pool = [];
+  if (assigned.length >= (quiz.totalMarks || 10)) {
+    pool = assigned;
+  } else {
+  // bắt đầu với các câu đã gán (có thể rỗng), sau đó thêm câu theo môn, loại trừ những câu đã thêm
+    pool = assigned.slice();
+    const subjectPool = ALL_QUESTIONS.filter(
+      (q) => normalize(q.subject) === normalize(quiz.subject) && normalize(q.quizTitle) !== normalize(quiz.title)
+    );
+  // Tránh trùng lặp dựa trên questionText
+    const seen = new Set(pool.map((p) => p.questionText));
+    for (const q of subjectPool) {
+      if (seen.size >= (quiz.totalMarks || 10)) break;
+      if (!seen.has(q.questionText)) {
+        pool.push(q);
+        seen.add(q.questionText);
+      }
+    }
+    if (pool.length === 0) pool = ALL_QUESTIONS.slice(0, quiz.totalMarks || 10);
+  }
   const selected = pool.slice(0, quiz.totalMarks || 10);
 
   const topbar = quizSection.querySelector(".quiz-topbar");
@@ -317,13 +361,22 @@ function renderQuiz(quiz) {
     }
   }
 
-  currentRenderedQuestions = selected.map((q) => ({
-    text: q.questionText,
-    options: q.options.map((t) => ({
-      text: t,
-      isCorrect: t === q.correctAnswer,
-    })),
-  }));
+  // Tạo danh sách câu hỏi hiển thị với options đã xáo (giữ flag isCorrect)
+  // Ngoài ra loại bỏ các tiền tố vô tình (quiz title hoặc "Câu N:") trong questionText
+  function escapeRegExp(s) {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+  const quizTitleEsc = escapeRegExp((quiz.title || "").trim());
+  const quizPrefixRegex = quizTitleEsc ? new RegExp('^\\s*' + quizTitleEsc + '\\s*[-–—:]?\\s*', 'i') : null;
+  currentRenderedQuestions = selected.map((q) => {
+    let text = (q.questionText || '').toString();
+    if (quizPrefixRegex) text = text.replace(quizPrefixRegex, '');
+    // remove leading 'Câu 1:', 'Câu 1 -', etc.
+    text = text.replace(/^\s*Câu\s*\d+\s*[:.-]?\s*/i, '');
+    const opts = (q.options || []).map((t) => ({ text: t, isCorrect: t === q.correctAnswer }));
+    shuffleArray(opts);
+    return { text, options: opts };
+  });
 
   const submitArea = quizSection.querySelector(".submit-area");
   if (selected.length === 0) {
@@ -430,10 +483,7 @@ async function submitCurrentQuiz(e) {
 
   let score = 0;
   const answers = [];
-  console.debug(
-    "Submitting quiz, currentRenderedQuestions:",
-    currentRenderedQuestions
-  );
+  console.debug("Đang nộp bài, currentRenderedQuestions:", currentRenderedQuestions);
   for (let i = 0; i < currentRenderedQuestions.length; i++) {
     const sel = document.querySelector(`input[name="q${i}"]:checked`);
     const selectedIndex = sel ? parseInt(sel.value, 10) : null;
@@ -461,12 +511,16 @@ async function submitCurrentQuiz(e) {
     ? Math.floor((Date.now() - currentQuizStartTime) / 1000)
     : 0;
   const timeText = formatTimeText(timeSpentSec);
-
+  // Scale score to maximum 10 points for each quiz
+  const scaledScore = total > 0 ? Math.round((score / total) * 10) : 0;
   const attempt = {
     email: auth.email,
     quizTitle: currentQuiz?.title || "(Không tiêu đề)",
-    score,
-    total,
+    // store scaled score so maximum possible is 10
+    score: scaledScore,
+    total: 10,
+    rawScore: score,
+    rawTotal: total,
     timeSpent: timeSpentSec,
     timeText,
     answers,
@@ -483,7 +537,7 @@ async function submitCurrentQuiz(e) {
     if (!res.ok) throw new Error("Server returned error");
     location.hash = "#history";
     await renderHistory();
-    alert(`Nộp bài thành công. Điểm của bạn: ${score}/${total}`);
+    alert(`Nộp bài thành công. Điểm của bạn: ${scaledScore}/10`);
   } catch (err) {
     // Save offline
     const offlineAll = JSON.parse(
@@ -494,7 +548,7 @@ async function submitCurrentQuiz(e) {
     location.hash = "#history";
     await renderHistory();
     alert(
-      `Không thể lưu trên server, đã lưu tạm. Điểm của bạn: ${score}/${total}`
+      `Không thể lưu trên server, đã lưu tạm. Điểm của bạn: ${scaledScore}/10`
     );
   }
 }
@@ -504,15 +558,36 @@ function setupSubmitButton() {
   if (submitBtn) submitBtn.addEventListener("click", submitCurrentQuiz);
 }
 
-function openReview(id) {
+function openReview(id, clickedEl) {
   if (!id) {
     alert("Không tìm thấy kết quả để xem lại.");
     return;
   }
 
+  console.debug('openReview gọi với id=', id);
   const attempt = MERGED_ATTEMPTS.find(
     (a) => a._id === id || a.createdAt === id || a._localId === id
   );
+  console.debug('openReview tìm được attempt=', attempt);
+
+  // Fallback: if not found by id, try to locate using DOM context (quiz title/time)
+  if (!attempt && clickedEl) {
+    try {
+      const item = clickedEl.closest('.history-item');
+      const title = item.querySelector('.history-title')?.textContent.trim();
+      const time = item.querySelector('.history-time')?.textContent.trim();
+      console.debug('openReview fallback search by title/time', title, time);
+      const fallback = MERGED_ATTEMPTS.find((a) => (a.quizTitle || '').trim() === (title || '').trim() && (a.timeText || '').trim() === (time || '').trim());
+      if (fallback) {
+        console.debug('openReview fallback found', fallback);
+        // use fallback as attempt
+        arguments[1] = clickedEl;
+        return openReview(fallback._localId || fallback._id || fallback.createdAt, clickedEl);
+      }
+    } catch (e) {
+      console.warn('openReview fallback failed', e);
+    }
+  }
 
   if (!attempt) {
     alert("Không tìm thấy dữ liệu để xem lại.");
@@ -524,19 +599,18 @@ function openReview(id) {
   const qWrap = document.getElementById("review-questions");
   if (titleEl) titleEl.textContent = attempt.quizTitle || "Xem lại đề";
   if (subEl)
-    subEl.textContent = `Điểm: ${attempt.score}/${attempt.total} • Thời gian: ${
+    subEl.textContent = `Điểm: ${attempt.score}/${attempt.total} - Thời gian: ${
       attempt.timeText || formatTimeText(attempt.timeSpent || 0)
     }`;
 
   if (!qWrap) return;
   qWrap.innerHTML = "";
-
   if (Array.isArray(attempt.questions) && attempt.questions.length > 0) {
     attempt.questions.forEach((q, i) => {
       const card = document.createElement("div");
       card.className = "question-card";
       const optionsHtml = (q.options || [])
-        .map((opt, idx) => {
+          .map((opt, idx) => {
           const isCorrect = !!opt.isCorrect;
           const selectedIdx =
             Array.isArray(attempt.answers) && attempt.answers[i]
@@ -546,9 +620,7 @@ function openReview(id) {
           const classes = [];
           if (isCorrect) classes.push("correct");
           if (isSelected) classes.push("selected");
-          return `<li class="answer-option ${classes.join(" ")}">${
-            isSelected ? "✓ " : ""
-          }${opt.text}${isCorrect ? " (Đúng)" : ""}</li>`;
+          return `<li class="answer-option ${classes.join(" ")}">${opt.text}${isCorrect ? " (Đúng)" : ""}</li>`;
         })
         .join("");
 
@@ -579,8 +651,11 @@ function openReview(id) {
       qWrap.appendChild(card);
     });
   } else {
+    // No detailed question objects available — show message and also update subtitle
     qWrap.innerHTML =
       "<div style='padding:12px;color:#555;'>Không có dữ liệu chi tiết để xem lại.</div>";
+    const sub = document.getElementById('review-sub');
+    if (sub) sub.textContent = 'Không có dữ liệu chi tiết để xem lại.';
   }
 
   location.hash = "#review";
