@@ -1126,6 +1126,10 @@ function navigateToHash() {
       if (home) home.style.display = "block";
     }
   }
+  if (h === "#admin") {
+    if (adminSec) adminSec.style.display = "block";
+    loadAdminSubjects(); // ⭐ Load môn học mỗi khi vào admin
+  }
   // === HIỆN / ẨN NÚT CHUYỂN GIAO DIỆN ===
   const btnGoAdmin = document.getElementById("btn-go-admin");
   const btnGoUser = document.getElementById("btn-go-user");
@@ -1281,7 +1285,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupSubmitButton();
   renderHistory();
   controlAccessUI();
-
+  setupAdminEvents();
   // ⭐ Chỉ router sau khi mọi thứ đã tải xong
   navigateToHash();
   updateOverlayBodyClass();
@@ -1302,3 +1306,122 @@ document.addEventListener("DOMContentLoaded", async () => {
     startBackgroundMusic();
   }
 });
+async function loadAdminSubjects() {
+  const ul = document.getElementById("admin-subject-list");
+  if (!ul) return;
+
+  ul.innerHTML = "<li>Đang tải...</li>";
+
+  try {
+    const res = await fetch(`${API_BASE}/subjects`);
+    let list = [];
+    if (res.ok) list = await res.json();
+
+    ul.innerHTML = "";
+
+    list.forEach((subj) => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <span>${subj.name}</span>
+        <button class="secondary-btn btn-delete-subject" data-id="${subj._id}">
+          Xóa
+        </button>
+      `;
+      ul.appendChild(li);
+    });
+
+    // Xóa môn học
+    ul.querySelectorAll(".btn-delete-subject").forEach((btn) =>
+      btn.addEventListener("click", async () => {
+        if (!confirm("Bạn có chắc muốn xóa môn này?")) return;
+
+        const id = btn.dataset.id;
+
+        await fetch(`${API_BASE}/subjects/${id}`, { method: "DELETE" });
+
+        loadAdminSubjects(); // reload
+      })
+    );
+  } catch (err) {
+    ul.innerHTML = "<li>Lỗi khi tải dữ liệu</li>";
+  }
+}
+function setupAdminEvents() {
+  const btnAddSubject = document.getElementById("btn-add-subject");
+  const btnSaveSubject = document.getElementById("btn-save-subject");
+
+  // 1. Mở popup thêm môn học
+  if (btnAddSubject) {
+    btnAddSubject.addEventListener("click", () => {
+      location.hash = "#add-subject";
+    });
+  }
+
+  // 2. Lưu môn học mới
+  btnSaveSubject.addEventListener("click", async () => {
+    const nameInput = document.getElementById("new-subject-name");
+    const name = nameInput.value.trim();
+
+    // 🔹 Lấy danh sách môn hiện có để kiểm tra trùng tên
+    let existingSubjects = [];
+    try {
+      const res = await fetch(`${API_BASE}/subjects`);
+      if (res.ok) existingSubjects = await res.json();
+    } catch {}
+
+    // 🔹 Kiểm tra hợp lệ
+    const error = validateSubjectName(name, existingSubjects);
+    if (error) {
+      alert(error);
+      return;
+    }
+
+    // 🔹 Gọi API tạo môn học
+    try {
+      const res = await fetch(`${API_BASE}/subjects`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      });
+
+      if (!res.ok) throw new Error("Không thể tạo môn học");
+
+      alert("Đã thêm môn học thành công!");
+
+      nameInput.value = "";
+      location.hash = "#admin";
+      loadAdminSubjects();
+    } catch (e) {
+      alert("Lỗi: " + e.message);
+    }
+  });
+}
+
+function validateSubjectName(name, existingSubjects) {
+  if (!name || name.trim().length === 0) {
+    return "Tên môn học không được để trống.";
+  }
+
+  if (name.trim().length < 3) {
+    return "Tên môn học phải dài ít nhất 3 ký tự.";
+  }
+
+  // Không chứa ký tự đặc biệt
+  const regex = /^[a-zA-Z0-9À-ỹ\s]+$/;
+  if (!regex.test(name)) {
+    return "Tên môn học không được chứa ký tự đặc biệt.";
+  }
+
+  // Không chỉ chứa số
+  if (/^\d+$/.test(name.trim())) {
+    return "Tên môn học không hợp lệ (không được chỉ có số).";
+  }
+
+  // Kiểm tra trùng tên (không phân biệt hoa thường)
+  const lower = name.trim().toLowerCase();
+  if (existingSubjects.some((s) => s.name.trim().toLowerCase() === lower)) {
+    return "Tên môn học đã tồn tại.";
+  }
+
+  return null; // hợp lệ
+}

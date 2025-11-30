@@ -54,6 +54,9 @@ const Attempt = mongoose.model("history", {
   timeText: String,
   questions: Array,
 });
+const Subject = mongoose.model("subjects", {
+  name: String,
+});
 app.post("/api/update-avatar", async (req, res) => {
   const { email, avatar } = req.body;
   try {
@@ -357,6 +360,57 @@ app.post("/api/admin/reseed", async (req, res) => {
     return res
       .status(500)
       .json({ message: "Đồng bộ thất bại", error: err.message });
+  }
+});
+app.get("/api/subjects", async (req, res) => {
+  try {
+    const list = await Subject.find().sort({ name: 1 });
+    res.json(list);
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
+});
+app.post("/api/subjects", async (req, res) => {
+  try {
+    const { name } = req.body;
+
+    if (!name || !name.trim()) {
+      return res.status(400).json({ message: "Tên môn học không hợp lệ" });
+    }
+
+    // kiểm tra trùng tên
+    const exists = await Subject.findOne({
+      name: { $regex: new RegExp(`^${name}$`, "i") },
+    });
+
+    if (exists) {
+      return res.status(400).json({ message: "Môn học đã tồn tại" });
+    }
+
+    const subj = await Subject.create({ name });
+    res.json(subj);
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
+});
+app.delete("/api/subjects/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Subject.findByIdAndDelete(id);
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
+});
+app.put("/api/subjects/:id", async (req, res) => {
+  try {
+    const { name } = req.body;
+    const id = req.params.id;
+
+    const subj = await Subject.findByIdAndUpdate(id, { name }, { new: true });
+    res.json(subj);
+  } catch (e) {
+    res.status(500).json({ message: e.message });
   }
 });
 
