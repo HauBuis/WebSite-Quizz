@@ -106,32 +106,42 @@ function setAuth(auth) {
 
 function updateHeaderAuthUI() {
   const auth = getAuth();
+
   const elLogin = document.getElementById("menu-login");
   const elReg = document.getElementById("menu-register");
   const elUser = document.getElementById("menu-user");
   const elEmail = document.getElementById("menu-user-email");
   const elAvatar = document.getElementById("menu-user-avatar");
+  const elAdminMenu = document.getElementById("menu-admin"); // ⭐ menu admin
 
-  if (!elLogin || !elReg || !elUser || !elEmail) return;
+  // Nếu các thẻ UI chưa load thì bỏ qua
+  if (!elLogin || !elReg || !elUser || !elEmail || !elAvatar) return;
 
   if (auth && auth.email) {
+    // Hiển thị user menu
     elLogin.style.display = "none";
     elReg.style.display = "none";
     elUser.style.display = "inline-flex";
     elEmail.textContent = auth.email;
 
-    if (elAvatar) {
-      // DÙNG AVATAR TỪ auth (MongoDB) — KHÔNG DÙNG settings nữa
-      if (auth.avatar && auth.avatar.startsWith("data:image")) {
-        elAvatar.innerHTML = `<img class="avatar-img" src="${auth.avatar}" alt="avatar" />`;
-      } else {
-        elAvatar.textContent = auth.avatar || "🙂";
-      }
+    // Avatar
+    if (auth.avatar && auth.avatar.startsWith("data:image")) {
+      elAvatar.innerHTML = `<img class="avatar-img" src="${auth.avatar}" alt="avatar" />`;
+    } else {
+      elAvatar.textContent = auth.avatar || "🙂";
+    }
+
+    // ⭐ Nếu là admin → hiện menu admin
+    if (elAdminMenu) {
+      elAdminMenu.style.display =
+        auth.role === "admin" ? "inline-block" : "none";
     }
   } else {
+    // Không đăng nhập → ẩn user + admin
     elLogin.style.display = "inline-block";
     elReg.style.display = "inline-block";
     elUser.style.display = "none";
+    if (elAdminMenu) elAdminMenu.style.display = "none";
   }
 }
 
@@ -152,6 +162,7 @@ async function registerUser({ name, email, password }) {
     name: data.name,
     email: data.email,
     avatar: data.avatar || "🙂",
+    role: "user",
   });
   return data;
 }
@@ -168,6 +179,7 @@ async function loginUser({ email, password }) {
     name: data.name,
     email: data.email,
     avatar: data.avatar || "🙂",
+    role: data.role || "user",
   });
   return data;
 }
@@ -652,14 +664,25 @@ function afterLogin() {
   updateHeaderAuthUI();
   renderHistory();
   controlAccessUI();
+
+  // đóng tất cả overlay
   document
     .querySelectorAll(".overlay")
     .forEach((ov) => (ov.style.display = "none"));
   document.body.classList.remove("overlay-open");
-  history.pushState("", document.title, window.location.pathname);
+
+  const auth = getAuth();
+
+  // ⭐ TỰ ĐỘNG ĐIỀU HƯỚNG THEO ROLE
+  if (auth && auth.role === "admin") {
+    location.hash = "#admin"; // giao diện admin
+  } else {
+    location.hash = "#home"; // giao diện user
+  }
+
   navigateToHash();
 
-  // Start music if enabled
+  // bật nhạc nếu ON
   const settings = getSettings();
   if (settings.music) {
     startBackgroundMusic();

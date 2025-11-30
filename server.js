@@ -29,6 +29,7 @@ const User = mongoose.model("users", {
   email: String,
   password: String,
   avatar: String,
+  role: { type: String, default: "user" },
 });
 const Quiz = mongoose.model("quizzes", {
   title: String,
@@ -275,7 +276,8 @@ app.post("/api/login", async (req, res) => {
   res.json({
     name: user.name,
     email: user.email,
-    avatar: user.avatar || "🙂", // ★ THÊM DÒNG NÀY
+    avatar: user.avatar || "🙂",
+    role: user.role || "user",
   });
 });
 
