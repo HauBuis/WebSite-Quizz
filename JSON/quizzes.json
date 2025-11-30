@@ -3,305 +3,150 @@
     "title": "Đề 01 – Cấu trúc dữ liệu 1",
     "subject": "Cấu trúc dữ liệu & Giải thuật",
     "duration": 30,
-    "totalMarks": 15
+    "totalMarks": 10
   },
   {
     "title": "Đề 02 – Cấu trúc dữ liệu 2",
     "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "duration": 25,
-    "totalMarks": 15
+    "duration": 30,
+    "totalMarks": 10
   },
   {
     "title": "Đề 03 – Cấu trúc dữ liệu 3",
     "subject": "Cấu trúc dữ liệu & Giải thuật",
     "duration": 30,
-    "totalMarks": 15
+    "totalMarks": 10
   },
   {
     "title": "Đề 04 – Cấu trúc dữ liệu 4",
     "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "duration": 25,
-    "totalMarks": 15
+    "duration": 30,
+    "totalMarks": 10
   },
   {
     "title": "Đề 05 – Cấu trúc dữ liệu 5",
     "subject": "Cấu trúc dữ liệu & Giải thuật",
     "duration": 30,
-    "totalMarks": 15
+    "totalMarks": 10
   },
   {
-    "title": "Đề 06 – Cấu trúc dữ liệu 6",
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "duration": 30,
-    "totalMarks": 15
-  },
-  {
-    "title": "Đề 07 – Cấu trúc dữ liệu 7",
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "duration": 35,
-    "totalMarks": 15
-  },
-  {
-    "title": "Đề 08 – Cấu trúc dữ liệu 8",
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "duration": 25,
-    "totalMarks": 15
-  },
-  {
-    "title": "Đề 09 – Cấu trúc dữ liệu 9",
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "duration": 30,
-    "totalMarks": 15
-  },
-
-  {
-    "title": "Đề 10 – Cấu trúc dữ liệu 10",
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "duration": 30,
-    "totalMarks": 15
-  },
-
-  {
-    "title": "Đề 11 – Lập trình C 1",
+    "title": "Đề 06 – Lập trình C 1",
     "subject": "Lập trình C cơ bản",
     "duration": 30,
-    "totalMarks": 15
+    "totalMarks": 10
   },
   {
-    "title": "Đề 12 – Lập trình C 2",
-    "subject": "Lập trình C cơ bản",
-    "duration": 25,
-    "totalMarks": 15
-  },
-  {
-    "title": "Đề 13 – Lập trình C 3",
+    "title": "Đề 07 – Lập trình C 2",
     "subject": "Lập trình C cơ bản",
     "duration": 30,
-    "totalMarks": 15
+    "totalMarks": 10
   },
   {
-    "title": "Đề 14 – Lập trình C 4",
-    "subject": "Lập trình C cơ bản",
-    "duration": 25,
-    "totalMarks": 15
-  },
-  {
-    "title": "Đề 15 – Lập trình C 5",
+    "title": "Đề 08 – Lập trình C 3",
     "subject": "Lập trình C cơ bản",
     "duration": 30,
-    "totalMarks": 15
+    "totalMarks": 10
   },
   {
-    "title": "Đề 16 – Lập trình C 6",
+    "title": "Đề 09 – Lập trình C 4",
     "subject": "Lập trình C cơ bản",
     "duration": 30,
-    "totalMarks": 15
+    "totalMarks": 10
   },
   {
-    "title": "Đề 17 – Lập trình C 7",
-    "subject": "Lập trình C cơ bản",
-    "duration": 35,
-    "totalMarks": 15
-  },
-  {
-    "title": "Đề 18 – Lập trình C 8",
-    "subject": "Lập trình C cơ bản",
-    "duration": 25,
-    "totalMarks": 15
-  },
-  {
-    "title": "Đề 19 – Lập trình C 9",
+    "title": "Đề 10 – Lập trình C 5",
     "subject": "Lập trình C cơ bản",
     "duration": 30,
-    "totalMarks": 15
+    "totalMarks": 10
   },
   {
-    "title": "Đề 20 – Lập trình C 10",
-    "subject": "Lập trình C cơ bản",
-    "duration": 30,
-    "totalMarks": 15
-  },
-
-  {
-    "title": "Đề 21 – Mạng 1",
-    "subject": "Mạng máy tính",
-    "duration": 25,
-    "totalMarks": 15
-  },
-  {
-    "title": "Đề 22 – Mạng 2",
-    "subject": "Mạng máy tính",
-    "duration": 25,
-    "totalMarks": 15
-  },
-  {
-    "title": "Đề 23 – Mạng 3",
+    "title": "Đề 11 – Mạng máy tính 1",
     "subject": "Mạng máy tính",
     "duration": 30,
-    "totalMarks": 15
+    "totalMarks": 10
   },
   {
-    "title": "Đề 24 – Mạng 4",
-    "subject": "Mạng máy tính",
-    "duration": 20,
-    "totalMarks": 15
-  },
-  {
-    "title": "Đề 25 – Mạng 5",
+    "title": "Đề 12 – Mạng máy tính 2",
     "subject": "Mạng máy tính",
     "duration": 30,
-    "totalMarks": 15
+    "totalMarks": 10
   },
   {
-    "title": "Đề 26 – Mạng 6",
+    "title": "Đề 13 – Mạng máy tính 3",
     "subject": "Mạng máy tính",
     "duration": 30,
-    "totalMarks": 15
+    "totalMarks": 10
   },
   {
-    "title": "Đề 27 – Mạng 7",
+    "title": "Đề 14 – Mạng máy tính 4",
     "subject": "Mạng máy tính",
     "duration": 30,
-    "totalMarks": 15
+    "totalMarks": 10
   },
   {
-    "title": "Đề 28 – Mạng 8",
+    "title": "Đề 15 – Mạng máy tính 5",
     "subject": "Mạng máy tính",
-    "duration": 25,
-    "totalMarks": 15
+    "duration": 30,
+    "totalMarks": 10
   },
   {
-    "title": "Đề 29 – Mạng 9",
-    "subject": "Mạng máy tính",
-    "duration": 25,
-    "totalMarks": 15
-  },
-  {
-    "title": "Đề 30 – Mạng 10",
-    "subject": "Mạng máy tính",
-    "duration": 25,
-    "totalMarks": 15
-  },
-
-  {
-    "title": "Đề 31 – CSDL 1",
+    "title": "Đề 16 – Cơ sở dữ liệu 1",
     "subject": "Cơ sở dữ liệu",
     "duration": 30,
-    "totalMarks": 15
+    "totalMarks": 10
   },
   {
-    "title": "Đề 32 – CSDL 2",
-    "subject": "Cơ sở dữ liệu",
-    "duration": 25,
-    "totalMarks": 15
-  },
-  {
-    "title": "Đề 33 – CSDL 3",
+    "title": "Đề 17 – Cơ sở dữ liệu 2",
     "subject": "Cơ sở dữ liệu",
     "duration": 30,
-    "totalMarks": 15
+    "totalMarks": 10
   },
   {
-    "title": "Đề 34 – CSDL 4",
-    "subject": "Cơ sở dữ liệu",
-    "duration": 25,
-    "totalMarks": 15
-  },
-  {
-    "title": "Đề 35 – CSDL 5",
+    "title": "Đề 18 – Cơ sở dữ liệu 3",
     "subject": "Cơ sở dữ liệu",
     "duration": 30,
-    "totalMarks": 15
+    "totalMarks": 10
   },
   {
-    "title": "Đề 36 – CSDL 6",
+    "title": "Đề 19 – Cơ sở dữ liệu 4",
     "subject": "Cơ sở dữ liệu",
     "duration": 30,
-    "totalMarks": 15
+    "totalMarks": 10
   },
   {
-    "title": "Đề 37 – CSDL 7",
+    "title": "Đề 20 – Cơ sở dữ liệu 5",
     "subject": "Cơ sở dữ liệu",
     "duration": 30,
-    "totalMarks": 15
+    "totalMarks": 10
   },
   {
-    "title": "Đề 38 – CSDL 8",
-    "subject": "Cơ sở dữ liệu",
-    "duration": 25,
-    "totalMarks": 15
-  },
-  {
-    "title": "Đề 39 – CSDL 9",
-    "subject": "Cơ sở dữ liệu",
-    "duration": 25,
-    "totalMarks": 15
-  },
-  {
-    "title": "Đề 40 – CSDL 10",
-    "subject": "Cơ sở dữ liệu",
-    "duration": 25,
-    "totalMarks": 15
-  },
-
-  {
-    "title": "Đề 41 – Hệ điều hành 1",
+    "title": "Đề 21 – Hệ điều hành 1",
     "subject": "Hệ điều hành",
     "duration": 30,
-    "totalMarks": 15
+    "totalMarks": 10
   },
   {
-    "title": "Đề 42 – Hệ điều hành 2",
+    "title": "Đề 22 – Hệ điều hành 2",
     "subject": "Hệ điều hành",
     "duration": 30,
-    "totalMarks": 15
+    "totalMarks": 10
   },
   {
-    "title": "Đề 43 – Hệ điều hành 3",
+    "title": "Đề 23 – Hệ điều hành 3",
     "subject": "Hệ điều hành",
     "duration": 30,
-    "totalMarks": 15
+    "totalMarks": 10
   },
   {
-    "title": "Đề 44 – Hệ điều hành 4",
-    "subject": "Hệ điều hành",
-    "duration": 25,
-    "totalMarks": 15
-  },
-  {
-    "title": "Đề 45 – Hệ điều hành 5",
+    "title": "Đề 24 – Hệ điều hành 4",
     "subject": "Hệ điều hành",
     "duration": 30,
-    "totalMarks": 15
+    "totalMarks": 10
   },
   {
-    "title": "Đề 46 – Hệ điều hành 6",
+    "title": "Đề 25 – Hệ điều hành 5",
     "subject": "Hệ điều hành",
     "duration": 30,
-    "totalMarks": 15
-  },
-  {
-    "title": "Đề 47 – Hệ điều hành 7",
-    "subject": "Hệ điều hành",
-    "duration": 35,
-    "totalMarks": 15
-  },
-  {
-    "title": "Đề 48 – Hệ điều hành 8",
-    "subject": "Hệ điều hành",
-    "duration": 25,
-    "totalMarks": 15
-  },
-  {
-    "title": "Đề 49 – Hệ điều hành 9",
-    "subject": "Hệ điều hành",
-    "duration": 25,
-    "totalMarks": 15
-  },
-  {
-    "title": "Đề 50 – Hệ điều hành 10",
-    "subject": "Hệ điều hành",
-    "duration": 30,
-    "totalMarks": 15
+    "totalMarks": 10
   }
 ]

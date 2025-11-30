@@ -3,10 +3,15 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const fs = require("fs");
+const path = require("path");
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+
+// Serve static files từ folder HTML
+app.use(express.static(path.join(__dirname, "HTML")));
 
 //  KẾT NỐI MONGODB
 mongoose
@@ -48,8 +53,6 @@ const Attempt = mongoose.model("history", {
 });
 
 // Nếu chưa có user trong MongoDB, seed từ file JSON/users.json (tiện cho môi trường dev)
-const fs = require("fs");
-const path = require("path");
 async function seedUsersFromJson() {
   try {
     const c = await User.countDocuments();
@@ -111,7 +114,9 @@ async function seedQuestionsFromJson() {
         const arr = JSON.parse(raw);
         if (Array.isArray(arr) && arr.length > 0) {
           await Question.insertMany(arr);
-          console.log("✅ Đã chèn questions vào MongoDB từ JSON/questions.json");
+          console.log(
+            "✅ Đã chèn questions vào MongoDB từ JSON/questions.json"
+          );
         }
       }
     }
@@ -125,14 +130,14 @@ async function generateMissingQuestionsForQuizzes() {
   try {
     const quizzes = await Quiz.find();
     for (const quiz of quizzes) {
-      const needed = (quiz.totalMarks || 15);
+      const needed = quiz.totalMarks || 15;
       const existing = await Question.countDocuments({ quizTitle: quiz.title });
       if (existing >= needed) continue;
       const toCreate = needed - existing;
       const docs = [];
       for (let i = 1; i <= toCreate; i++) {
         const qnum = existing + i;
-  // xây dựng nội dung câu hỏi và các phương án phù hợp ngữ cảnh
+        // xây dựng nội dung câu hỏi và các phương án phù hợp ngữ cảnh
         const text = `${quiz.title} - Câu ${qnum}: Nội dung câu hỏi về ${quiz.subject} (mẫu)`;
         const built = buildOptionsForQuestion(quiz, qnum);
         docs.push({
@@ -157,7 +162,8 @@ async function generateMissingQuestionsForQuizzes() {
 // Tạo phương án và đáp án đúng dựa trên môn học và số thứ tự câu
 function buildOptionsForQuestion(quiz, qnum) {
   const subject = (quiz.subject || "").toLowerCase();
-  const difficulty = qnum % 5 === 0 ? "hard" : qnum % 3 === 0 ? "medium" : "easy";
+  const difficulty =
+    qnum % 5 === 0 ? "hard" : qnum % 3 === 0 ? "medium" : "easy";
   const idx = (qnum - 1) % 4;
   // phương án mặc định chung
   let opts = ["Đáp án 1", "Đáp án 2", "Đáp án 3", "Đáp án 4"];
@@ -175,7 +181,7 @@ function buildOptionsForQuestion(quiz, qnum) {
   } else if (subject.includes("lập trình c")) {
     const choices = ["printf()", "scanf()", "malloc()", "free()"];
     opts = rotateArray(choices, idx);
-  // chọn phương án phù hợp (ví dụ printf() cho một số câu, malloc cho câu khác)
+    // chọn phương án phù hợp (ví dụ printf() cho một số câu, malloc cho câu khác)
     correct = qnum % 2 === 1 ? "printf()" : "malloc()";
     if (!opts.includes(correct)) opts[0] = correct;
   } else if (subject.includes("mạng")) {
@@ -294,7 +300,8 @@ app.post("/api/admin/reseed", async (req, res) => {
   try {
     const SECRET = process.env.RESEED_SECRET || "please-reseed";
     const { secret, dropHistory } = req.body || {};
-  if (secret !== SECRET) return res.status(403).json({ message: "Không được phép" });
+    if (secret !== SECRET)
+      return res.status(403).json({ message: "Không được phép" });
 
     // Remove quizzes and questions so seeding will re-insert them
     await Quiz.deleteMany({});
@@ -306,20 +313,26 @@ app.post("/api/admin/reseed", async (req, res) => {
     // optionally reseed users as well if none exist
     await seedUsersFromJson();
 
-  // ensure every quiz has enough questions (and generate contextual options)
-  await generateMissingQuestionsForQuizzes();
+    // ensure every quiz has enough questions (and generate contextual options)
+    await generateMissingQuestionsForQuizzes();
 
     const qc = await Quiz.countDocuments();
     const qsc = await Question.countDocuments();
-  return res.json({ message: "Đã đồng bộ lại dữ liệu", quizzes: qc, questions: qsc });
+    return res.json({
+      message: "Đã đồng bộ lại dữ liệu",
+      quizzes: qc,
+      questions: qsc,
+    });
   } catch (err) {
-    console.error('❌ Lỗi tại endpoint reseed:', err);
-    return res.status(500).json({ message: 'Đồng bộ thất bại', error: err.message });
+    console.error("❌ Lỗi tại endpoint reseed:", err);
+    return res
+      .status(500)
+      .json({ message: "Đồng bộ thất bại", error: err.message });
   }
 });
 
 // 4️⃣ CHẠY SERVER
-const PORT = 5000;
+const PORT = 5500;
 app.listen(PORT, () =>
   console.log(`🚀 Server đang chạy tại http://localhost:${PORT}`)
 );
