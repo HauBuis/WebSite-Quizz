@@ -106,12 +106,12 @@ function setAuth(auth) {
 
 function updateHeaderAuthUI() {
   const auth = getAuth();
-  const settings = getSettings();
   const elLogin = document.getElementById("menu-login");
   const elReg = document.getElementById("menu-register");
   const elUser = document.getElementById("menu-user");
   const elEmail = document.getElementById("menu-user-email");
   const elAvatar = document.getElementById("menu-user-avatar");
+
   if (!elLogin || !elReg || !elUser || !elEmail) return;
 
   if (auth && auth.email) {
@@ -119,12 +119,13 @@ function updateHeaderAuthUI() {
     elReg.style.display = "none";
     elUser.style.display = "inline-flex";
     elEmail.textContent = auth.email;
+
     if (elAvatar) {
-      // If avatar is a data URL (uploaded image), show as <img>, otherwise show emoji text
-      if (settings.avatar && settings.avatar.startsWith("data:image")) {
-        elAvatar.innerHTML = `<img class="avatar-img" src="${settings.avatar}" alt="avatar" />`;
+      // DÙNG AVATAR TỪ auth (MongoDB) — KHÔNG DÙNG settings nữa
+      if (auth.avatar && auth.avatar.startsWith("data:image")) {
+        elAvatar.innerHTML = `<img class="avatar-img" src="${auth.avatar}" alt="avatar" />`;
       } else {
-        elAvatar.textContent = settings.avatar || "🙂";
+        elAvatar.textContent = auth.avatar || "🙂";
       }
     }
   } else {
@@ -147,7 +148,11 @@ async function registerUser({ name, email, password }) {
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || "Lỗi đăng ký.");
-  setAuth(data);
+  setAuth({
+    name: data.name,
+    email: data.email,
+    avatar: data.avatar || "🙂",
+  });
   return data;
 }
 
@@ -159,7 +164,11 @@ async function loginUser({ email, password }) {
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || "Lỗi đăng nhập.");
-  setAuth(data);
+  setAuth({
+    name: data.name,
+    email: data.email,
+    avatar: data.avatar || "🙂",
+  });
   return data;
 }
 
@@ -1134,21 +1143,48 @@ function setupSettings() {
 
   // Avatar file upload
   if (avatarUpload) {
-    avatarUpload.addEventListener("change", (e) => {
+    avatarUpload.addEventListener("change", async (e) => {
       const file = e.target.files[0];
       if (!file) return;
 
       const reader = new FileReader();
-      reader.onload = (ev) => {
+      reader.onload = async (ev) => {
         const dataUrl = ev.target.result;
-        // Store as data URL
-        settings.avatar = dataUrl;
-        // Update avatar display in header if logged in
-        const elAvatar = document.getElementById("menu-user-avatar");
-        if (elAvatar && getAuth()) {
-          elAvatar.innerHTML = `<img class="avatar-img" src="${dataUrl}" alt="avatar" />`;
+
+        const auth = getAuth();
+        if (!auth) return alert("Bạn cần đăng nhập trước khi đổi avatar.");
+
+        // Gửi avatar lên backend
+        const res = await fetch(`${API_BASE}/update-avatar`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: auth.email,
+            avatar: dataUrl,
+          }),
+        });
+
+        if (!res.ok) {
+          const err = await res.text();
+          alert("Không thể cập nhật avatar: " + err);
+          return;
         }
+
+        // Cập nhật vào AUTH local
+        auth.avatar = dataUrl;
+        setAuth(auth);
+
+        // Cập nhật settings (để nút emoji highlight đúng)
+        const settings = getSettings();
+        settings.avatar = dataUrl;
+        setSettings(settings);
+
+        // Cập nhật giao diện header
+        updateHeaderAuthUI();
+
+        alert("Đã cập nhật avatar thành công!");
       };
+
       reader.readAsDataURL(file);
     });
   }

@@ -8,7 +8,8 @@ const path = require("path");
 
 const app = express();
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "10mb" }));
+app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 
 // Serve static files từ folder HTML
 app.use(express.static(path.join(__dirname, "HTML")));
@@ -27,6 +28,7 @@ const User = mongoose.model("users", {
   name: String,
   email: String,
   password: String,
+  avatar: String,
 });
 const Quiz = mongoose.model("quizzes", {
   title: String,
@@ -50,6 +52,15 @@ const Attempt = mongoose.model("history", {
   durationText: String,
   timeText: String,
   questions: Array,
+});
+app.post("/api/update-avatar", async (req, res) => {
+  const { email, avatar } = req.body;
+  try {
+    await User.updateOne({ email }, { avatar });
+    res.json({ success: true, avatar }); // ★ TRẢ AVATAR CHO FRONTEND
+  } catch (err) {
+    res.status(500).json({ message: "Update avatar failed" });
+  }
 });
 
 // Nếu chưa có user trong MongoDB, seed từ file JSON/users.json (tiện cho môi trường dev)
@@ -239,8 +250,19 @@ app.post("/api/register", async (req, res) => {
   const { name, email, password } = req.body;
   const exists = await User.findOne({ email });
   if (exists) return res.status(400).json({ message: "Email đã tồn tại" });
-  const user = await User.create({ name, email, password });
-  res.json(user);
+
+  const user = await User.create({
+    name,
+    email,
+    password,
+    avatar: "🙂",
+  });
+
+  res.json({
+    name: user.name,
+    email: user.email,
+    avatar: user.avatar,
+  });
 });
 
 // Đăng nhập
@@ -249,7 +271,12 @@ app.post("/api/login", async (req, res) => {
   const user = await User.findOne({ email, password });
   if (!user)
     return res.status(400).json({ message: "Sai email hoặc mật khẩu" });
-  res.json(user);
+
+  res.json({
+    name: user.name,
+    email: user.email,
+    avatar: user.avatar || "🙂", // ★ THÊM DÒNG NÀY
+  });
 });
 
 // Lấy danh sách quiz
