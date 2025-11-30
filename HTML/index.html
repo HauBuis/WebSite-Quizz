@@ -13,29 +13,32 @@
       <h1 class="logo">Quiz CNTT</h1>
 
       <nav class="menu">
-        <a class="menu-btn" href="#home">Trang chủ</a>
-        <!-- <a class="menu-btn" href="#quizzes">Đề thi</a> -->
+        <a
+          id="btn-go-admin"
+          class="menu-btn"
+          href="#admin"
+          style="display: none"
+        >
+          Về giao diện admin
+        </a>
+
+        <a id="btn-go-user" class="menu-btn" href="#home" style="display: none">
+          Về giao diện user
+        </a>
+
         <a class="menu-btn" href="#history">Lịch sử</a>
 
-        <!-- Khi CHƯA đăng nhập -->
         <a id="menu-login" class="menu-btn" href="#login">Đăng nhập</a>
         <a id="menu-register" class="menu-btn" href="#register">Đăng ký</a>
 
-        <!-- Khi ĐÃ đăng nhập -->
         <span id="menu-user" class="menu-user" style="display: none">
-          <span
-            id="menu-user-avatar"
-            class="menu-user-avatar"
-            style="margin-right: 8px"
-            >🙂</span
-          >
-          <span id="menu-user-email" class="menu-user-email"
-            >user@mail.com</span
-          >
+          <span id="menu-user-avatar" class="menu-user-avatar"></span>
+          <span id="menu-user-email" class="menu-user-email"></span>
           <button id="btn-logout" class="menu-btn" type="button">
             Đăng xuất
           </button>
         </span>
+
         <a class="menu-btn" href="#settings">Cài đặt</a>
       </nav>
     </header>
@@ -294,6 +297,38 @@
           <button id="btn-open-login" class="primary-btn">Đăng nhập</button>
           <button id="btn-open-register" class="secondary-btn">Đăng ký</button>
         </div>
+      </div>
+    </section>
+    <!-- ====== ADMIN DASHBOARD ====== -->
+    <section id="admin" class="section container" style="display: none">
+      <h2 class="section-title">Quản trị hệ thống</h2>
+      <p class="section-desc">Chỉ dành cho tài khoản Admin</p>
+
+      <div class="admin-grid">
+        <!-- QUẢN LÝ MÔN HỌC -->
+        <article class="admin-card">
+          <h3>Quản lý Môn học</h3>
+          <button class="primary-btn" id="btn-add-subject">
+            + Thêm môn học
+          </button>
+          <ul id="admin-subject-list" class="admin-list"></ul>
+        </article>
+
+        <!-- QUẢN LÝ ĐỀ THI -->
+        <article class="admin-card">
+          <h3>Quản lý Đề thi</h3>
+          <button class="primary-btn" id="btn-add-quiz">+ Thêm đề thi</button>
+          <ul id="admin-quiz-list" class="admin-list"></ul>
+        </article>
+
+        <!-- QUẢN LÝ CÂU HỎI -->
+        <article class="admin-card">
+          <h3>Quản lý Câu hỏi</h3>
+          <button class="primary-btn" id="btn-add-question">
+            + Thêm câu hỏi
+          </button>
+          <ul id="admin-question-list" class="admin-list"></ul>
+        </article>
       </div>
     </section>
 

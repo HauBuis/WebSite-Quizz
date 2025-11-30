@@ -112,10 +112,10 @@ function updateHeaderAuthUI() {
   const elUser = document.getElementById("menu-user");
   const elEmail = document.getElementById("menu-user-email");
   const elAvatar = document.getElementById("menu-user-avatar");
-  const elAdminMenu = document.getElementById("menu-admin"); // ⭐ menu admin
+  const elAdminMenu = document.getElementById("menu-admin");
 
-  // Nếu các thẻ UI chưa load thì bỏ qua
-  if (!elLogin || !elReg || !elUser || !elEmail || !elAvatar) return;
+  // Không cần avatar ở đây – tránh bị return sớm
+  if (!elLogin || !elReg || !elUser || !elEmail) return;
 
   if (auth && auth.email) {
     // Hiển thị user menu
@@ -125,22 +125,25 @@ function updateHeaderAuthUI() {
     elEmail.textContent = auth.email;
 
     // Avatar
-    if (auth.avatar && auth.avatar.startsWith("data:image")) {
-      elAvatar.innerHTML = `<img class="avatar-img" src="${auth.avatar}" alt="avatar" />`;
-    } else {
-      elAvatar.textContent = auth.avatar || "🙂";
+    if (elAvatar) {
+      if (auth.avatar && auth.avatar.startsWith("data:image")) {
+        elAvatar.innerHTML = `<img class="avatar-img" src="${auth.avatar}" alt="avatar" />`;
+      } else {
+        elAvatar.textContent = auth.avatar || "🙂";
+      }
     }
 
-    // ⭐ Nếu là admin → hiện menu admin
+    // Menu admin
     if (elAdminMenu) {
       elAdminMenu.style.display =
         auth.role === "admin" ? "inline-block" : "none";
     }
   } else {
-    // Không đăng nhập → ẩn user + admin
+    // Không đăng nhập
     elLogin.style.display = "inline-block";
     elReg.style.display = "inline-block";
     elUser.style.display = "none";
+
     if (elAdminMenu) elAdminMenu.style.display = "none";
   }
 }
@@ -1085,20 +1088,27 @@ document.addEventListener("DOMContentLoaded", updateOverlayBodyClass);
 function navigateToHash() {
   const auth = getAuth();
   controlAccessUI();
+
   const home = document.getElementById("home");
   const quizzes = document.getElementById("quizzes");
   const quiz = document.getElementById("quiz");
   const historySec = document.getElementById("history");
+  const adminSec = document.getElementById("admin"); // ⭐ trang admin
 
-  if (!auth) {
-    updateOverlayBodyClass();
-    return;
-  }
-  [home, quizzes, quiz, historySec].forEach((el) => {
+  // Ẩn tất cả trước
+  [home, quizzes, quiz, historySec, adminSec].forEach((el) => {
     if (el) el.style.display = "none";
   });
 
   const h = location.hash || "#home";
+
+  // ❗ Nếu chưa đăng nhập → không cho vào bất kỳ trang nào
+  if (!auth) {
+    updateOverlayBodyClass();
+    return;
+  }
+
+  // ⭐ Điều hướng theo hash
   if (h === "" || h === "#" || h === "#home") {
     if (home) home.style.display = "block";
   } else if (h.startsWith("#quizzes")) {
@@ -1107,6 +1117,31 @@ function navigateToHash() {
     if (quiz) quiz.style.display = "block";
   } else if (h === "#history") {
     if (historySec) historySec.style.display = "block";
+  } else if (h === "#admin") {
+    if (auth.role === "admin") {
+      if (adminSec) adminSec.style.display = "block";
+    } else {
+      alert("Bạn không có quyền truy cập trang Admin!");
+      location.hash = "#home";
+      if (home) home.style.display = "block";
+    }
+  }
+  // === HIỆN / ẨN NÚT CHUYỂN GIAO DIỆN ===
+  const btnGoAdmin = document.getElementById("btn-go-admin");
+  const btnGoUser = document.getElementById("btn-go-user");
+
+  if (auth && auth.role === "admin") {
+    if (h === "#admin") {
+      btnGoAdmin.style.display = "none";
+      btnGoUser.style.display = "inline-block";
+    } else {
+      btnGoAdmin.style.display = "inline-block";
+      btnGoUser.style.display = "none";
+    }
+  } else {
+    // User bình thường không được thấy nút admin
+    btnGoAdmin.style.display = "none";
+    btnGoUser.style.display = "none";
   }
 
   updateHeaderAuthUI();
@@ -1117,10 +1152,10 @@ window.addEventListener("hashchange", () => {
   updateOverlayBodyClass();
   navigateToHash();
 });
-document.addEventListener("DOMContentLoaded", () => {
-  updateOverlayBodyClass();
-  navigateToHash();
-});
+// document.addEventListener("DOMContentLoaded", () => {
+//   updateOverlayBodyClass();
+//   navigateToHash();
+// });
 
 function setupSettings() {
   const settingMusic = document.getElementById("setting-music");
@@ -1240,14 +1275,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   updateHeaderAuthUI();
   setupAuthForms();
   setupSettings();
+
   await loadDataFiles();
   setupSubjectButtons();
   setupSubmitButton();
   renderHistory();
   controlAccessUI();
-  if (["#login", "#register", "#review"].includes(location.hash)) {
-    history.pushState("", document.title, window.location.pathname);
-  }
+
+  // ⭐ Chỉ router sau khi mọi thứ đã tải xong
+  navigateToHash();
+  updateOverlayBodyClass();
 
   // Resume AudioContext on any user interaction (to comply with autoplay policy)
   document.addEventListener(
@@ -1258,7 +1295,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     { once: true }
   );
 
-  // Try to start background music if already logged in and enabled
+  // ⭐ giữ nguyên — không mất nhạc
   const auth = getAuth();
   const settings = getSettings();
   if (auth && settings.music) {
