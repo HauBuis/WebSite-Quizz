@@ -1,852 +1,1017 @@
 [
   {
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "questionText": "Ngăn xếp hoạt động theo nguyên tắc nào?",
-    "options": ["FIFO", "LIFO", "Random", "Circular"],
-    "correctAnswer": "LIFO",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "questionText": "Hàng đợi hoạt động theo nguyên tắc nào?",
-    "options": ["LIFO", "FIFO", "Random", "Stack"],
-    "correctAnswer": "FIFO",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "questionText": "Độ phức tạp của tìm kiếm nhị phân là bao nhiêu?",
-    "options": ["O(n)", "O(log n)", "O(n²)", "O(2n)"],
-    "correctAnswer": "O(log n)",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "questionText": "Thuật toán sắp xếp nhanh (Quick Sort) có độ phức tạp trung bình là?",
-    "options": ["O(n)", "O(n log n)", "O(n²)", "O(2n)"],
-    "correctAnswer": "O(n log n)",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "questionText": "Cây nhị phân tìm kiếm là gì?",
+    "subject": "Cơ sở dữ liệu",
+    "quizTitle": "Đề 01",
+    "questionText": "1. Cơ sở dữ liệu (Database) là gì?",
     "options": [
-      "Cây mà mỗi nút có 2 con",
-      "Cây mà giá trị con trái < nút < con phải",
-      "Cây cân bằng",
-      "Cây đỏ-đen"
+      "Tập hợp chương trình",
+      "Tập hợp dữ liệu có tổ chức",
+      "Hệ điều hành",
+      "Công cụ lập trình"
     ],
-    "correctAnswer": "Cây mà giá trị con trái < nút < con phải",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "questionText": "Đồ thị là gì?",
-    "options": [
-      "Tập hợp các điểm",
-      "Tập hợp các nút và cạnh",
-      "Tập hợp các đường thẳng",
-      "Tập hợp các hình tròn"
-    ],
-    "correctAnswer": "Tập hợp các nút và cạnh",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "questionText": "DFS (Depth First Search) sử dụng cấu trúc dữ liệu nào?",
-    "options": ["Hàng đợi", "Ngăn xếp", "Danh sách", "Cây"],
-    "correctAnswer": "Ngăn xếp",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "questionText": "BFS (Breadth First Search) sử dụng cấu trúc dữ liệu nào?",
-    "options": ["Ngăn xếp", "Hàng đợi", "Danh sách", "Cây"],
-    "correctAnswer": "Hàng đợi",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "questionText": "Thuật toán Dijkstra dùng để làm gì?",
-    "options": ["Sắp xếp", "Tìm đường đi ngắn nhất", "Duyệt cây", "Tìm kiếm"],
-    "correctAnswer": "Tìm đường đi ngắn nhất",
-    "difficulty": "hard"
-  },
-  {
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "questionText": "Hash table có độ phức tạp tìm kiếm trung bình là?",
-    "options": ["O(n)", "O(log n)", "O(1)", "O(n²)"],
-    "correctAnswer": "O(1)",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Lập trình C cơ bản",
-    "questionText": "Khai báo biến trong C như thế nào?",
-    "options": ["var x;", "int x;", "x int;", "declare x;"],
-    "correctAnswer": "int x;",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Lập trình C cơ bản",
-    "questionText": "Hàm printf dùng để làm gì?",
-    "options": ["Đọc dữ liệu", "In dữ liệu", "Tạo biến", "Xóa file"],
-    "correctAnswer": "In dữ liệu",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Lập trình C cơ bản",
-    "questionText": "Hàm scanf dùng để làm gì?",
-    "options": ["In dữ liệu", "Đọc dữ liệu", "Tạo biến", "Xóa file"],
-    "correctAnswer": "Đọc dữ liệu",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Lập trình C cơ bản",
-    "questionText": "Con trỏ (pointer) trong C là gì?",
-    "options": [
-      "Biến lưu địa chỉ",
-      "Biến lưu giá trị",
-      "Biến lưu kiểu",
-      "Biến lưu độ dài"
-    ],
-    "correctAnswer": "Biến lưu địa chỉ",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Lập trình C cơ bản",
-    "questionText": "Toán tử & dùng để làm gì?",
-    "options": ["AND logic", "Lấy địa chỉ", "Nhân", "Chia"],
-    "correctAnswer": "Lấy địa chỉ",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Lập trình C cơ bản",
-    "questionText": "Toán tử * dùng để làm gì khi đứng trước tên biến?",
-    "options": [
-      "Nhân",
-      "Khởi tạo con trỏ",
-      "Truy cập giá trị con trỏ",
-      "Phép XOR"
-    ],
-    "correctAnswer": "Truy cập giá trị con trỏ",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Lập trình C cơ bản",
-    "questionText": "Mảng trong C là gì?",
-    "options": [
-      "Tập hợp các biến khác kiểu",
-      "Tập hợp các biến cùng kiểu",
-      "Con trỏ",
-      "Hàm"
-    ],
-    "correctAnswer": "Tập hợp các biến cùng kiểu",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Lập trình C cơ bản",
-    "questionText": "Vòng lặp for có cú pháp như thế nào?",
-    "options": [
-      "for i in range",
-      "for(i=0; i<n; i++)",
-      "for each",
-      "while(i<n)"
-    ],
-    "correctAnswer": "for(i=0; i<n; i++)",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Lập trình C cơ bản",
-    "questionText": "Cấu trúc (struct) trong C dùng để làm gì?",
-    "options": ["Tạo hàm", "Tạo mảng", "Gom nhóm các biến", "Quản lý bộ nhớ"],
-    "correctAnswer": "Gom nhóm các biến",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Lập trình C cơ bản",
-    "questionText": "Hàm malloc dùng để làm gì?",
-    "options": ["Giải phóng bộ nhớ", "Cấp phát bộ nhớ", "Sắp xếp", "Tìm kiếm"],
-    "correctAnswer": "Cấp phát bộ nhớ",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Mạng máy tính",
-    "questionText": "OSI model có bao nhiêu tầng?",
-    "options": ["5", "6", "7", "8"],
-    "correctAnswer": "7",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Mạng máy tính",
-    "questionText": "TCP hoạt động ở tầng nào?",
-    "options": ["Physical", "Data Link", "Transport", "Application"],
-    "correctAnswer": "Transport",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Mạng máy tính",
-    "questionText": "IP hoạt động ở tầng nào?",
-    "options": ["Transport", "Network", "Data Link", "Physical"],
-    "correctAnswer": "Network",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Mạng máy tính",
-    "questionText": "HTTP sử dụng port mặc định nào?",
-    "options": ["22", "80", "443", "3306"],
-    "correctAnswer": "80",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Mạng máy tính",
-    "questionText": "HTTPS sử dụng port mặc định nào?",
-    "options": ["80", "22", "443", "3306"],
-    "correctAnswer": "443",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Mạng máy tính",
-    "questionText": "DNS dùng để làm gì?",
-    "options": [
-      "Mã hóa dữ liệu",
-      "Phân giải tên miền",
-      "Định tuyến gói tin",
-      "Xác thực người dùng"
-    ],
-    "correctAnswer": "Phân giải tên miền",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Mạng máy tính",
-    "questionText": "Địa chỉ IPv4 có bao nhiêu bit?",
-    "options": ["16", "32", "64", "128"],
-    "correctAnswer": "32",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Mạng máy tính",
-    "questionText": "Địa chỉ IPv6 có bao nhiêu bit?",
-    "options": ["32", "64", "128", "256"],
-    "correctAnswer": "128",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Mạng máy tính",
-    "questionText": "Mạng riêng tư (Private Network) là gì?",
-    "options": [
-      "Mạng công cộng",
-      "Mạng không có bộ định tuyến",
-      "Mạng chỉ cho phép các thiết bị cụ thể",
-      "Mạng có mã hóa"
-    ],
-    "correctAnswer": "Mạng chỉ cho phép các thiết bị cụ thể",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Mạng máy tính",
-    "questionText": "Firewall dùng để làm gì?",
-    "options": ["Tăng tốc độ", "Bảo vệ mạng", "Sắp xếp dữ liệu", "Nén dữ liệu"],
-    "correctAnswer": "Bảo vệ mạng",
+    "correctAnswer": "Tập hợp dữ liệu có tổ chức",
     "difficulty": "easy"
   },
   {
     "subject": "Cơ sở dữ liệu",
-    "questionText": "RDBMS là gì?",
+    "quizTitle": "Đề 01",
+    "questionText": "2. SQL là viết tắt của?",
     "options": [
-      "Random Database",
-      "Relational Database Management System",
-      "Remote Database",
-      "Real-time Database"
-    ],
-    "correctAnswer": "Relational Database Management System",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Cơ sở dữ liệu",
-    "questionText": "Bảng (Table) trong CSDL là gì?",
-    "options": [
-      "Danh sách",
-      "Tập hợp hàng và cột",
-      "Một tệp",
-      "Một cơ sở dữ liệu"
-    ],
-    "correctAnswer": "Tập hợp hàng và cột",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Cơ sở dữ liệu",
-    "questionText": "Khóa chính (Primary Key) là gì?",
-    "options": [
-      "Khóa bảo mật",
-      "Định danh duy nhất cho mỗi hàng",
-      "Khóa tạm thời",
-      "Khóa mã hóa"
-    ],
-    "correctAnswer": "Định danh duy nhất cho mỗi hàng",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Cơ sở dữ liệu",
-    "questionText": "Khóa ngoài (Foreign Key) dùng để làm gì?",
-    "options": [
-      "Bảo vệ dữ liệu",
-      "Kết nối hai bảng",
-      "Xóa dữ liệu",
-      "Sắp xếp dữ liệu"
-    ],
-    "correctAnswer": "Kết nối hai bảng",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Cơ sở dữ liệu",
-    "questionText": "JOIN là gì?",
-    "options": [
-      "Xóa dữ liệu",
-      "Gộp dữ liệu từ nhiều bảng",
-      "Sắp xếp dữ liệu",
-      "Tìm kiếm dữ liệu"
-    ],
-    "correctAnswer": "Gộp dữ liệu từ nhiều bảng",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Cơ sở dữ liệu",
-    "questionText": "INNER JOIN trả về cái gì?",
-    "options": [
-      "Tất cả hàng từ bảng trái",
-      "Tất cả hàng từ cả hai bảng",
-      "Chỉ các hàng khớp giữa hai bảng",
-      "Tất cả hàng từ bảng phải"
-    ],
-    "correctAnswer": "Chỉ các hàng khớp giữa hai bảng",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Cơ sở dữ liệu",
-    "questionText": "LEFT JOIN trả về cái gì?",
-    "options": [
-      "Tất cả hàng từ bảng phải",
-      "Tất cả hàng từ bảng trái + các hàng khớp",
-      "Chỉ các hàng khớp",
-      "Tất cả hàng từ cả hai bảng"
-    ],
-    "correctAnswer": "Tất cả hàng từ bảng trái + các hàng khớp",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Cơ sở dữ liệu",
-    "questionText": "Chuẩn hóa CSDL (Normalization) dùng để làm gì?",
-    "options": [
-      "Tăng tốc độ",
-      "Loại bỏ dữ liệu trùng lặp",
-      "Nén dữ liệu",
-      "Mã hóa dữ liệu"
-    ],
-    "correctAnswer": "Loại bỏ dữ liệu trùng lặp",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Cơ sở dữ liệu",
-    "questionText": "SQL là gì?",
-    "options": [
+      "Simple Query Language",
       "Structured Query Language",
-      "Simple Query Logic",
-      "Secure Query Line",
-      "Sequential Query Line"
+      "System Query Logic",
+      "Sequential Query List"
     ],
     "correctAnswer": "Structured Query Language",
     "difficulty": "easy"
   },
   {
-    "subject": "Hệ điều hành",
-    "questionText": "Hệ điều hành là gì?",
+    "subject": "Cơ sở dữ liệu",
+    "quizTitle": "Đề 01",
+    "questionText": "3. Lệnh SELECT dùng để làm gì?",
     "options": [
-      "Phần mềm ứng dụng",
+      "Xóa dữ liệu",
+      "Chèn dữ liệu",
+      "Lấy dữ liệu",
+      "Cập nhật dữ liệu"
+    ],
+    "correctAnswer": "Lấy dữ liệu",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cơ sở dữ liệu",
+    "quizTitle": "Đề 01",
+    "questionText": "4. Khóa chính (Primary Key) có đặc điểm gì?",
+    "options": [
+      "Có thể null",
+      "Không trùng và không null",
+      "Luôn trùng lặp",
+      "Không quan trọng"
+    ],
+    "correctAnswer": "Không trùng và không null",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cơ sở dữ liệu",
+    "quizTitle": "Đề 01",
+    "questionText": "5. Khóa ngoại (Foreign Key) dùng để làm gì?",
+    "options": [
+      "Xóa bảng",
+      "Liên kết các bảng",
+      "Chèn dữ liệu",
+      "Đặt tên bảng"
+    ],
+    "correctAnswer": "Liên kết các bảng",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cơ sở dữ liệu",
+    "quizTitle": "Đề 01",
+    "questionText": "6. Lệnh INSERT dùng để làm gì?",
+    "options": [
+      "Cập nhật bảng",
+      "Xóa hàng",
+      "Thêm dữ liệu mới",
+      "Tạo bảng mới"
+    ],
+    "correctAnswer": "Thêm dữ liệu mới",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cơ sở dữ liệu",
+    "quizTitle": "Đề 01",
+    "questionText": "7. Câu lệnh tạo bảng là?",
+    "options": ["CREATE TABLE", "MAKE TABLE", "NEW TABLE", "BUILD TABLE"],
+    "correctAnswer": "CREATE TABLE",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cơ sở dữ liệu",
+    "quizTitle": "Đề 01",
+    "questionText": "8. Lệnh UPDATE dùng để?",
+    "options": [
+      "Cập nhật bản ghi",
+      "Xóa bảng",
+      "Tạo bảng",
+      "Xóa cơ sở dữ liệu"
+    ],
+    "correctAnswer": "Cập nhật bản ghi",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cơ sở dữ liệu",
+    "quizTitle": "Đề 01",
+    "questionText": "9. Mô hình dữ liệu quan hệ gồm thành phần nào?",
+    "options": ["Bảng", "Tập tin", "Thư mục", "Hệ điều hành"],
+    "correctAnswer": "Bảng",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cơ sở dữ liệu",
+    "quizTitle": "Đề 01",
+    "questionText": "10. Lệnh DELETE dùng để?",
+    "options": [
+      "Xóa bảng",
+      "Xóa dữ liệu trong bảng",
+      "Sửa bảng",
+      "Tạo chỉ mục"
+    ],
+    "correctAnswer": "Xóa dữ liệu trong bảng",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cơ sở dữ liệu",
+    "quizTitle": "Đề 02",
+    "questionText": "1. Thuộc tính nào sau đây có thể làm khóa chính?",
+    "options": ["Tên", "Địa chỉ", "Mã sinh viên", "Ngày sinh"],
+    "correctAnswer": "Mã sinh viên",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cơ sở dữ liệu",
+    "quizTitle": "Đề 02",
+    "questionText": "2. Khóa ngoại (Foreign Key) dùng để liên kết gì?",
+    "options": [
+      "Hai bảng với nhau",
+      "Hai hàng với nhau",
+      "Hai cột với nhau",
+      "Hai cơ sở dữ liệu"
+    ],
+    "correctAnswer": "Hai bảng với nhau",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cơ sở dữ liệu",
+    "quizTitle": "Đề 02",
+    "questionText": "3. Lệnh CREATE DATABASE dùng để?",
+    "options": [
+      "Xóa cơ sở dữ liệu",
+      "Tạo cơ sở dữ liệu mới",
+      "Sửa cơ sở dữ liệu",
+      "Sao lưu cơ sở dữ liệu"
+    ],
+    "correctAnswer": "Tạo cơ sở dữ liệu mới",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cơ sở dữ liệu",
+    "quizTitle": "Đề 02",
+    "questionText": "4. Lệnh DROP TABLE thực hiện điều gì?",
+    "options": [
+      "Xóa toàn bộ bảng",
+      "Xóa một dòng",
+      "Xóa khóa chính",
+      "Ẩn bảng"
+    ],
+    "correctAnswer": "Xóa toàn bộ bảng",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cơ sở dữ liệu",
+    "quizTitle": "Đề 02",
+    "questionText": "5. Ràng buộc UNIQUE đảm bảo điều gì?",
+    "options": [
+      "Giá trị không được null",
+      "Giá trị không được trùng",
+      "Giá trị phải là số",
+      "Giá trị phải là chữ"
+    ],
+    "correctAnswer": "Giá trị không được trùng",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cơ sở dữ liệu",
+    "quizTitle": "Đề 02",
+    "questionText": "6. Câu lệnh UPDATE cần có điều kiện WHERE để tránh điều gì?",
+    "options": [
+      "Cập nhật nhầm tất cả dòng",
+      "Xóa bảng",
+      "Thêm bảng",
+      "Tạo khóa chính"
+    ],
+    "correctAnswer": "Cập nhật nhầm tất cả dòng",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cơ sở dữ liệu",
+    "quizTitle": "Đề 02",
+    "questionText": "7. Dữ liệu dạng VARCHAR dùng để lưu trữ loại thông tin nào?",
+    "options": ["Số nguyên", "Chuỗi ký tự", "Ngày giờ", "Kiểu boolean"],
+    "correctAnswer": "Chuỗi ký tự",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cơ sở dữ liệu",
+    "quizTitle": "Đề 02",
+    "questionText": "8. Cột có kiểu dữ liệu DATE dùng để lưu?",
+    "options": ["Số thập phân", "Ngày tháng", "Chuỗi ký tự", "Địa chỉ"],
+    "correctAnswer": "Ngày tháng",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cơ sở dữ liệu",
+    "quizTitle": "Đề 02",
+    "questionText": "9. Tập hợp các bảng liên quan với nhau tạo thành?",
+    "options": [
+      "Cơ sở dữ liệu",
+      "Hệ điều hành",
+      "Cây nhị phân",
+      "Tập tin văn bản"
+    ],
+    "correctAnswer": "Cơ sở dữ liệu",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cơ sở dữ liệu",
+    "quizTitle": "Đề 02",
+    "questionText": "10. SQL thuộc loại ngôn ngữ nào?",
+    "options": [
+      "Ngôn ngữ lập trình hướng đối tượng",
+      "Ngôn ngữ thao tác dữ liệu",
+      "Ngôn ngữ truy vấn dữ liệu",
+      "Ngôn ngữ máy"
+    ],
+    "correctAnswer": "Ngôn ngữ truy vấn dữ liệu",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "quizTitle": "Đề 01",
+    "questionText": "1. Ngăn xếp (Stack) hoạt động theo nguyên tắc nào?",
+    "options": ["FIFO", "LIFO", "Random", "Song song"],
+    "correctAnswer": "LIFO",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "quizTitle": "Đề 01",
+    "questionText": "2. Hàng đợi (Queue) hoạt động theo nguyên tắc nào?",
+    "options": ["LIFO", "FIFO", "Ngẫu nhiên", "Không xác định"],
+    "correctAnswer": "FIFO",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "quizTitle": "Đề 01",
+    "questionText": "3. Tìm kiếm nhị phân yêu cầu dữ liệu phải như thế nào?",
+    "options": ["Ngẫu nhiên", "Đã sắp xếp", "Đã xóa trùng", "Dạng cây"],
+    "correctAnswer": "Đã sắp xếp",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "quizTitle": "Đề 01",
+    "questionText": "4. Độ phức tạp trung bình của thuật toán Quick Sort là?",
+    "options": ["O(n)", "O(n log n)", "O(n²)", "O(log n)"],
+    "correctAnswer": "O(n log n)",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "quizTitle": "Đề 01",
+    "questionText": "5. Cây nhị phân tìm kiếm (BST) có tính chất gì?",
+    "options": [
+      "Không có nút trái",
+      "Con trái < nút < con phải",
+      "Tất cả nút bằng nhau",
+      "Cây luôn cân bằng"
+    ],
+    "correctAnswer": "Con trái < nút < con phải",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "quizTitle": "Đề 01",
+    "questionText": "6. Heap là gì?",
+    "options": [
+      "Cấu trúc danh sách liên kết",
+      "Cây nhị phân hoàn chỉnh",
+      "Mảng tĩnh",
+      "Cây không có thứ tự"
+    ],
+    "correctAnswer": "Cây nhị phân hoàn chỉnh",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "quizTitle": "Đề 01",
+    "questionText": "7. DFS sử dụng cấu trúc dữ liệu nào?",
+    "options": ["Queue", "Stack", "Array", "Map"],
+    "correctAnswer": "Stack",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "quizTitle": "Đề 01",
+    "questionText": "8. BFS sử dụng cấu trúc dữ liệu nào?",
+    "options": ["Stack", "Queue", "Tree", "List"],
+    "correctAnswer": "Queue",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "quizTitle": "Đề 01",
+    "questionText": "9. Thuật toán Dijkstra dùng để làm gì?",
+    "options": [
+      "Sắp xếp",
+      "Duyệt cây",
+      "Tìm đường đi ngắn nhất",
+      "Tìm phần tử lớn nhất"
+    ],
+    "correctAnswer": "Tìm đường đi ngắn nhất",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "quizTitle": "Đề 01",
+    "questionText": "10. Hash Table có độ phức tạp trung bình khi tìm kiếm là?",
+    "options": ["O(n)", "O(log n)", "O(1)", "O(n²)"],
+    "correctAnswer": "O(1)",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "quizTitle": "Đề 02",
+    "questionText": "1. Sắp xếp nổi bọt (Bubble Sort) có độ phức tạp trung bình là?",
+    "options": ["O(n)", "O(n log n)", "O(n²)", "O(log n)"],
+    "correctAnswer": "O(n²)",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "quizTitle": "Đề 02",
+    "questionText": "2. Sắp xếp chọn (Selection Sort) chọn phần tử theo tiêu chí nào?",
+    "options": ["Lớn nhất", "Nhỏ nhất", "Ngẫu nhiên", "Theo vị trí giữa"],
+    "correctAnswer": "Nhỏ nhất",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "quizTitle": "Đề 02",
+    "questionText": "3. Merge Sort hoạt động dựa trên kỹ thuật nào?",
+    "options": ["Chia để trị", "Tham lam", "Quay lui", "Đệ quy mù"],
+    "correctAnswer": "Chia để trị",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "quizTitle": "Đề 02",
+    "questionText": "4. Danh sách liên kết đơn có đặc điểm gì?",
+    "options": [
+      "Mỗi nút có 2 con trỏ",
+      "Mỗi nút có 1 con trỏ trỏ đến nút tiếp theo",
+      "Các nút không liên kết",
+      "Mỗi nút trỏ về nút đầu"
+    ],
+    "correctAnswer": "Mỗi nút có 1 con trỏ trỏ đến nút tiếp theo",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "quizTitle": "Đề 02",
+    "questionText": "5. Danh sách liên kết đôi (Doubly Linked List) khác gì danh sách đơn?",
+    "options": [
+      "Không có con trỏ",
+      "Có 2 con trỏ: next và prev",
+      "Có 3 con trỏ",
+      "Không thể duyệt ngược"
+    ],
+    "correctAnswer": "Có 2 con trỏ: next và prev",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "quizTitle": "Đề 02",
+    "questionText": "6. Cây đỏ-đen (Red-Black Tree) là gì?",
+    "options": [
+      "Cây không có thuộc tính đặc biệt",
+      "Cây nhị phân tìm kiếm có cân bằng tự động",
+      "Cây chỉ chứa nút màu đỏ",
+      "Cây chỉ chứa nút màu đen"
+    ],
+    "correctAnswer": "Cây nhị phân tìm kiếm có cân bằng tự động",
+    "difficulty": "hard"
+  },
+  {
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "quizTitle": "Đề 02",
+    "questionText": "7. Tree Traversal gồm những cách nào?",
+    "options": [
+      "In-order, Pre-order, Post-order",
+      "Up, Down, Left",
+      "Inner, Outer",
+      "Find, Replace"
+    ],
+    "correctAnswer": "In-order, Pre-order, Post-order",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "quizTitle": "Đề 02",
+    "questionText": "8. Hash Collision xảy ra khi?",
+    "options": [
+      "Hai khóa tạo ra cùng một giá trị băm",
+      "Hai bảng có cùng cấu trúc",
+      "Hai phần tử bằng nhau",
+      "Dữ liệu bị xóa"
+    ],
+    "correctAnswer": "Hai khóa tạo ra cùng một giá trị băm",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "quizTitle": "Đề 02",
+    "questionText": "9. Thuật toán tham lam (Greedy) chọn phương án như thế nào?",
+    "options": [
+      "Tối ưu tổng thể",
+      "Tối ưu cục bộ tại mỗi bước",
+      "Ngẫu nhiên",
+      "Theo độ ưu tiên ngang nhau"
+    ],
+    "correctAnswer": "Tối ưu cục bộ tại mỗi bước",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Cấu trúc dữ liệu & Giải thuật",
+    "quizTitle": "Đề 02",
+    "questionText": "10. Danh sách vòng (Circular Linked List) là gì?",
+    "options": [
+      "Danh sách kết thúc bằng NULL",
+      "Nút cuối trỏ về nút đầu",
+      "Không có liên kết giữa các nút",
+      "Danh sách chỉ có 1 phần tử"
+    ],
+    "correctAnswer": "Nút cuối trỏ về nút đầu",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Hệ điều hành",
+    "quizTitle": "Đề 01",
+    "questionText": "1. Hệ điều hành (Operating System) là gì?",
+    "options": [
+      "Phần mềm diệt virus",
       "Phần mềm quản lý tài nguyên máy tính",
-      "Phần cứng",
-      "Mạng máy tính"
+      "Trình duyệt web",
+      "Thiết bị ngoại vi"
     ],
     "correctAnswer": "Phần mềm quản lý tài nguyên máy tính",
     "difficulty": "easy"
   },
   {
     "subject": "Hệ điều hành",
-    "questionText": "Tiến trình (Process) là gì?",
+    "quizTitle": "Đề 01",
+    "questionText": "2. Thành phần nào quản lý CPU trong hệ điều hành?",
     "options": [
-      "Chương trình đang chạy",
-      "Chương trình được biên dịch",
-      "Chương trình được lưu trữ",
-      "Chương trình được cài đặt"
+      "CPU Manager",
+      "Memory Manager",
+      "Process Scheduler",
+      "Taskbar"
     ],
-    "correctAnswer": "Chương trình đang chạy",
+    "correctAnswer": "Process Scheduler",
     "difficulty": "easy"
   },
   {
     "subject": "Hệ điều hành",
-    "questionText": "Thread là gì?",
+    "quizTitle": "Đề 01",
+    "questionText": "3. Tiến trình (Process) là gì?",
     "options": [
-      "Tiến trình con",
-      "Đơn vị nhỏ nhất có thể thực thi",
-      "Bộ nhớ",
-      "Bộ xử lý"
+      "Một đoạn mã chưa chạy",
+      "Một chương trình đang chạy",
+      "Một tập tin bị lỗi",
+      "Một thiết bị phần cứng"
     ],
-    "correctAnswer": "Đơn vị nhỏ nhất có thể thực thi",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Hệ điều hành",
-    "questionText": "CPU Scheduling dùng để làm gì?",
-    "options": [
-      "Quản lý bộ nhớ",
-      "Phân chia thời gian CPU cho các tiến trình",
-      "Quản lý file",
-      "Quản lý mạng"
-    ],
-    "correctAnswer": "Phân chia thời gian CPU cho các tiến trình",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Hệ điều hành",
-    "questionText": "Deadlock là gì?",
-    "options": [
-      "Lỗi chương trình",
-      "Tình trạng các tiến trình chờ đợi lẫn nhau vô hạn",
-      "Mất dữ liệu",
-      "Sự cố phần cứng"
-    ],
-    "correctAnswer": "Tình trạng các tiến trình chờ đợi lẫn nhau vô hạn",
-    "difficulty": "hard"
-  },
-  {
-    "subject": "Hệ điều hành",
-    "questionText": "Bộ nhớ ảo (Virtual Memory) dùng để làm gì?",
-    "options": [
-      "Tăng tốc độ",
-      "Mô phỏng bộ nhớ lớn hơn RAM",
-      "Nén dữ liệu",
-      "Mã hóa dữ liệu"
-    ],
-    "correctAnswer": "Mô phỏng bộ nhớ lớn hơn RAM",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Hệ điều hành",
-    "questionText": "Paging là gì?",
-    "options": [
-      "Quản lý file",
-      "Chia bộ nhớ vật lý thành các trang",
-      "Quản lý tiến trình",
-      "Quản lý I/O"
-    ],
-    "correctAnswer": "Chia bộ nhớ vật lý thành các trang",
-    "difficulty": "hard"
-  },
-  {
-    "subject": "Hệ điều hành",
-    "questionText": "Context Switching là gì?",
-    "options": [
-      "Chuyển dữ liệu",
-      "Chuyển từ một tiến trình sang tiến trình khác",
-      "Chuyển file",
-      "Chuyển mạng"
-    ],
-    "correctAnswer": "Chuyển từ một tiến trình sang tiến trình khác",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "questionText": "Sắp xếp nổi bọt (Bubble Sort) có độ phức tạp là?",
-    "options": ["O(log n)", "O(n)", "O(n²)", "O(2n)"],
-    "correctAnswer": "O(n²)",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "questionText": "Sắp xếp chèn (Insertion Sort) có độ phức tạp là?",
-    "options": ["O(log n)", "O(n)", "O(n²)", "O(2n)"],
-    "correctAnswer": "O(n²)",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "questionText": "Sắp xếp gộp (Merge Sort) có độ phức tạp là?",
-    "options": ["O(n)", "O(n log n)", "O(n²)", "O(2n)"],
-    "correctAnswer": "O(n log n)",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "questionText": "Danh sách liên kết là gì?",
-    "options": [
-      "Danh sách sử dụng mảng",
-      "Danh sách các nút liên kết bằng con trỏ",
-      "Danh sách có kích thước cố định",
-      "Danh sách được sắp xếp"
-    ],
-    "correctAnswer": "Danh sách các nút liên kết bằng con trỏ",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "questionText": "Danh sách hai chiều là gì?",
-    "options": [
-      "Danh sách có hai con trỏ",
-      "Danh sách có hai mảng",
-      "Danh sách có hai nút",
-      "Danh sách được lưu hai lần"
-    ],
-    "correctAnswer": "Danh sách có hai con trỏ",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "questionText": "Cây đỏ-đen là cái gì?",
-    "options": [
-      "Cây nhị phân",
-      "Cây nhị phân tìm kiếm cân bằng",
-      "Cây có độ sâu nhỏ",
-      "Cây không có nút"
-    ],
-    "correctAnswer": "Cây nhị phân tìm kiếm cân bằng",
-    "difficulty": "hard"
-  },
-  {
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "questionText": "Heap là gì?",
-    "options": ["Ngăn xếp", "Cây nhị phân hoàn toàn", "Mảng", "Danh sách"],
-    "correctAnswer": "Cây nhị phân hoàn toàn",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Cấu trúc dữ liệu & Giải thuật",
-    "questionText": "Thuật toán tham lam (Greedy) là gì?",
-    "options": [
-      "Tìm kiếm toàn bộ",
-      "Chọn lựa tối ưu cục bộ tại mỗi bước",
-      "Tìm kiếm ngẫu nhiên",
-      "Sắp xếp dữ liệu"
-    ],
-    "correctAnswer": "Chọn lựa tối ưu cục bộ tại mỗi bước",
-    "difficulty": "hard"
-  },
-  {
-    "subject": "Lập trình C cơ bản",
-    "questionText": "Hàm strlen dùng để làm gì?",
-    "options": [
-      "Sao chép chuỗi",
-      "Tính độ dài chuỗi",
-      "So sánh chuỗi",
-      "Nối chuỗi"
-    ],
-    "correctAnswer": "Tính độ dài chuỗi",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Lập trình C cơ bản",
-    "questionText": "Hàm strcpy dùng để làm gì?",
-    "options": [
-      "So sánh chuỗi",
-      "Sao chép chuỗi",
-      "Tính độ dài chuỗi",
-      "Nối chuỗi"
-    ],
-    "correctAnswer": "Sao chép chuỗi",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Lập trình C cơ bản",
-    "questionText": "Hàm strcat dùng để làm gì?",
-    "options": [
-      "Sao chép chuỗi",
-      "So sánh chuỗi",
-      "Nối chuỗi",
-      "Tính độ dài chuỗi"
-    ],
-    "correctAnswer": "Nối chuỗi",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Lập trình C cơ bản",
-    "questionText": "Biến toàn cục (global variable) có phạm vi như thế nào?",
-    "options": [
-      "Chỉ trong hàm",
-      "Trong toàn bộ chương trình",
-      "Chỉ trong file",
-      "Chỉ trong khối lệnh"
-    ],
-    "correctAnswer": "Trong toàn bộ chương trình",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Lập trình C cơ bản",
-    "questionText": "Biến cục bộ (local variable) có phạm vi như thế nào?",
-    "options": [
-      "Trong toàn bộ chương trình",
-      "Chỉ trong hàm hoặc khối lệnh",
-      "Chỉ trong file",
-      "Chỉ trong thư viện"
-    ],
-    "correctAnswer": "Chỉ trong hàm hoặc khối lệnh",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Lập trình C cơ bản",
-    "questionText": "Thư viện chuẩn của C là gì?",
-    "options": ["stdio.h", "stdlib.h", "string.h", "Tất cả đều đúng"],
-    "correctAnswer": "Tất cả đều đúng",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Lập trình C cơ bản",
-    "questionText": "Hàm free dùng để làm gì?",
-    "options": ["Cấp phát bộ nhớ", "Giải phóng bộ nhớ", "Tạo biến", "Xóa file"],
-    "correctAnswer": "Giải phóng bộ nhớ",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Lập trình C cơ bản",
-    "questionText": "Mảng hai chiều khai báo như thế nào?",
-    "options": ["int a[10]", "int a[10][5]", "int a[][]", "int *a[10]"],
-    "correctAnswer": "int a[10][5]",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Mạng máy tính",
-    "questionText": "Switch là gì?",
-    "options": [
-      "Công tắc điện",
-      "Thiết bị kết nối các máy tính trong mạng LAN",
-      "Bộ định tuyến",
-      "Modem"
-    ],
-    "correctAnswer": "Thiết bị kết nối các máy tính trong mạng LAN",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Mạng máy tính",
-    "questionText": "Router dùng để làm gì?",
-    "options": [
-      "Kết nối máy tính",
-      "Định tuyến gói tin",
-      "Tăng tốc độ",
-      "Nén dữ liệu"
-    ],
-    "correctAnswer": "Định tuyến gói tin",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Mạng máy tính",
-    "questionText": "Bandwidth là gì?",
-    "options": [
-      "Tên miền",
-      "Dung lượng truyền dữ liệu",
-      "Địa chỉ IP",
-      "Mật khẩu"
-    ],
-    "correctAnswer": "Dung lượng truyền dữ liệu",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Mạng máy tính",
-    "questionText": "Latency là gì?",
-    "options": ["Dung lượng", "Tốc độ truyền", "Độ trễ", "Khoảng cách"],
-    "correctAnswer": "Độ trễ",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Mạng máy tính",
-    "questionText": "VPN dùng để làm gì?",
-    "options": [
-      "Tăng tốc độ",
-      "Tạo kết nối an toàn",
-      "Nén dữ liệu",
-      "Sắp xếp dữ liệu"
-    ],
-    "correctAnswer": "Tạo kết nối an toàn",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Mạng máy tính",
-    "questionText": "Proxy server dùng để làm ghi?",
-    "options": [
-      "Sắp xếp dữ liệu",
-      "Đại diện cho client gửi request",
-      "Nén dữ liệu",
-      "Mã hóa dữ liệu"
-    ],
-    "correctAnswer": "Đại diện cho client gửi request",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Mạng máy tính",
-    "questionText": "MAC address là gì?",
-    "options": [
-      "Địa chỉ Internet",
-      "Địa chỉ phần cứng",
-      "Tên máy tính",
-      "Mật khẩu"
-    ],
-    "correctAnswer": "Địa chỉ phần cứng",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Mạng máy tính",
-    "questionText": "Subnetting dùng để làm gì?",
-    "options": [
-      "Chia mạng lớn thành các mạng con",
-      "Nối các mạng",
-      "Tăng tốc độ",
-      "Mã hóa dữ liệu"
-    ],
-    "correctAnswer": "Chia mạng lớn thành các mạng con",
-    "difficulty": "hard"
-  },
-  {
-    "subject": "Cơ sở dữ liệu",
-    "questionText": "Câu lệnh SELECT dùng để làm gì?",
-    "options": ["Thêm dữ liệu", "Lấy dữ liệu", "Xóa dữ liệu", "Sửa dữ liệu"],
-    "correctAnswer": "Lấy dữ liệu",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Cơ sở dữ liệu",
-    "questionText": "Câu lệnh INSERT dùng để làm gì?",
-    "options": ["Lấy dữ liệu", "Thêm dữ liệu", "Xóa dữ liệu", "Sửa dữ liệu"],
-    "correctAnswer": "Thêm dữ liệu",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Cơ sở dữ liệu",
-    "questionText": "Câu lệnh UPDATE dùng để làm gì?",
-    "options": ["Thêm dữ liệu", "Sửa dữ liệu", "Xóa dữ liệu", "Lấy dữ liệu"],
-    "correctAnswer": "Sửa dữ liệu",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Cơ sở dữ liệu",
-    "questionText": "Câu lệnh DELETE dùng để làm gì?",
-    "options": ["Thêm dữ liệu", "Sửa dữ liệu", "Xóa dữ liệu", "Lấy dữ liệu"],
-    "correctAnswer": "Xóa dữ liệu",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Cơ sở dữ liệu",
-    "questionText": "WHERE clause dùng để làm gì?",
-    "options": [
-      "Sắp xếp dữ liệu",
-      "Lọc dữ liệu",
-      "Nhóm dữ liệu",
-      "Nối dữ liệu"
-    ],
-    "correctAnswer": "Lọc dữ liệu",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Cơ sở dữ liệu",
-    "questionText": "ORDER BY dùng để làm gì?",
-    "options": [
-      "Lọc dữ liệu",
-      "Sắp xếp dữ liệu",
-      "Nhóm dữ liệu",
-      "Nối dữ liệu"
-    ],
-    "correctAnswer": "Sắp xếp dữ liệu",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Cơ sở dữ liệu",
-    "questionText": "GROUP BY dùng để làm gì?",
-    "options": [
-      "Sắp xếp dữ liệu",
-      "Lọc dữ liệu",
-      "Nhóm dữ liệu theo cột",
-      "Nối dữ liệu"
-    ],
-    "correctAnswer": "Nhóm dữ liệu theo cột",
-    "difficulty": "medium"
-  },
-  {
-    "subject": "Cơ sở dữ liệu",
-    "questionText": "Hàm COUNT() dùng để làm gì?",
-    "options": [
-      "Tính tổng",
-      "Đếm số hàng",
-      "Tính trung bình",
-      "Tìm giá trị lớn nhất"
-    ],
-    "correctAnswer": "Đếm số hàng",
-    "difficulty": "easy"
-  },
-  {
-    "subject": "Cơ sở dữ liệu",
-    "questionText": "Hàm SUM() dùng để làm gì?",
-    "options": [
-      "Đếm số hàng",
-      "Tính tổng",
-      "Tính trung bình",
-      "Tìm giá trị nhỏ nhất"
-    ],
-    "correctAnswer": "Tính tổng",
+    "correctAnswer": "Một chương trình đang chạy",
     "difficulty": "easy"
   },
   {
     "subject": "Hệ điều hành",
-    "questionText": "Semaphore dùng để làm gì?",
+    "quizTitle": "Đề 01",
+    "questionText": "4. Đâu là trạng thái của tiến trình?",
     "options": [
-      "Quản lý file",
+      "Running, Waiting, Ready",
+      "Start, Stop",
+      "Old, New",
+      "High, Low"
+    ],
+    "correctAnswer": "Running, Waiting, Ready",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Hệ điều hành",
+    "quizTitle": "Đề 01",
+    "questionText": "5. Bộ nhớ ảo (Virtual Memory) giúp điều gì?",
+    "options": [
+      "Lưu trữ dữ liệu tạm trên RAM",
+      "Cho phép chạy chương trình lớn hơn RAM",
+      "Giảm tốc độ xử lý",
+      "Xóa bộ nhớ hệ thống"
+    ],
+    "correctAnswer": "Cho phép chạy chương trình lớn hơn RAM",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Hệ điều hành",
+    "quizTitle": "Đề 01",
+    "questionText": "6. Bộ lập lịch CPU (CPU Scheduler) làm gì?",
+    "options": [
+      "Phân phối CPU cho các tiến trình",
+      "Tăng tốc CPU",
+      "Kiểm tra ổ cứng",
+      "Tắt nguồn hệ thống"
+    ],
+    "correctAnswer": "Phân phối CPU cho các tiến trình",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Hệ điều hành",
+    "quizTitle": "Đề 01",
+    "questionText": "7. Deadlock xảy ra khi nào?",
+    "options": [
+      "Các tiến trình luân phiên hoàn thành",
+      "Các tiến trình chờ nhau vô hạn",
+      "CPU ngừng hoạt động",
+      "RAM bị đầy"
+    ],
+    "correctAnswer": "Các tiến trình chờ nhau vô hạn",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Hệ điều hành",
+    "quizTitle": "Đề 01",
+    "questionText": "8. Semaphore được dùng để làm gì?",
+    "options": [
       "Đồng bộ hóa tiến trình",
-      "Quản lý bộ nhớ",
-      "Quản lý I/O"
+      "Quản lý RAM",
+      "Khởi động hệ điều hành",
+      "Theo dõi ổ cứng"
     ],
     "correctAnswer": "Đồng bộ hóa tiến trình",
     "difficulty": "hard"
   },
   {
     "subject": "Hệ điều hành",
-    "questionText": "Mutex là gì?",
+    "quizTitle": "Đề 01",
+    "questionText": "9. Hệ thống tập tin (File System) dùng để?",
     "options": [
-      "Loại biến",
-      "Khóa để bảo vệ tài nguyên chung",
-      "Hàm hệ thống",
-      "Loại file"
+      "Quản lý CPU",
+      "Quản lý file và thư mục",
+      "Quản lý card đồ họa",
+      "Quản lý ổ đĩa DVD"
     ],
-    "correctAnswer": "Khóa để bảo vệ tài nguyên chung",
-    "difficulty": "hard"
+    "correctAnswer": "Quản lý file và thư mục",
+    "difficulty": "easy"
   },
   {
     "subject": "Hệ điều hành",
-    "questionText": "Interrupt là gì?",
+    "quizTitle": "Đề 01",
+    "questionText": "10. Kernel là gì?",
     "options": [
-      "Tín hiệu ngừng chương trình",
-      "Tín hiệu yêu cầu CPU ngừng công việc hiện tại",
-      "Thư mục hệ thống",
-      "Loại file"
+      "Phần mềm chỉnh sửa ảnh",
+      "Lõi của hệ điều hành",
+      "Trình duyệt web",
+      "Thiết bị lưu trữ"
     ],
-    "correctAnswer": "Tín hiệu yêu cầu CPU ngừng công việc hiện tại",
+    "correctAnswer": "Lõi của hệ điều hành",
     "difficulty": "medium"
   },
   {
     "subject": "Hệ điều hành",
-    "questionText": "File descriptor là gì?",
+    "quizTitle": "Đề 02",
+    "questionText": "1. Bộ nhớ đệm (Cache Memory) có đặc điểm gì?",
     "options": [
-      "Mô tả file",
-      "Con số đại diện cho một file mở",
-      "Tên file",
-      "Loại file"
+      "Tốc độ chậm",
+      "Tốc độ nhanh nhất",
+      "Dung lượng lớn",
+      "Không liên quan đến CPU"
     ],
-    "correctAnswer": "Con số đại diện cho một file mở",
+    "correctAnswer": "Tốc độ nhanh nhất",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Hệ điều hành",
+    "quizTitle": "Đề 02",
+    "questionText": "2. Paging trong quản lý bộ nhớ là gì?",
+    "options": [
+      "Chia bộ nhớ thành các vùng cố định",
+      "Chia bộ nhớ thành các trang có kích thước bằng nhau",
+      "Tăng RAM",
+      "Xóa toàn bộ bộ nhớ"
+    ],
+    "correctAnswer": "Chia bộ nhớ thành các trang có kích thước bằng nhau",
     "difficulty": "medium"
   },
   {
     "subject": "Hệ điều hành",
-    "questionText": "Inode là gì?",
+    "quizTitle": "Đề 02",
+    "questionText": "3. Swapping dùng để làm gì?",
     "options": [
-      "Tên file",
-      "Cấu trúc chứa thông tin về file",
-      "Đường dẫn file",
-      "Kích thước file"
+      "Sao chép file",
+      "Chuyển tiến trình từ RAM ra đĩa và ngược lại",
+      "Tăng tốc CPU",
+      "Xóa tiến trình"
     ],
-    "correctAnswer": "Cấu trúc chứa thông tin về file",
-    "difficulty": "hard"
+    "correctAnswer": "Chuyển tiến trình từ RAM ra đĩa và ngược lại",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Hệ điều hành",
+    "quizTitle": "Đề 02",
+    "questionText": "4. Round Robin là thuật toán gì?",
+    "options": [
+      "Thuật toán sắp xếp",
+      "Thuật toán cấp CPU theo vòng cho các tiến trình",
+      "Thuật toán tìm kiếm",
+      "Thuật toán đồ thị"
+    ],
+    "correctAnswer": "Thuật toán cấp CPU theo vòng cho các tiến trình",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Hệ điều hành",
+    "quizTitle": "Đề 02",
+    "questionText": "5. Mỗi tiến trình trong hệ điều hành có gì?",
+    "options": ["PID", "IP", "URL", "DNS"],
+    "correctAnswer": "PID",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Hệ điều hành",
+    "quizTitle": "Đề 02",
+    "questionText": "6. Hệ điều hành đa nhiệm (Multitasking) cho phép điều gì?",
+    "options": [
+      "Chạy nhiều tiến trình cùng lúc",
+      "Chỉ chạy 1 tiến trình duy nhất",
+      "Chạy phần cứng song song",
+      "Chạy tiến trình không theo lịch"
+    ],
+    "correctAnswer": "Chạy nhiều tiến trình cùng lúc",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Hệ điều hành",
+    "quizTitle": "Đề 02",
+    "questionText": "7. Fragmentation (phân mảnh) là gì?",
+    "options": [
+      "Lỗi CPU",
+      "Bộ nhớ bị chia nhỏ không sử dụng được",
+      "Ổ cứng hỏng",
+      "Kernel bị lỗi"
+    ],
+    "correctAnswer": "Bộ nhớ bị chia nhỏ không sử dụng được",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Hệ điều hành",
+    "quizTitle": "Đề 02",
+    "questionText": "8. Interrupt (ngắt) dùng để làm gì?",
+    "options": [
+      "Tăng tốc CPU",
+      "Thông báo sự kiện cần xử lý",
+      "Xóa bộ nhớ",
+      "Khởi động lại hệ thống"
+    ],
+    "correctAnswer": "Thông báo sự kiện cần xử lý",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Hệ điều hành",
+    "quizTitle": "Đề 02",
+    "questionText": "9. Process Control Block (PCB) chứa gì?",
+    "options": [
+      "Mã nguồn chương trình",
+      "Thông tin về tiến trình",
+      "Hướng dẫn cài đặt",
+      "Thông tin phần cứng"
+    ],
+    "correctAnswer": "Thông tin về tiến trình",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Hệ điều hành",
+    "quizTitle": "Đề 02",
+    "questionText": "10. Hệ điều hành nào dưới đây là mã nguồn mở?",
+    "options": ["Windows", "Linux", "macOS", "ChromeOS"],
+    "correctAnswer": "Linux",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Lập trình C cơ bản",
+    "quizTitle": "Đề 01",
+    "questionText": "1. Cú pháp khai báo biến trong C là gì?",
+    "options": ["var x;", "int x;", "x := int", "declare x;"],
+    "correctAnswer": "int x;",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Lập trình C cơ bản",
+    "quizTitle": "Đề 01",
+    "questionText": "2. Hàm main() trong C có vai trò gì?",
+    "options": [
+      "Hàm tùy chọn",
+      "Điểm bắt đầu của chương trình",
+      "Hàm để khai báo biến",
+      "Hàm để xuất dữ liệu"
+    ],
+    "correctAnswer": "Điểm bắt đầu của chương trình",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Lập trình C cơ bản",
+    "quizTitle": "Đề 01",
+    "questionText": "3. Đâu là kiểu dữ liệu số nguyên?",
+    "options": ["int", "float", "double", "char"],
+    "correctAnswer": "int",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Lập trình C cơ bản",
+    "quizTitle": "Đề 01",
+    "questionText": "4. Ký tự '\\n' có nghĩa gì?",
+    "options": ["Xuống dòng", "Tab", "Khoảng trắng", "Kết thúc chương trình"],
+    "correctAnswer": "Xuống dòng",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Lập trình C cơ bản",
+    "quizTitle": "Đề 01",
+    "questionText": "5. Lệnh scanf dùng để làm gì?",
+    "options": [
+      "In dữ liệu ra màn hình",
+      "Nhập dữ liệu từ bàn phím",
+      "Tạo biến",
+      "Tạo hàm"
+    ],
+    "correctAnswer": "Nhập dữ liệu từ bàn phím",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Lập trình C cơ bản",
+    "quizTitle": "Đề 01",
+    "questionText": "6. Kết quả của biểu thức 5 / 2 trong C (kiểu int) là?",
+    "options": ["2.5", "2", "3", "5"],
+    "correctAnswer": "2",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Lập trình C cơ bản",
+    "quizTitle": "Đề 01",
+    "questionText": "7. Toán tử % dùng để?",
+    "options": [
+      "Chia lấy nguyên",
+      "Chia lấy dư",
+      "Tăng giá trị",
+      "Gán giá trị"
+    ],
+    "correctAnswer": "Chia lấy dư",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Lập trình C cơ bản",
+    "quizTitle": "Đề 01",
+    "questionText": "8. Hàm printf thuộc thư viện nào?",
+    "options": ["math.h", "string.h", "stdio.h", "ctype.h"],
+    "correctAnswer": "stdio.h",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Lập trình C cơ bản",
+    "quizTitle": "Đề 01",
+    "questionText": "9. Lệnh nào dùng để khai báo hằng số?",
+    "options": ["const", "let", "var", "static"],
+    "correctAnswer": "const",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Lập trình C cơ bản",
+    "quizTitle": "Đề 01",
+    "questionText": "10. Vòng lặp nào trong C luôn chạy ít nhất 1 lần?",
+    "options": ["for", "while", "do-while", "foreach"],
+    "correctAnswer": "do-while",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Lập trình C cơ bản",
+    "quizTitle": "Đề 02",
+    "questionText": "1. Câu lệnh nào dùng để kết thúc vòng lặp ngay lập tức?",
+    "options": ["continue", "stop", "end", "break"],
+    "correctAnswer": "break",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Lập trình C cơ bản",
+    "quizTitle": "Đề 02",
+    "questionText": "2. Câu lệnh continue trong vòng lặp dùng để?",
+    "options": [
+      "Thoát vòng lặp",
+      "Nhảy tới lần lặp tiếp theo",
+      "Dừng chương trình",
+      "Chạy lại từ đầu chương trình"
+    ],
+    "correctAnswer": "Nhảy tới lần lặp tiếp theo",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Lập trình C cơ bản",
+    "quizTitle": "Đề 02",
+    "questionText": "3. Con trỏ (pointer) trong C là gì?",
+    "options": [
+      "Biến lưu địa chỉ của biến khác",
+      "Biến lưu kiểu chuỗi",
+      "Hàm xử lý số nguyên",
+      "Biến chỉ lưu số thực"
+    ],
+    "correctAnswer": "Biến lưu địa chỉ của biến khác",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Lập trình C cơ bản",
+    "quizTitle": "Đề 02",
+    "questionText": "4. Toán tử & trong C dùng để?",
+    "options": [
+      "Lấy giá trị của biến",
+      "Lấy địa chỉ của biến",
+      "Gán giá trị cho biến",
+      "Tạo biến mới"
+    ],
+    "correctAnswer": "Lấy địa chỉ của biến",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Lập trình C cơ bản",
+    "quizTitle": "Đề 02",
+    "questionText": "5. Cú pháp khai báo mảng trong C là?",
+    "options": ["array x[10];", "int x[10];", "int[10] x;", "list x(10);"],
+    "correctAnswer": "int x[10];",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Lập trình C cơ bản",
+    "quizTitle": "Đề 02",
+    "questionText": "6. Chuỗi (string) trong C thực chất là?",
+    "options": [
+      "Một số nguyên",
+      "Một dãy ký tự kết thúc bằng ký tự '\\0'",
+      "Một dãy số thực",
+      "Một kiểu dữ liệu riêng biệt"
+    ],
+    "correctAnswer": "Một dãy ký tự kết thúc bằng ký tự '\\0'",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Lập trình C cơ bản",
+    "quizTitle": "Đề 02",
+    "questionText": "7. Hàm strlen() dùng để làm gì?",
+    "options": [
+      "Đếm số ký tự trong chuỗi",
+      "Sao chép chuỗi",
+      "So sánh chuỗi",
+      "Xóa chuỗi"
+    ],
+    "correctAnswer": "Đếm số ký tự trong chuỗi",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Lập trình C cơ bản",
+    "quizTitle": "Đề 02",
+    "questionText": "8. Hàm strcpy() dùng để làm gì?",
+    "options": ["In chuỗi", "Đếm ký tự", "Sao chép chuỗi", "Tìm kiếm chuỗi"],
+    "correctAnswer": "Sao chép chuỗi",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Lập trình C cơ bản",
+    "quizTitle": "Đề 02",
+    "questionText": "9. Mảng trong C có chỉ mục bắt đầu từ?",
+    "options": ["1", "0", "-1", "Tùy thuộc kiểu dữ liệu"],
+    "correctAnswer": "0",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Lập trình C cơ bản",
+    "quizTitle": "Đề 02",
+    "questionText": "10. Con trỏ NULL dùng để?",
+    "options": [
+      "Trỏ đến vùng nhớ bất kỳ",
+      "Trỏ đến một giá trị rác",
+      "Không trỏ đến vùng nhớ nào",
+      "Khởi động lại chương trình"
+    ],
+    "correctAnswer": "Không trỏ đến vùng nhớ nào",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Mạng máy tính",
+    "quizTitle": "Đề 02",
+    "questionText": "1. Tầng nào trong mô hình OSI chịu trách nhiệm mã hóa và giải mã dữ liệu?",
+    "options": ["Tầng ứng dụng", "Tầng trình bày", "Tầng phiên", "Tầng mạng"],
+    "correctAnswer": "Tầng trình bày",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Mạng máy tính",
+    "quizTitle": "Đề 02",
+    "questionText": "2. Giao thức FTP dùng để làm gì?",
+    "options": [
+      "Truyền file",
+      "Gửi email",
+      "Truy vấn tên miền",
+      "Kết nối mạng LAN"
+    ],
+    "correctAnswer": "Truyền file",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Mạng máy tính",
+    "quizTitle": "Đề 02",
+    "questionText": "3. Địa chỉ MAC tồn tại ở tầng nào của mô hình OSI?",
+    "options": [
+      "Tầng vật lý",
+      "Tầng liên kết dữ liệu",
+      "Tầng mạng",
+      "Tầng ứng dụng"
+    ],
+    "correctAnswer": "Tầng liên kết dữ liệu",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Mạng máy tính",
+    "quizTitle": "Đề 02",
+    "questionText": "4. Khái niệm subnet mask dùng để?",
+    "options": [
+      "Phân chia mạng thành các mạng con",
+      "Mã hóa dữ liệu",
+      "Tăng tốc kết nối",
+      "Kiểm tra lỗi dữ liệu"
+    ],
+    "correctAnswer": "Phân chia mạng thành các mạng con",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Mạng máy tính",
+    "quizTitle": "Đề 02",
+    "questionText": "5. Ping được dùng để?",
+    "options": [
+      "Kiểm tra kết nối giữa hai thiết bị",
+      "Lưu trữ dữ liệu",
+      "Bảo mật mạng",
+      "Mã hóa thông tin"
+    ],
+    "correctAnswer": "Kiểm tra kết nối giữa hai thiết bị",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Mạng máy tính",
+    "quizTitle": "Đề 02",
+    "questionText": "6. Giao thức SMTP liên quan đến dịch vụ nào?",
+    "options": ["Web", "Email", "SSH", "VPN"],
+    "correctAnswer": "Email",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Mạng máy tính",
+    "quizTitle": "Đề 02",
+    "questionText": "7. DHCP cung cấp gì cho máy khách?",
+    "options": [
+      "Mật khẩu mạng",
+      "Địa chỉ IP tự động",
+      "Tập tin cấu hình",
+      "Mã hóa dữ liệu"
+    ],
+    "correctAnswer": "Địa chỉ IP tự động",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Mạng máy tính",
+    "quizTitle": "Đề 02",
+    "questionText": "8. WAN là viết tắt của?",
+    "options": [
+      "Wide Area Network",
+      "Wireless Access Network",
+      "World Application Node",
+      "Web Address Number"
+    ],
+    "correctAnswer": "Wide Area Network",
+    "difficulty": "easy"
+  },
+  {
+    "subject": "Mạng máy tính",
+    "quizTitle": "Đề 02",
+    "questionText": "9. SSH được sử dụng để?",
+    "options": [
+      "Truy cập từ xa an toàn",
+      "Chia sẻ file trong LAN",
+      "Chạy website",
+      "Tạo danh sách email"
+    ],
+    "correctAnswer": "Truy cập từ xa an toàn",
+    "difficulty": "medium"
+  },
+  {
+    "subject": "Mạng máy tính",
+    "quizTitle": "Đề 02",
+    "questionText": "10. IPv6 có độ dài bao nhiêu bit?",
+    "options": ["32 bit", "64 bit", "128 bit", "256 bit"],
+    "correctAnswer": "128 bit",
+    "difficulty": "easy"
   }
 ]

@@ -274,6 +274,7 @@
         </div>
       </div>
     </section>
+
     <section id="edit-subject" class="overlay">
       <div class="overlay-card">
         <h3 class="overlay-title">Sửa Môn học</h3>
@@ -287,6 +288,124 @@
 
         <div style="display: flex; gap: 8px; margin-top: 12px">
           <button id="btn-update-subject" class="primary-btn">Cập nhật</button>
+          <a class="secondary-btn overlay-close" href="#admin">Hủy</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== ADD QUIZ OVERLAY ====== -->
+    <section id="add-quiz" class="overlay">
+      <div class="overlay-card overlay-large">
+        <h3 class="overlay-title">Thêm Đề thi</h3>
+
+        <div style="margin-bottom: 12px">
+          <label style="display: block; margin-bottom: 6px; font-weight: 600">Tiêu đề</label>
+          <input id="new-quiz-title" class="input-box" type="text" placeholder="Nhập tiêu đề đề thi" required />
+        </div>
+
+        <div style="margin-bottom: 12px">
+          <label style="display: block; margin-bottom: 6px; font-weight: 600">Môn học</label>
+          <select id="new-quiz-subject" class="input-box" required>
+            <option value="">-- Chọn môn học --</option>
+          </select>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-bottom: 12px">
+          <div style="flex: 1">
+            <label style="display: block; margin-bottom: 6px; font-weight: 600">Thời gian (phút)</label>
+            <input id="new-quiz-duration" class="input-box" type="number" placeholder="30" min="1" required />
+          </div>
+          <div style="flex: 1">
+            <label style="display: block; margin-bottom: 6px; font-weight: 600">Điểm</label>
+           <input id="new-quiz-marks" 
+       class="input-box" 
+       type="number" 
+       placeholder="10" 
+       min="0" 
+       max="10" 
+       required />
+
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 12px">
+          <button id="btn-save-quiz" class="primary-btn">Lưu</button>
+          <a class="secondary-btn overlay-close" href="#admin">Hủy</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== ADD QUESTION OVERLAY ====== -->
+    <section id="add-question" class="overlay">
+      <div class="overlay-card overlay-large">
+        <h3 class="overlay-title">Thêm Câu hỏi</h3>
+
+        <div style="margin-bottom: 12px">
+          <label style="display: block; margin-bottom: 6px; font-weight: 600">Loại câu hỏi</label>
+          <div style="display: flex; gap: 16px">
+            <label>
+              <input type="radio" name="new-question-type" value="multiple" checked /> Trắc nghiệm 4 lựa chọn
+            </label>
+            <label>
+              <input type="radio" name="new-question-type" value="truefalse" /> Đúng/Sai
+            </label>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 12px">
+          <label style="display: block; margin-bottom: 6px; font-weight: 600">Môn học</label>
+          <select id="new-question-subject" class="input-box" required>
+            <option value="">-- Chọn môn học --</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom: 12px">
+          <label style="display: block; margin-bottom: 6px; font-weight: 600">Câu hỏi</label>
+          <textarea id="new-question-text" class="input-box" placeholder="Nhập nội dung câu hỏi" rows="3" required></textarea>
+        </div>
+
+        <div id="new-question-multiple-section" style="margin-bottom: 12px">
+          <label style="display: block; margin-bottom: 6px; font-weight: 600">Các lựa chọn</label>
+          <input id="new-question-a" class="input-box" type="text" placeholder="Lựa chọn A" required />
+          <input id="new-question-b" class="input-box" type="text" placeholder="Lựa chọn B" style="margin-top: 6px" required />
+          <input id="new-question-c" class="input-box" type="text" placeholder="Lựa chọn C" style="margin-top: 6px" required />
+          <input id="new-question-d" class="input-box" type="text" placeholder="Lựa chọn D" style="margin-top: 6px" required />
+        </div>
+
+        <div id="new-question-truefalse-section" style="margin-bottom: 12px; display: none">
+          <label style="display: block; margin-bottom: 6px; font-weight: 600">Đáp án</label>
+          <div style="display: flex; gap: 16px">
+            <label>
+              <input type="radio" name="new-question-tf-answer" value="Đúng" /> Đúng
+            </label>
+            <label>
+              <input type="radio" name="new-question-tf-answer" value="Sai" /> Sai
+            </label>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 12px; display: none" id="new-question-multiple-answer-section">
+          <label style="display: block; margin-bottom: 6px; font-weight: 600">Đáp án đúng</label>
+          <select id="new-question-correct-answer" class="input-box" required>
+            <option value="">-- Chọn đáp án --</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom: 12px">
+          <label style="display: block; margin-bottom: 6px; font-weight: 600">Độ khó</label>
+          <select id="new-question-difficulty" class="input-box" required>
+            <option value="easy">Dễ</option>
+            <option value="medium">Trung bình</option>
+            <option value="hard">Khó</option>
+          </select>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 12px">
+          <button id="btn-save-question" class="primary-btn">Lưu</button>
           <a class="secondary-btn overlay-close" href="#admin">Hủy</a>
         </div>
       </div>
@@ -329,12 +448,37 @@
 
         <!-- QUẢN LÝ CÂU HỎI -->
         <article class="admin-card">
-          <h3>Quản lý Câu hỏi</h3>
+          <h3>Quản lý Câu hỏi theo Đề thi</h3>
           <button class="primary-btn" id="btn-add-question">
-            + Thêm câu hỏi
+            + Thêm câu hỏi mới
           </button>
-          <ul id="admin-question-list" class="admin-list"></ul>
+          <div style="margin-top: 12px; border-top: 1px solid #e5e7eb; padding-top: 12px">
+            <p style="font-size: 13px; color: #666; margin-bottom: 8px">Chọn đề thi để xem/chỉnh sửa câu hỏi:</p>
+            <ul id="admin-question-list" class="admin-list"></ul>
+          </div>
         </article>
+      </div>
+    </section>
+
+    <!-- ====== QUIZ QUESTIONS MODAL ====== -->
+    <section id="quiz-questions" class="overlay" style="display: none;">
+      <div class="overlay-card overlay-large">
+        <div class="overlay-top">
+          <div>
+            <h3 id="quiz-questions-title" class="overlay-title">Câu hỏi của đề thi</h3>
+            <div id="quiz-questions-info" class="overlay-sub">Môn: -- | Số câu: --</div>
+          </div>
+          <a class="overlay-close" href="#admin">Đóng</a>
+        </div>
+
+        <div style="margin-bottom: 12px">
+          <button class="primary-btn" id="btn-add-to-quiz" style="margin-bottom: 12px">
+            + Thêm câu hỏi cho đề này
+          </button>
+          <div id="quiz-questions-content" style="max-height: 400px; overflow-y: auto">
+            <!-- Danh sách câu hỏi sẽ render ở đây -->
+          </div>
+        </div>
       </div>
     </section>
 

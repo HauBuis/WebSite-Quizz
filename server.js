@@ -98,19 +98,18 @@ if (mongoose.connection.readyState === 1) {
   mongoose.connection.once("open", () => seedUsersFromJson());
 }
 
-// Seed dữ liệu quizzes từ JSON/quizzes.json nếu collection rỗng
+// Seed dữ liệu quizzes từ JSON/quizzes.json - Luôn reload từ file để đồng bộ
 async function seedQuizzesFromJson() {
   try {
-    const c = await Quiz.countDocuments();
-    if (c === 0) {
-      const quizzesPath = path.join(__dirname, "JSON", "quizzes.json");
-      if (fs.existsSync(quizzesPath)) {
-        const raw = fs.readFileSync(quizzesPath, "utf8");
-        const arr = JSON.parse(raw);
-        if (Array.isArray(arr) && arr.length > 0) {
-          await Quiz.insertMany(arr);
-          console.log("✅ Đã chèn quizzes vào MongoDB từ JSON/quizzes.json");
-        }
+    const quizzesPath = path.join(__dirname, "JSON", "quizzes.json");
+    if (fs.existsSync(quizzesPath)) {
+      const raw = fs.readFileSync(quizzesPath, "utf8");
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr) && arr.length > 0) {
+        // Xóa hết quizzes cũ và chèn lại từ JSON
+        await Quiz.deleteMany({});
+        await Quiz.insertMany(arr);
+        console.log(`✅ Đã đồng bộ ${arr.length} quizzes từ JSON/quizzes.json`);
       }
     }
   } catch (err) {
@@ -118,21 +117,58 @@ async function seedQuizzesFromJson() {
   }
 }
 
-// Seed dữ liệu questions từ JSON/questions.json nếu collection rỗng
+// Seed dữ liệu questions từ JSON/questions.json - Luôn reload từ file để đồng bộ
 async function seedQuestionsFromJson() {
   try {
-    const c = await Question.countDocuments();
-    if (c === 0) {
-      const questionsPath = path.join(__dirname, "JSON", "questions.json");
-      if (fs.existsSync(questionsPath)) {
-        const raw = fs.readFileSync(questionsPath, "utf8");
-        const arr = JSON.parse(raw);
-        if (Array.isArray(arr) && arr.length > 0) {
-          await Question.insertMany(arr);
-          console.log(
-            "✅ Đã chèn questions vào MongoDB từ JSON/questions.json"
+    const questionsPath = path.join(__dirname, "JSON", "questions.json");
+    const quizzesPath = path.join(__dirname, "JSON", "quizzes.json");
+
+    if (fs.existsSync(questionsPath) && fs.existsSync(quizzesPath)) {
+      const rawQuestions = fs.readFileSync(questionsPath, "utf8");
+      const rawQuizzes = fs.readFileSync(quizzesPath, "utf8");
+
+      const questions = JSON.parse(rawQuestions);
+      const quizzes = JSON.parse(rawQuizzes);
+
+      if (Array.isArray(questions) && questions.length > 0) {
+        // Map môn học với các đề thi (giữ thứ tự)
+        const subjectQuizzes = {};
+        quizzes.forEach((q) => {
+          if (!subjectQuizzes[q.subject]) {
+            subjectQuizzes[q.subject] = [];
+          }
+          subjectQuizzes[q.subject].push(q.title);
+        });
+
+        // Gán quizTitle cho từng câu hỏi
+        // Mỗi môn học: câu 1-10 -> đề 1, câu 11-20 -> đề 2, v.v...
+        let qIndex = {};
+        const updatedQuestions = questions.map((q) => {
+          const subject = q.subject;
+          const quizList = subjectQuizzes[subject] || [];
+
+          if (!qIndex[subject]) {
+            qIndex[subject] = 0;
+          }
+
+          // Tính chỉ số đề (0-indexed), không vượt quá số đề có sẵn
+          const quizIdx = Math.min(
+            Math.floor(qIndex[subject] / 10),
+            quizList.length - 1
           );
-        }
+          const quizTitle = quizList[quizIdx];
+
+          qIndex[subject]++;
+
+          return { ...q, quizTitle };
+        });
+
+        // Xóa hết questions cũ và chèn lại từ JSON
+        await Question.deleteMany({});
+        await Question.insertMany(updatedQuestions);
+        console.log(
+          `✅ Đã đồng bộ ${updatedQuestions.length} questions từ JSON/questions.json`
+        );
       }
     }
   } catch (err) {
@@ -140,112 +176,44 @@ async function seedQuestionsFromJson() {
   }
 }
 
-// Sinh các câu hỏi giả lập cho những đề chưa đủ số câu được gán
-async function generateMissingQuestionsForQuizzes() {
+// Seed dữ liệu subjects từ JSON/subjects.json - Luôn reload từ file để đồng bộ
+async function seedSubjectsFromJson() {
   try {
-    const quizzes = await Quiz.find();
-    for (const quiz of quizzes) {
-      const needed = quiz.totalMarks || 15;
-      const existing = await Question.countDocuments({ quizTitle: quiz.title });
-      if (existing >= needed) continue;
-      const toCreate = needed - existing;
-      const docs = [];
-      for (let i = 1; i <= toCreate; i++) {
-        const qnum = existing + i;
-        // xây dựng nội dung câu hỏi và các phương án phù hợp ngữ cảnh
-        const text = `${quiz.title} - Câu ${qnum}: Nội dung câu hỏi về ${quiz.subject} (mẫu)`;
-        const built = buildOptionsForQuestion(quiz, qnum);
-        docs.push({
-          subject: quiz.subject,
-          quizTitle: quiz.title,
-          questionText: text,
-          options: built.options,
-          correctAnswer: built.correct,
-          difficulty: built.difficulty,
-        });
-      }
-      if (docs.length > 0) {
-        await Question.insertMany(docs);
-        console.log(`✅ Đã sinh ${docs.length} câu hỏi cho đề '${quiz.title}'`);
+    const subjectsPath = path.join(__dirname, "JSON", "subjects.json");
+    if (fs.existsSync(subjectsPath)) {
+      const raw = fs.readFileSync(subjectsPath, "utf8");
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr) && arr.length > 0) {
+        // Chuyển đổi format: subjectName -> name
+        const converted = arr.map((item) => ({
+          name: item.subjectName || item.name,
+        }));
+        // Xóa hết subjects cũ và chèn lại từ JSON
+        await Subject.deleteMany({});
+        await Subject.insertMany(converted);
+        console.log(
+          `✅ Đã đồng bộ ${converted.length} subjects từ JSON/subjects.json`
+        );
       }
     }
   } catch (err) {
-    console.error("❌ Lỗi khi sinh các câu hỏi thiếu:", err);
+    console.error("❌ Lỗi khi seed subjects:", err);
   }
 }
 
-// Tạo phương án và đáp án đúng dựa trên môn học và số thứ tự câu
-function buildOptionsForQuestion(quiz, qnum) {
-  const subject = (quiz.subject || "").toLowerCase();
-  const difficulty =
-    qnum % 5 === 0 ? "hard" : qnum % 3 === 0 ? "medium" : "easy";
-  const idx = (qnum - 1) % 4;
-  // phương án mặc định chung
-  let opts = ["Đáp án 1", "Đáp án 2", "Đáp án 3", "Đáp án 4"];
-  let correct = opts[idx];
+// Sinh các câu hỏi giả lập cho những đề chưa đủ số câu được gán
 
-  if (subject.includes("cấu trúc dữ liệu") || subject.includes("giải thuật")) {
-    const choices = [
-      "Array (mảng)",
-      "LinkedList (danh sách liên kết)",
-      "Stack (ngăn xếp)",
-      "Queue (hàng đợi)",
-    ];
-    opts = rotateArray(choices, idx);
-    correct = opts[0];
-  } else if (subject.includes("lập trình c")) {
-    const choices = ["printf()", "scanf()", "malloc()", "free()"];
-    opts = rotateArray(choices, idx);
-    // chọn phương án phù hợp (ví dụ printf() cho một số câu, malloc cho câu khác)
-    correct = qnum % 2 === 1 ? "printf()" : "malloc()";
-    if (!opts.includes(correct)) opts[0] = correct;
-  } else if (subject.includes("mạng")) {
-    const choices = ["TCP", "UDP", "ARP", "ICMP"];
-    opts = rotateArray(choices, idx);
-    correct = opts[0];
-  } else if (subject.includes("cơ sở dữ liệu") || subject.includes("csdl")) {
-    const choices = ["SELECT", "INSERT", "UPDATE", "DELETE"];
-    opts = rotateArray(choices, idx);
-    correct = opts[0];
-  } else if (subject.includes("hệ điều hành")) {
-    const choices = ["Semaphore", "Mutex", "Scheduler", "Virtual Memory"];
-    opts = rotateArray(choices, idx);
-    correct = opts[0];
-  } else {
-    opts = [
-      `${quiz.subject} - phương án A`,
-      `${quiz.subject} - phương án B`,
-      `${quiz.subject} - phương án C`,
-      `${quiz.subject} - phương án D`,
-    ];
-    correct = opts[0];
-  }
-
-  // đảm bảo đáp án đúng nằm trong danh sách phương án
-  if (!opts.includes(correct)) correct = opts[0];
-  return { options: opts, correct, difficulty };
-}
-
-function rotateArray(arr, shift) {
-  const n = arr.length;
-  const s = ((shift % n) + n) % n;
-  return arr.slice(s).concat(arr.slice(0, s));
-}
-
-if (mongoose.connection.readyState === 1) {
-  seedQuizzesFromJson();
-  seedQuestionsFromJson();
-  // sau khi seed từ JSON, đảm bảo mỗi đề có ít nhất quiz.totalMarks câu hỏi
-  mongoose.connection.once("open", () => {});
-  // gọi hàm sinh thêm sau một khoảng delay để các insert trước đó hoàn tất
-  setTimeout(() => generateMissingQuestionsForQuizzes(), 1200);
-} else {
-  mongoose.connection.once("open", () => {
-    seedQuizzesFromJson();
-    seedQuestionsFromJson();
-    setTimeout(() => generateMissingQuestionsForQuizzes(), 1200);
-  });
-}
+// if (mongoose.connection.readyState === 1) {
+//   seedSubjectsFromJson();
+//   seedQuizzesFromJson();
+//   seedQuestionsFromJson();
+// } else {
+//   mongoose.connection.once("open", () => {
+//     seedSubjectsFromJson();
+//     seedQuizzesFromJson();
+//     seedQuestionsFromJson();
+//   });
+// }
 
 // CÁC API ENDPOINT
 
@@ -328,40 +296,39 @@ app.get("/api/attempts/:email", async (req, res) => {
 });
 
 // Admin: đồng bộ lại DB từ các file JSON (an toàn: yêu cầu secret trong body)
-app.post("/api/admin/reseed", async (req, res) => {
-  try {
-    const SECRET = process.env.RESEED_SECRET || "please-reseed";
-    const { secret, dropHistory } = req.body || {};
-    if (secret !== SECRET)
-      return res.status(403).json({ message: "Không được phép" });
+// app.post("/api/admin/reseed", async (req, res) => {
+//   try {
+//     const SECRET = process.env.RESEED_SECRET || "please-reseed";
+//     const { secret, dropHistory } = req.body || {};
+//     if (secret !== SECRET)
+//       return res.status(403).json({ message: "Không được phép" });
 
-    // Remove quizzes and questions so seeding will re-insert them
-    await Quiz.deleteMany({});
-    await Question.deleteMany({});
-    if (dropHistory) await Attempt.deleteMany({});
+//     // Remove quizzes and questions so seeding will re-insert them
+//     await Subject.deleteMany({});
+//     await Quiz.deleteMany({});
+//     await Question.deleteMany({});
+//     if (dropHistory) await Attempt.deleteMany({});
 
-    await seedQuizzesFromJson();
-    await seedQuestionsFromJson();
-    // optionally reseed users as well if none exist
-    await seedUsersFromJson();
+//     await seedSubjectsFromJson();
+//     await seedQuizzesFromJson();
+//     await seedQuestionsFromJson();
+//     // optionally reseed users as well if none exist
+//     await seedUsersFromJson();
 
-    // ensure every quiz has enough questions (and generate contextual options)
-    await generateMissingQuestionsForQuizzes();
-
-    const qc = await Quiz.countDocuments();
-    const qsc = await Question.countDocuments();
-    return res.json({
-      message: "Đã đồng bộ lại dữ liệu",
-      quizzes: qc,
-      questions: qsc,
-    });
-  } catch (err) {
-    console.error("❌ Lỗi tại endpoint reseed:", err);
-    return res
-      .status(500)
-      .json({ message: "Đồng bộ thất bại", error: err.message });
-  }
-});
+//     const qc = await Quiz.countDocuments();
+//     const qsc = await Question.countDocuments();
+//     return res.json({
+//       message: "Đã đồng bộ lại dữ liệu",
+//       quizzes: qc,
+//       questions: qsc,
+//     });
+//   } catch (err) {
+//     console.error("❌ Lỗi tại endpoint reseed:", err);
+//     return res
+//       .status(500)
+//       .json({ message: "Đồng bộ thất bại", error: err.message });
+//   }
+// });
 app.get("/api/subjects", async (req, res) => {
   try {
     const list = await Subject.find().sort({ name: 1 });
@@ -430,6 +397,80 @@ app.put("/api/subjects/:id", (req, res) => {
   save("subjects.json", subjects);
 
   res.json({ message: "Đã cập nhật", subject: subj });
+});
+
+// ====== QUIZZES ENDPOINTS ======
+app.post("/api/quizzes/add", async (req, res) => {
+  try {
+    const { title, subject, duration, totalMarks } = req.body;
+    if (!title || !subject || !duration || !totalMarks) {
+      return res.status(400).json({ message: "Thiếu thông tin bắt buộc" });
+    }
+    const quiz = await Quiz.create({ title, subject, duration, totalMarks });
+    res.json(quiz);
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
+});
+
+app.delete("/api/quizzes/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const quiz = await Quiz.findById(id);
+    if (!quiz) {
+      return res.status(404).json({ message: "Không tìm thấy đề thi" });
+    }
+    // Xóa tất cả câu hỏi của đề này
+    await Question.deleteMany({ quizTitle: quiz.title });
+    await Quiz.findByIdAndDelete(id);
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
+});
+
+// ====== QUESTIONS ENDPOINTS ======
+app.post("/api/questions/add", async (req, res) => {
+  try {
+    const {
+      subject,
+      questionText,
+      options,
+      correctAnswer,
+      difficulty,
+      quizTitle,
+    } = req.body;
+    if (
+      !subject ||
+      !questionText ||
+      !options ||
+      !correctAnswer ||
+      !difficulty
+    ) {
+      return res.status(400).json({ message: "Thiếu thông tin bắt buộc" });
+    }
+    const question = await Question.create({
+      subject,
+      questionText,
+      options,
+      correctAnswer,
+      difficulty,
+      quizTitle: quizTitle || null,
+    });
+    res.json(question);
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
+});
+
+app.delete("/api/questions/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Question.findByIdAndDelete(id);
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
 });
 
 // 4️⃣ CHẠY SERVER

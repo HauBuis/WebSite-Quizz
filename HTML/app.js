@@ -1136,7 +1136,7 @@ function navigateToHash() {
   }
   if (h === "#admin") {
     if (adminSec) adminSec.style.display = "block";
-    loadAdminSubjects(); // ⭐ Load môn học mỗi khi vào admin
+    loadAdminData(); // ⭐ Load tất cả dữ liệu admin mỗi khi vào admin
   }
   // === HIỆN / ẨN NÚT CHUYỂN GIAO DIỆN ===
   const btnGoAdmin = document.getElementById("btn-go-admin");
@@ -1331,13 +1331,17 @@ async function loadAdminSubjects() {
     list.forEach((subj) => {
       const li = document.createElement("li");
       li.innerHTML = `
-        <span>${subj.name}</span>
-        <button class="secondary-btn btn-edit-subject" data-id="${subj._id}" data-name="${subj.name}">
-      Sửa
-    </button>
-        <button class="secondary-btn btn-delete-subject" data-id="${subj._id}">
-          Xóa
-        </button>
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px">
+          <div style="flex: 1; font-weight: 500">${subj.name}</div>
+          <div style="display: flex; gap: 4px">
+            <button class="secondary-btn btn-edit-subject" data-id="${subj._id}" data-name="${subj.name}" style="white-space: nowrap">
+              Sửa
+            </button>
+            <button class="secondary-btn btn-delete-subject" data-id="${subj._id}" style="white-space: nowrap">
+              Xóa
+            </button>
+          </div>
+        </div>
       `;
       ul.appendChild(li);
     });
@@ -1349,13 +1353,23 @@ async function loadAdminSubjects() {
 
         const id = btn.dataset.id;
 
-        await fetch(`${API_BASE}/subjects/${id}`, { method: "DELETE" });
-
-        loadAdminSubjects(); // reload
+        try {
+          const res = await fetch(`${API_BASE}/subjects/${id}`, {
+            method: "DELETE",
+          });
+          if (res.ok) {
+            loadAdminSubjects(); // reload
+          } else {
+            alert("Lỗi xóa môn học");
+          }
+        } catch (e) {
+          alert("Lỗi: " + e.message);
+        }
       })
     );
   } catch (err) {
     ul.innerHTML = "<li>Lỗi khi tải dữ liệu</li>";
+    console.error("Error loading subjects:", err);
   }
   document.querySelectorAll(".btn-edit-subject").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -1373,12 +1387,520 @@ async function loadAdminSubjects() {
     });
   });
 }
+
+async function loadAdminQuizzes() {
+  const ul = document.getElementById("admin-quiz-list");
+  if (!ul) return;
+
+  ul.innerHTML = "<li>Đang tải...</li>";
+
+  try {
+    const res = await fetch(`${API_BASE}/quizzes`);
+    let list = [];
+    if (res.ok) list = await res.json();
+
+    ul.innerHTML = "";
+
+    if (list.length === 0) {
+      ul.innerHTML = "<li>Chưa có đề thi nào</li>";
+      return;
+    }
+
+    list.forEach((quiz) => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px">
+          <div style="flex: 1">
+            <div style="font-weight: 500">${quiz.title}</div>
+            <div style="font-size: 12px; color: #666">
+              Môn: ${quiz.subject} | Thời gian: ${quiz.duration}p | Điểm: ${quiz.totalMarks}
+            </div>
+          </div>
+          <button class="secondary-btn btn-delete-quiz" data-id="${quiz._id}" style="white-space: nowrap">
+            Xóa
+          </button>
+        </div>
+      `;
+      ul.appendChild(li);
+    });
+
+    // Xóa đề thi
+    ul.querySelectorAll(".btn-delete-quiz").forEach((btn) =>
+      btn.addEventListener("click", async () => {
+        if (!confirm("Bạn có chắc muốn xóa đề thi này?")) return;
+
+        const id = btn.dataset.id;
+
+        try {
+          const res = await fetch(`${API_BASE}/quizzes/${id}`, {
+            method: "DELETE",
+          });
+          if (res.ok) {
+            loadAdminQuizzes(); // reload
+          } else {
+            alert("Lỗi xóa đề thi");
+          }
+        } catch (e) {
+          alert("Lỗi: " + e.message);
+        }
+      })
+    );
+  } catch (err) {
+    ul.innerHTML = "<li>Lỗi khi tải dữ liệu</li>";
+    console.error("Error loading quizzes:", err);
+  }
+}
+
+async function loadAdminQuestions() {
+  const ul = document.getElementById("admin-question-list");
+  if (!ul) return;
+
+  ul.innerHTML = "<li>Đang tải...</li>";
+
+  try {
+    const res = await fetch(`${API_BASE}/quizzes`);
+    let list = [];
+    if (res.ok) list = await res.json();
+
+    ul.innerHTML = "";
+
+    if (list.length === 0) {
+      ul.innerHTML = "<li>Chưa có đề thi nào</li>";
+      return;
+    }
+
+    // Hiển thị danh sách đề thi - click vào để xem câu hỏi
+    list.forEach((quiz) => {
+      const li = document.createElement("li");
+      li.style.cursor = "pointer";
+      li.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 8px; border-radius: 4px; transition: background 0.2s">
+          <div style="flex: 1">
+            <div style="font-weight: 500">${quiz.title}</div>
+            <div style="font-size: 12px; color: #666">
+              Môn: ${quiz.subject} | Thời gian: ${quiz.duration}p | Điểm: ${quiz.totalMarks}
+            </div>
+          </div>
+          <button class="secondary-btn" style="white-space: nowrap">
+            Xem câu hỏi
+          </button>
+        </div>
+      `;
+
+      // Click vào item để xem câu hỏi
+      li.addEventListener("click", async () => {
+        await viewQuizQuestions(quiz);
+      });
+
+      ul.appendChild(li);
+    });
+  } catch (err) {
+    ul.innerHTML = "<li>Lỗi khi tải dữ liệu</li>";
+    console.error("Error loading quizzes:", err);
+  }
+}
+
+async function viewQuizQuestions(quiz) {
+  // Tìm tất cả câu hỏi của đề này
+  try {
+    const res = await fetch(`${API_BASE}/questions`);
+    let allQuestions = [];
+    if (res.ok) allQuestions = await res.json();
+
+    // Lọc câu hỏi theo môn học AND tiêu đề đề thi
+    const quizQuestions = allQuestions.filter(
+      (q) => q.subject === quiz.subject && q.quizTitle === quiz.title
+    );
+
+    // Hiển thị modal
+    const modal = document.getElementById("quiz-questions");
+    const title = document.getElementById("quiz-questions-title");
+    const info = document.getElementById("quiz-questions-info");
+    const content = document.getElementById("quiz-questions-content");
+
+    title.textContent = `Câu hỏi của đề: ${quiz.title}`;
+    info.textContent = `Môn: ${quiz.subject} | Số câu: ${quizQuestions.length} / ${quiz.totalMarks}`;
+
+    content.innerHTML = "";
+
+    if (quizQuestions.length === 0) {
+      content.innerHTML =
+        "<p style='text-align: center; color: #666; padding: 20px'>Chưa có câu hỏi cho đề thi này</p>";
+    } else {
+      quizQuestions.forEach((q, idx) => {
+        const div = document.createElement("div");
+        div.style.cssText =
+          "border: 1px solid #e5e7eb; border-radius: 4px; padding: 12px; margin-bottom: 12px";
+
+        const difficultyEmoji =
+          q.difficulty === "easy"
+            ? "🟢"
+            : q.difficulty === "medium"
+            ? "�"
+            : "🔴";
+
+        div.innerHTML = `
+          <div style="display: flex; gap: 8px; margin-bottom: 8px">
+            <span style="background: #e5e7eb; padding: 2px 6px; border-radius: 3px; font-size: 12px">Câu ${
+              idx + 1
+            }</span>
+            <span style="color: #666; font-size: 12px">${difficultyEmoji} ${
+          q.difficulty === "easy"
+            ? "Dễ"
+            : q.difficulty === "medium"
+            ? "Trung bình"
+            : "Khó"
+        }</span>
+          </div>
+          <div style="margin-bottom: 8px; font-weight: 500">${
+            q.questionText
+          }</div>
+          <div style="background: #f3f4f6; padding: 8px; border-radius: 3px; margin-bottom: 8px">
+            <div style="font-size: 12px; color: #666; margin-bottom: 4px">Các lựa chọn:</div>
+            <ul style="margin: 4px 0 0 16px; padding: 0">
+              ${q.options
+                .map(
+                  (opt, i) => `
+                <li style="color: ${
+                  opt === q.correctAnswer ? "#10b981" : "#666"
+                }; font-weight: ${opt === q.correctAnswer ? "600" : "400"}">
+                  ${opt} ${opt === q.correctAnswer ? "✓" : ""}
+                </li>
+              `
+                )
+                .join("")}
+            </ul>
+          </div>
+          <div style="display: flex; gap: 4px">
+            <button class="secondary-btn btn-edit-inline-question" data-id="${
+              q._id
+            }" style="font-size: 12px; padding: 4px 8px">
+              Sửa
+            </button>
+            <button class="secondary-btn btn-delete-inline-question" data-id="${
+              q._id
+            }" style="font-size: 12px; padding: 4px 8px">
+              Xóa
+            </button>
+          </div>
+        `;
+        content.appendChild(div);
+      });
+
+      // Xóa câu hỏi inline
+      content.querySelectorAll(".btn-delete-inline-question").forEach((btn) => {
+        btn.addEventListener("click", async (e) => {
+          e.stopPropagation();
+          if (!confirm("Bạn có chắc muốn xóa câu hỏi này?")) return;
+
+          try {
+            const res = await fetch(`${API_BASE}/questions/${btn.dataset.id}`, {
+              method: "DELETE",
+            });
+            if (res.ok) {
+              await viewQuizQuestions(quiz); // Reload
+            } else {
+              alert("Lỗi xóa câu hỏi");
+            }
+          } catch (e) {
+            alert("Lỗi: " + e.message);
+          }
+        });
+      });
+    }
+
+    // Lưu quiz đang xem để thêm câu hỏi
+    window.currentViewingQuiz = quiz;
+
+    modal.style.display = "block";
+    location.hash = "#quiz-questions";
+  } catch (err) {
+    alert("Lỗi khi tải câu hỏi");
+    console.error("Error loading questions:", err);
+  }
+}
+
+async function loadAdminData() {
+  await Promise.all([
+    loadAdminSubjects(),
+    loadAdminQuizzes(),
+    loadAdminQuestions(),
+  ]);
+}
 function setupAdminEvents() {
+  // ==========================
+  // ⭐ QUẢN LÝ MÔN HỌC
+  // ==========================
+
   // Nút mở popup Thêm môn
   const btnAddSubject = document.getElementById("btn-add-subject");
   if (btnAddSubject) {
     btnAddSubject.addEventListener("click", () => {
       location.hash = "#add-subject";
+    });
+  }
+
+  // ==========================
+  // ⭐ QUẢN LÝ ĐỀ THI
+  // ==========================
+
+  // Nút mở popup Thêm đề thi
+  const btnAddQuiz = document.getElementById("btn-add-quiz");
+  if (btnAddQuiz) {
+    btnAddQuiz.addEventListener("click", async () => {
+      // Load danh sách môn học vào select
+      try {
+        const res = await fetch(`${API_BASE}/subjects`);
+        const subjects = res.ok ? await res.json() : [];
+        const select = document.getElementById("new-quiz-subject");
+        select.innerHTML = '<option value="">-- Chọn môn học --</option>';
+        subjects.forEach((s) => {
+          const opt = document.createElement("option");
+          // Kiểm tra xem s là object hay string
+          const subjectName = typeof s === "object" ? s.name : s;
+          opt.value = subjectName;
+          opt.textContent = subjectName;
+          select.appendChild(opt);
+        });
+      } catch (e) {
+        console.error("Lỗi tải môn học:", e);
+      }
+      location.hash = "#add-quiz";
+    });
+  }
+
+  // Nút lưu đề thi
+  const btnSaveQuiz = document.getElementById("btn-save-quiz");
+  if (btnSaveQuiz) {
+    btnSaveQuiz.addEventListener("click", async () => {
+      const title = document.getElementById("new-quiz-title").value.trim();
+      const subject = document.getElementById("new-quiz-subject").value;
+      const duration =
+        parseInt(document.getElementById("new-quiz-duration").value) || 0;
+      const totalMarks =
+        parseInt(document.getElementById("new-quiz-marks").value) || 0;
+
+      if (!title || !subject || duration <= 0 || totalMarks <= 0) {
+        alert("Vui lòng điền đầy đủ và hợp lệ tất cả thông tin.");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/quizzes/add`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, subject, duration, totalMarks }),
+        });
+
+        if (!res.ok) throw new Error("Lỗi thêm đề thi");
+
+        alert("✅ Thêm đề thi thành công!");
+        document.getElementById("new-quiz-title").value = "";
+        document.getElementById("new-quiz-subject").value = "";
+        document.getElementById("new-quiz-duration").value = "";
+        document.getElementById("new-quiz-marks").value = "";
+        location.hash = "#admin";
+        loadAdminData();
+      } catch (e) {
+        alert(`❌ ${e.message}`);
+      }
+    });
+  }
+
+  // ==========================
+  // ⭐ QUẢN LÝ CÂU HỎI
+  // ==========================
+
+  // Nút mở popup Thêm câu hỏi
+  const btnAddQuestion = document.getElementById("btn-add-question");
+  if (btnAddQuestion) {
+    btnAddQuestion.addEventListener("click", async () => {
+      // Load danh sách môn học vào select
+      try {
+        const res = await fetch(`${API_BASE}/subjects`);
+        const subjects = res.ok ? await res.json() : [];
+        const select = document.getElementById("new-question-subject");
+        select.innerHTML = '<option value="">-- Chọn môn học --</option>';
+        subjects.forEach((s) => {
+          const opt = document.createElement("option");
+          // Kiểm tra xem s là object hay string
+          const subjectName = typeof s === "object" ? s.name : s;
+          opt.value = subjectName;
+          opt.textContent = subjectName;
+          select.appendChild(opt);
+        });
+      } catch (e) {
+        console.error("Lỗi tải môn học:", e);
+      }
+      location.hash = "#add-question";
+    });
+  }
+
+  // Nút thêm câu hỏi từ trong modal (cho đề thi cụ thể)
+  const btnAddToQuiz = document.getElementById("btn-add-to-quiz");
+  if (btnAddToQuiz) {
+    btnAddToQuiz.addEventListener("click", async () => {
+      if (!window.currentViewingQuiz) {
+        alert("Vui lòng chọn một đề thi trước");
+        return;
+      }
+
+      const quiz = window.currentViewingQuiz;
+
+      // Load danh sách môn học vào select
+      try {
+        const res = await fetch(`${API_BASE}/subjects`);
+        const subjects = res.ok ? await res.json() : [];
+        const select = document.getElementById("new-question-subject");
+        select.innerHTML = '<option value="">-- Chọn môn học --</option>';
+
+        // Set mặc định là môn của đề hiện tại
+        subjects.forEach((s) => {
+          const opt = document.createElement("option");
+          const subjectName = typeof s === "object" ? s.name : s;
+          opt.value = subjectName;
+          opt.textContent = subjectName;
+          if (subjectName === quiz.subject) {
+            opt.selected = true;
+          }
+          select.appendChild(opt);
+        });
+      } catch (e) {
+        console.error("Lỗi tải môn học:", e);
+      }
+
+      // Reset form và set subject mặc định
+      document.getElementById("new-question-text").value = "";
+      document.getElementById("new-question-a").value = "";
+      document.getElementById("new-question-b").value = "";
+      document.getElementById("new-question-c").value = "";
+      document.getElementById("new-question-d").value = "";
+      document.getElementById("new-question-subject").value = quiz.subject;
+      document.getElementById("new-question-difficulty").value = "easy";
+      document.querySelector(
+        'input[name="new-question-type"][value="multiple"]'
+      ).checked = true;
+
+      location.hash = "#add-question";
+    });
+  }
+
+  // Toggle loại câu hỏi
+  const questionTypeRadios = document.querySelectorAll(
+    'input[name="new-question-type"]'
+  );
+  questionTypeRadios.forEach((radio) => {
+    radio.addEventListener("change", () => {
+      const multipleSection = document.getElementById(
+        "new-question-multiple-section"
+      );
+      const trueFalseSection = document.getElementById(
+        "new-question-truefalse-section"
+      );
+      const answerSection = document.getElementById(
+        "new-question-multiple-answer-section"
+      );
+
+      if (radio.value === "multiple") {
+        multipleSection.style.display = "block";
+        trueFalseSection.style.display = "none";
+        answerSection.style.display = "block";
+      } else {
+        multipleSection.style.display = "none";
+        trueFalseSection.style.display = "flex";
+        answerSection.style.display = "none";
+      }
+    });
+  });
+
+  // Nút lưu câu hỏi
+  const btnSaveQuestion = document.getElementById("btn-save-question");
+  if (btnSaveQuestion) {
+    btnSaveQuestion.addEventListener("click", async () => {
+      const questionType = document.querySelector(
+        'input[name="new-question-type"]:checked'
+      ).value;
+      const subject = document.getElementById("new-question-subject").value;
+      const questionText = document
+        .getElementById("new-question-text")
+        .value.trim();
+      const difficulty = document.getElementById(
+        "new-question-difficulty"
+      ).value;
+
+      if (!subject || !questionText || !difficulty) {
+        alert("Vui lòng điền đầy đủ tất cả thông tin.");
+        return;
+      }
+
+      let options = [];
+      let correctAnswer = "";
+
+      if (questionType === "multiple") {
+        const a = document.getElementById("new-question-a").value.trim();
+        const b = document.getElementById("new-question-b").value.trim();
+        const c = document.getElementById("new-question-c").value.trim();
+        const d = document.getElementById("new-question-d").value.trim();
+        correctAnswer = document.getElementById(
+          "new-question-correct-answer"
+        ).value;
+
+        if (!a || !b || !c || !d || !correctAnswer) {
+          alert("Vui lòng điền đầy đủ tất cả lựa chọn và đáp án.");
+          return;
+        }
+
+        options = [a, b, c, d];
+      } else {
+        options = ["Đúng", "Sai"];
+        const tfRadios = document.querySelectorAll(
+          'input[name="new-question-tf-answer"]:checked'
+        );
+        if (tfRadios.length === 0) {
+          alert("Vui lòng chọn đáp án Đúng/Sai.");
+          return;
+        }
+        correctAnswer = tfRadios[0].value;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/questions/add`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            subject,
+            questionText,
+            options,
+            correctAnswer,
+            difficulty,
+            quizTitle: window.currentViewingQuiz
+              ? window.currentViewingQuiz.title
+              : null,
+          }),
+        });
+
+        if (!res.ok) throw new Error("Lỗi thêm câu hỏi");
+
+        alert("✅ Thêm câu hỏi thành công!");
+        document.getElementById("new-question-text").value = "";
+        document.getElementById("new-question-a").value = "";
+        document.getElementById("new-question-b").value = "";
+        document.getElementById("new-question-c").value = "";
+        document.getElementById("new-question-d").value = "";
+        document.getElementById("new-question-subject").value = "";
+        document.getElementById("new-question-difficulty").value = "easy";
+
+        // Nếu đang xem quiz modal, reload lại
+        if (window.currentViewingQuiz) {
+          await viewQuizQuestions(window.currentViewingQuiz);
+          location.hash = "#quiz-questions";
+        } else {
+          location.hash = "#admin";
+          loadAdminData();
+        }
+      } catch (e) {
+        alert(`❌ ${e.message}`);
+      }
     });
   }
 
