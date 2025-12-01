@@ -270,23 +270,19 @@ app.get("/api/questions", async (req, res) => {
   res.json(qs);
 });
 
-// Lưu lịch sử bài làm
-// route cũ (giữ tương thích)
-app.post("/api/attempt", async (req, res) => {
-  const payload = req.body || {};
-  const userEmail = payload.userEmail || payload.email || payload.user || "";
-  const doc = Object.assign({}, payload, { userEmail });
-  const att = await Attempt.create(doc);
-  res.json(att);
-});
-
-// chấp nhận đường dẫn số nhiều /api/attempts để tương thích với client
+// Lưu lịch sử bài làm (nếu gửi đúng API)
 app.post("/api/attempts", async (req, res) => {
   const payload = req.body || {};
   const userEmail = payload.userEmail || payload.email || payload.user || "";
   const doc = Object.assign({}, payload, { userEmail });
-  const att = await Attempt.create(doc);
-  res.json(att);
+
+  try {
+    const att = await Attempt.create(doc); // Lưu vào MongoDB
+    res.json(att); // Trả về thông tin bài nộp
+  } catch (err) {
+    console.error("Lỗi lưu attempt:", err);
+    res.status(500).json({ error: "Lỗi khi lưu kết quả bài làm" });
+  }
 });
 
 // Lấy lịch sử theo user

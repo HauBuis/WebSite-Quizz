@@ -348,6 +348,7 @@ async function loadDataFiles() {
 }
 
 function setupSubjectButtons() {
+  // Đảm bảo gọi sự kiện cho các nút "Xem đề" sau khi danh sách môn học đã được render xong
   document.querySelectorAll(".btn-view-quizzes").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       const card = e.currentTarget.closest(".subject-card");
@@ -361,7 +362,7 @@ function setupSubjectButtons() {
         return;
       }
       location.hash = "#quizzes";
-      renderQuizzes(subjectTitle);
+      renderQuizzes(subjectTitle); // Render danh sách đề thi của môn học đã chọn
     });
   });
 }
@@ -775,7 +776,7 @@ async function submitCurrentQuiz(e) {
   const attempt = {
     email: auth.email,
     quizTitle: currentQuiz?.title || "(Không tiêu đề)",
-    // store scaled score so maximum possible is 10
+
     score: scaledScore,
     total: 10,
     rawScore: score,
@@ -2042,12 +2043,18 @@ function validateSubjectName(name, existingSubjects) {
   return null; // hợp lệ
 }
 async function loadQuizCount(subjectName) {
-  const res = await fetch(
-    `${API_BASE}/quizzes/count/${encodeURIComponent(subjectName)}`
-  );
-  const data = await res.json();
-  return data.count || 0;
+  try {
+    const res = await fetch(
+      `${API_BASE}/quizzes/count/${encodeURIComponent(subjectName)}`
+    );
+    const data = await res.json();
+    return data.count || 0; // Trả về số lượng đề thi của môn học
+  } catch (error) {
+    console.error("Lỗi khi lấy số lượng đề thi:", error);
+    return 0; // Trả về 0 nếu gặp lỗi
+  }
 }
+
 async function renderSubjects() {
   const grid = document.querySelector("#home .card-grid");
   if (!grid) return;
@@ -2064,10 +2071,11 @@ async function renderSubjects() {
       return;
     }
 
-    grid.innerHTML = "";
+    grid.innerHTML = ""; // Xóa nội dung cũ trong grid
 
     // 🟦 Dùng for..of thay vì forEach để await hoạt động đúng
     for (const sub of list) {
+      // Đợi lấy số lượng đề cho môn học này
       const count = await loadQuizCount(sub.name);
 
       const card = document.createElement("article");
@@ -2077,13 +2085,14 @@ async function renderSubjects() {
         <p class="subject-info">${count} đề - Độ khó: Trung bình</p>
         <button class="primary-btn btn-view-quizzes">Xem đề</button>
       `;
-      grid.appendChild(card);
+      grid.appendChild(card); // Thêm card vào trong grid
     }
 
-    // 🔥 Gọi sau khi render xong toàn bộ card
+    // 🔥 Gọi sau khi render xong toàn bộ card để gắn sự kiện cho các nút "Xem đề"
     setupSubjectButtons();
   } catch (e) {
     grid.innerHTML = "<p style='color:red'>Lỗi tải môn học</p>";
+    console.error("Lỗi khi tải môn học:", e);
   }
 }
 async function loadQuizCount(subjectName) {
