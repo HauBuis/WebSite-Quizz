@@ -1744,7 +1744,6 @@ function setupAdminEvents() {
             console.error("Lỗi load đề theo môn:", err);
           }
         });
-
       // Load danh sách môn học vào select
       try {
         const res = await fetch(`${API_BASE}/subjects`);
@@ -1871,63 +1870,55 @@ function setupAdminEvents() {
         const b = document.getElementById("new-question-b").value.trim();
         const c = document.getElementById("new-question-c").value.trim();
         const d = document.getElementById("new-question-d").value.trim();
-        correctAnswer = document.getElementById(
+
+        // A/B/C/D
+        const selectedCorrect = document.getElementById(
           "new-question-correct-answer"
         ).value;
 
-        if (!a || !b || !c || !d || !correctAnswer) {
+        if (!a || !b || !c || !d || !selectedCorrect) {
           alert("Vui lòng điền đầy đủ tất cả lựa chọn và đáp án.");
           return;
         }
 
         options = [a, b, c, d];
-      } else {
-        options = ["Đúng", "Sai"];
-        const tfRadios = document.querySelectorAll(
-          'input[name="new-question-tf-answer"]:checked'
-        );
-        if (tfRadios.length === 0) {
-          alert("Vui lòng chọn đáp án Đúng/Sai.");
-          return;
+
+        try {
+          const res = await fetch(`${API_BASE}/questions/add`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              subject,
+              questionText,
+              options,
+              correctAnswer,
+              difficulty,
+              quizTitle: document.getElementById("new-question-quiz").value,
+            }),
+          });
+
+          if (!res.ok) throw new Error("Lỗi thêm câu hỏi");
+
+          alert("✅ Thêm câu hỏi thành công!");
+          document.getElementById("new-question-text").value = "";
+          document.getElementById("new-question-a").value = "";
+          document.getElementById("new-question-b").value = "";
+          document.getElementById("new-question-c").value = "";
+          document.getElementById("new-question-d").value = "";
+          document.getElementById("new-question-subject").value = "";
+          document.getElementById("new-question-difficulty").value = "easy";
+
+          // Nếu đang xem quiz modal, reload lại
+          if (window.currentViewingQuiz) {
+            await viewQuizQuestions(window.currentViewingQuiz);
+            location.hash = "#quiz-questions";
+          } else {
+            location.hash = "#admin";
+            loadAdminData();
+          }
+        } catch (e) {
+          alert(`❌ ${e.message}`);
         }
-        correctAnswer = tfRadios[0].value;
-      }
-
-      try {
-        const res = await fetch(`${API_BASE}/questions/add`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            subject,
-            questionText,
-            options,
-            correctAnswer,
-            difficulty,
-            quizTitle: document.getElementById("new-question-quiz").value,
-          }),
-        });
-
-        if (!res.ok) throw new Error("Lỗi thêm câu hỏi");
-
-        alert("✅ Thêm câu hỏi thành công!");
-        document.getElementById("new-question-text").value = "";
-        document.getElementById("new-question-a").value = "";
-        document.getElementById("new-question-b").value = "";
-        document.getElementById("new-question-c").value = "";
-        document.getElementById("new-question-d").value = "";
-        document.getElementById("new-question-subject").value = "";
-        document.getElementById("new-question-difficulty").value = "easy";
-
-        // Nếu đang xem quiz modal, reload lại
-        if (window.currentViewingQuiz) {
-          await viewQuizQuestions(window.currentViewingQuiz);
-          location.hash = "#quiz-questions";
-        } else {
-          location.hash = "#admin";
-          loadAdminData();
-        }
-      } catch (e) {
-        alert(`❌ ${e.message}`);
       }
     });
   }
