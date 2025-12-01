@@ -48,37 +48,7 @@
       <h2 class="section-title">Danh sách môn học</h2>
       <p class="section-desc">Chọn môn để bắt đầu luyện tập.</p>
 
-      <div class="card-grid">
-        <article class="subject-card">
-          <h3 class="subject-title">Cấu trúc dữ liệu & Giải thuật</h3>
-          <p class="subject-info">10 đề - Độ khó: Trung bình</p>
-          <button class="primary-btn btn-view-quizzes">Xem đề</button>
-        </article>
-
-        <article class="subject-card">
-          <h3 class="subject-title">Mạng máy tính</h3>
-          <p class="subject-info">10 đề - Độ khó: Khó</p>
-          <button class="primary-btn btn-view-quizzes">Xem đề</button>
-        </article>
-
-        <article class="subject-card">
-          <h3 class="subject-title">Hệ điều hành</h3>
-          <p class="subject-info">10 đề - Độ khó: Dễ</p>
-          <button class="primary-btn btn-view-quizzes">Xem đề</button>
-        </article>
-
-        <article class="subject-card">
-          <h3 class="subject-title">Lập trình C cơ bản</h3>
-          <p class="subject-info">10 đề - Độ khó: Trung bình</p>
-          <button class="primary-btn btn-view-quizzes">Xem đề</button>
-        </article>
-
-        <article class="subject-card">
-          <h3 class="subject-title">Cơ sở dữ liệu</h3>
-          <p class="subject-info">10 đề - Độ khó: Trung bình</p>
-          <button class="primary-btn btn-view-quizzes">Xem đề</button>
-        </article>
-      </div>
+      <div class="card-grid"></div>
     </main>
 
     <!-- ====== QUIZZES (DANH SÁCH ĐỀ) ====== -->
@@ -300,6 +270,23 @@
 
         <div style="display: flex; gap: 10px; margin-top: 12px">
           <button id="btn-save-subject" class="primary-btn">Lưu</button>
+          <a class="secondary-btn overlay-close" href="#admin">Hủy</a>
+        </div>
+      </div>
+    </section>
+    <section id="edit-subject" class="overlay">
+      <div class="overlay-card">
+        <h3 class="overlay-title">Sửa Môn học</h3>
+
+        <input
+          id="edit-subject-name"
+          class="input-box"
+          type="text"
+          placeholder="Tên môn"
+        />
+
+        <div style="display: flex; gap: 8px; margin-top: 12px">
+          <button id="btn-update-subject" class="primary-btn">Cập nhật</button>
           <a class="secondary-btn overlay-close" href="#admin">Hủy</a>
         </div>
       </div>

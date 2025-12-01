@@ -1281,6 +1281,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupSettings();
 
   await loadDataFiles();
+  await renderSubjects();
   setupSubjectButtons();
   setupSubmitButton();
   renderHistory();
@@ -1323,6 +1324,9 @@ async function loadAdminSubjects() {
       const li = document.createElement("li");
       li.innerHTML = `
         <span>${subj.name}</span>
+        <button class="secondary-btn btn-edit-subject" data-id="${subj._id}" data-name="${subj.name}">
+      Sửa
+    </button>
         <button class="secondary-btn btn-delete-subject" data-id="${subj._id}">
           Xóa
         </button>
@@ -1345,56 +1349,125 @@ async function loadAdminSubjects() {
   } catch (err) {
     ul.innerHTML = "<li>Lỗi khi tải dữ liệu</li>";
   }
+  document.querySelectorAll(".btn-edit-subject").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.id;
+      const name = btn.dataset.name;
+
+      // Lưu ID đang sửa
+      window.currentEditingSubject = id;
+
+      // Gán tên cũ vào input
+      document.getElementById("edit-subject-name").value = name;
+
+      // Mở popup sửa
+      location.hash = "#edit-subject";
+    });
+  });
 }
 function setupAdminEvents() {
+  // Nút mở popup Thêm môn
   const btnAddSubject = document.getElementById("btn-add-subject");
-  const btnSaveSubject = document.getElementById("btn-save-subject");
-
-  // 1. Mở popup thêm môn học
   if (btnAddSubject) {
     btnAddSubject.addEventListener("click", () => {
       location.hash = "#add-subject";
     });
   }
 
-  // 2. Lưu môn học mới
-  btnSaveSubject.addEventListener("click", async () => {
-    const nameInput = document.getElementById("new-subject-name");
-    const name = nameInput.value.trim();
+  // ==========================
+  // ⭐ THÊM MÔN HỌC
+  // ==========================
+  const btnSaveSubject = document.getElementById("btn-save-subject");
+  if (btnSaveSubject) {
+    btnSaveSubject.addEventListener("click", async () => {
+      const nameInput = document.getElementById("new-subject-name");
+      const name = nameInput.value.trim();
 
-    // 🔹 Lấy danh sách môn hiện có để kiểm tra trùng tên
-    let existingSubjects = [];
-    try {
-      const res = await fetch(`${API_BASE}/subjects`);
-      if (res.ok) existingSubjects = await res.json();
-    } catch {}
+      // Lấy danh sách môn tránh trùng
+      let existing = [];
+      try {
+        const res = await fetch(`${API_BASE}/subjects`);
+        if (res.ok) existing = await res.json();
+      } catch {}
 
-    // 🔹 Kiểm tra hợp lệ
-    const error = validateSubjectName(name, existingSubjects);
-    if (error) {
-      alert(error);
-      return;
-    }
+      const err = validateSubjectName(name, existing);
+      if (err) return alert(err);
 
-    // 🔹 Gọi API tạo môn học
-    try {
-      const res = await fetch(`${API_BASE}/subjects`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
-      });
+      try {
+        const res = await fetch(`${API_BASE}/subjects`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name }),
+        });
 
-      if (!res.ok) throw new Error("Không thể tạo môn học");
+        if (!res.ok) throw new Error("Không thể tạo môn học");
 
-      alert("Đã thêm môn học thành công!");
+        alert("Đã thêm môn học thành công!");
+        nameInput.value = "";
+        location.hash = "#admin";
+        loadAdminSubjects();
+      } catch (e) {
+        alert("Lỗi: " + e.message);
+      }
+    });
+  }
 
-      nameInput.value = "";
-      location.hash = "#admin";
-      loadAdminSubjects();
-    } catch (e) {
-      alert("Lỗi: " + e.message);
-    }
+  // ==========================
+  // ⭐ SỬA MÔN HỌC
+  // ==========================
+
+  // 1. Gán sự kiện cho nút Sửa trong danh sách
+  document.querySelectorAll(".btn-edit-subject").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.id;
+      const name = btn.dataset.name;
+
+      window.currentEditingSubject = id;
+      document.getElementById("edit-subject-name").value = name;
+
+      location.hash = "#edit-subject";
+    });
   });
+
+  // 2. Nút Cập nhật môn
+  const btnUpdateSubject = document.getElementById("btn-update-subject");
+  if (btnUpdateSubject) {
+    btnUpdateSubject.addEventListener("click", async () => {
+      const id = window.currentEditingSubject;
+      const newName = document.getElementById("edit-subject-name").value.trim();
+
+      if (!id) return alert("Không xác định được môn để sửa.");
+
+      // Lấy danh sách môn để kiểm tra trùng tên
+      let existing = [];
+      try {
+        const res = await fetch(`${API_BASE}/subjects`);
+        if (res.ok) existing = await res.json();
+      } catch {}
+
+      // bỏ môn hiện tại ra khỏi danh sách
+      existing = existing.filter((s) => s._id !== id);
+
+      const err = validateSubjectName(newName, existing);
+      if (err) return alert(err);
+
+      try {
+        const res = await fetch(`${API_BASE}/subjects/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: newName }),
+        });
+
+        if (!res.ok) throw new Error("Không thể cập nhật môn học");
+
+        alert("Đã cập nhật thành công!");
+        location.hash = "#admin";
+        loadAdminSubjects();
+      } catch (e) {
+        alert("Lỗi: " + e.message);
+      }
+    });
+  }
 }
 
 function validateSubjectName(name, existingSubjects) {
@@ -1404,12 +1477,6 @@ function validateSubjectName(name, existingSubjects) {
 
   if (name.trim().length < 3) {
     return "Tên môn học phải dài ít nhất 3 ký tự.";
-  }
-
-  // Không chứa ký tự đặc biệt
-  const regex = /^[a-zA-Z0-9À-ỹ\s]+$/;
-  if (!regex.test(name)) {
-    return "Tên môn học không được chứa ký tự đặc biệt.";
   }
 
   // Không chỉ chứa số
@@ -1424,4 +1491,39 @@ function validateSubjectName(name, existingSubjects) {
   }
 
   return null; // hợp lệ
+}
+async function renderSubjects() {
+  const grid = document.querySelector("#home .card-grid");
+  if (!grid) return;
+
+  grid.innerHTML = "<p>Đang tải...</p>";
+
+  try {
+    const res = await fetch(`${API_BASE}/subjects`);
+    const list = res.ok ? await res.json() : [];
+
+    if (list.length === 0) {
+      grid.innerHTML =
+        "<p style='text-align:center;color:#666'>Chưa có môn học nào.</p>";
+      return;
+    }
+
+    grid.innerHTML = "";
+
+    list.forEach((sub) => {
+      const card = document.createElement("article");
+      card.className = "subject-card";
+      card.innerHTML = `
+        <h3 class="subject-title">${sub.name}</h3>
+        <p class="subject-info">0 đề - Độ khó: Trung bình</p>
+        <button class="primary-btn btn-view-quizzes">Xem đề</button>
+      `;
+      grid.appendChild(card);
+    });
+
+    // gắn lại sự kiện
+    setupSubjectButtons();
+  } catch (e) {
+    grid.innerHTML = "<p style='color:red'>Lỗi tải môn học</p>";
+  }
 }

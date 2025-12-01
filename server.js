@@ -413,6 +413,24 @@ app.put("/api/subjects/:id", async (req, res) => {
     res.status(500).json({ message: e.message });
   }
 });
+app.put("/api/subjects/:id", (req, res) => {
+  const id = req.params.id;
+  const { name } = req.body;
+
+  if (!name || name.trim() === "") {
+    return res.status(400).json({ message: "Tên môn không hợp lệ" });
+  }
+
+  const subj = subjects.find((s) => s._id === id);
+  if (!subj) {
+    return res.status(404).json({ message: "Không tìm thấy môn học" });
+  }
+
+  subj.name = name;
+  save("subjects.json", subjects);
+
+  res.json({ message: "Đã cập nhật", subject: subj });
+});
 
 // 4️⃣ CHẠY SERVER
 const PORT = 5500;
