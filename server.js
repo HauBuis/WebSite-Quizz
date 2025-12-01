@@ -294,7 +294,11 @@ app.get("/api/attempts/:email", async (req, res) => {
   const list = await Attempt.find({ userEmail: req.params.email });
   res.json(list);
 });
-
+app.get("/api/quizzes/count/:subject", async (req, res) => {
+  const subject = req.params.subject;
+  const count = await Quiz.countDocuments({ subject });
+  res.json({ subject, count });
+});
 // Admin: đồng bộ lại DB từ các file JSON (an toàn: yêu cầu secret trong body)
 // app.post("/api/admin/reseed", async (req, res) => {
 //   try {

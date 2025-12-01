@@ -454,32 +454,31 @@ function renderQuiz(quiz) {
   // dùng kho câu hỏi theo môn làm dự phòng, đồng thời tránh trùng lặp.
   const normalize = (s) =>
     (s || "").toString().trim().replace(/\s+/g, " ").normalize();
+  // Lấy đúng câu hỏi thuộc về đề thi này
   const assigned = ALL_QUESTIONS.filter(
-    (q) => q.quizTitle && normalize(q.quizTitle) === normalize(quiz.title || "")
+    (q) => q.quizTitle && normalize(q.quizTitle) === normalize(quiz.title)
   );
-  let pool = [];
-  if (assigned.length >= (quiz.totalMarks || 10)) {
-    pool = assigned;
-  } else {
-    // bắt đầu với các câu đã gán (có thể rỗng), sau đó thêm câu theo môn, loại trừ những câu đã thêm
-    pool = assigned.slice();
-    const subjectPool = ALL_QUESTIONS.filter(
-      (q) =>
-        normalize(q.subject) === normalize(quiz.subject) &&
-        normalize(q.quizTitle) !== normalize(quiz.title)
-    );
-    // Tránh trùng lặp dựa trên questionText
-    const seen = new Set(pool.map((p) => p.questionText));
-    for (const q of subjectPool) {
-      if (seen.size >= (quiz.totalMarks || 10)) break;
-      if (!seen.has(q.questionText)) {
-        pool.push(q);
-        seen.add(q.questionText);
-      }
-    }
-    if (pool.length === 0) pool = ALL_QUESTIONS.slice(0, quiz.totalMarks || 10);
+
+  // ❗ Không lấy câu hỏi từ đề khác – nếu rỗng thì báo luôn
+  if (assigned.length === 0) {
+    const quizSection = document.getElementById("quiz");
+
+    quizSection.querySelectorAll(".question-card").forEach((e) => e.remove());
+
+    const submitArea = quizSection.querySelector(".submit-area");
+
+    const msg = document.createElement("div");
+    msg.style.padding = "16px";
+    msg.style.fontSize = "18px";
+    msg.style.color = "#555";
+    msg.style.textAlign = "center";
+    msg.textContent = "Chưa có câu hỏi cho đề thi này.";
+    quizSection.insertBefore(msg, submitArea);
+
+    return; // ⛔ STOP — không render gì thêm
   }
-  const selected = pool.slice(0, quiz.totalMarks || 10);
+
+  const selected = assigned.slice(0, quiz.totalMarks || 10);
 
   const topbar = quizSection.querySelector(".quiz-topbar");
   if (topbar) {
@@ -1715,6 +1714,36 @@ function setupAdminEvents() {
   const btnAddQuestion = document.getElementById("btn-add-question");
   if (btnAddQuestion) {
     btnAddQuestion.addEventListener("click", async () => {
+      // Khi chọn môn → tự động load danh sách đề của môn đó
+      document
+        .getElementById("new-question-subject")
+        .addEventListener("change", async (e) => {
+          const subjectSelected = e.target.value;
+          const quizSelect = document.getElementById("new-question-quiz");
+
+          quizSelect.innerHTML = '<option value="">-- Chọn đề thi --</option>';
+
+          if (!subjectSelected) return;
+
+          try {
+            const resQuiz = await fetch(`${API_BASE}/quizzes`);
+            const quizList = resQuiz.ok ? await resQuiz.json() : [];
+
+            // Chỉ lấy đề thuộc môn được chọn
+            const filteredQuizzes = quizList.filter(
+              (q) => q.subject === subjectSelected
+            );
+
+            filteredQuizzes.forEach((q) => {
+              const opt = document.createElement("option");
+              opt.value = q.title;
+              opt.textContent = `${q.title}`;
+              quizSelect.appendChild(opt);
+            });
+          } catch (err) {
+            console.error("Lỗi load đề theo môn:", err);
+          }
+        });
       // Load danh sách môn học vào select
       try {
         const res = await fetch(`${API_BASE}/subjects`);
@@ -1841,65 +1870,22 @@ function setupAdminEvents() {
         const b = document.getElementById("new-question-b").value.trim();
         const c = document.getElementById("new-question-c").value.trim();
         const d = document.getElementById("new-question-d").value.trim();
-        correctAnswer = document.getElementById(
+
+        // A/B/C/D
+        const selectedCorrect = document.getElementById(
           "new-question-correct-answer"
         ).value;
 
-        if (!a || !b || !c || !d || !correctAnswer) {
+        if (!a || !b || !c || !d || !selectedCorrect) {
           alert("Vui lòng điền đầy đủ tất cả lựa chọn và đáp án.");
           return;
         }
 
         options = [a, b, c, d];
-      } else {
-        options = ["Đúng", "Sai"];
-        const tfRadios = document.querySelectorAll(
-          'input[name="new-question-tf-answer"]:checked'
-        );
-        if (tfRadios.length === 0) {
-          alert("Vui lòng chọn đáp án Đúng/Sai.");
-          return;
-        }
-        correctAnswer = tfRadios[0].value;
-      }
 
-      try {
-        const res = await fetch(`${API_BASE}/questions/add`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            subject,
-            questionText,
-            options,
-            correctAnswer,
-            difficulty,
-            quizTitle: window.currentViewingQuiz
-              ? window.currentViewingQuiz.title
-              : null,
-          }),
-        });
-
-        if (!res.ok) throw new Error("Lỗi thêm câu hỏi");
-
-        alert("✅ Thêm câu hỏi thành công!");
-        document.getElementById("new-question-text").value = "";
-        document.getElementById("new-question-a").value = "";
-        document.getElementById("new-question-b").value = "";
-        document.getElementById("new-question-c").value = "";
-        document.getElementById("new-question-d").value = "";
-        document.getElementById("new-question-subject").value = "";
-        document.getElementById("new-question-difficulty").value = "easy";
-
-        // Nếu đang xem quiz modal, reload lại
-        if (window.currentViewingQuiz) {
-          await viewQuizQuestions(window.currentViewingQuiz);
-          location.hash = "#quiz-questions";
-        } else {
-          location.hash = "#admin";
-          loadAdminData();
-        }
-      } catch (e) {
-        alert(`❌ ${e.message}`);
+        // ⭐ Convert từ A/B/C/D → Nội dung đáp án thật
+        const mapIndex = { A: 0, B: 1, C: 2, D: 3 };
+        correctAnswer = options[mapIndex[selectedCorrect]];
       }
     });
   }
@@ -2022,6 +2008,13 @@ function validateSubjectName(name, existingSubjects) {
 
   return null; // hợp lệ
 }
+async function loadQuizCount(subjectName) {
+  const res = await fetch(
+    `${API_BASE}/quizzes/count/${encodeURIComponent(subjectName)}`
+  );
+  const data = await res.json();
+  return data.count || 0;
+}
 async function renderSubjects() {
   const grid = document.querySelector("#home .card-grid");
   if (!grid) return;
@@ -2040,14 +2033,16 @@ async function renderSubjects() {
 
     grid.innerHTML = "";
 
-    list.forEach((sub) => {
+    list.forEach(async (sub) => {
+      const count = await loadQuizCount(sub.name); // lấy số đề
+
       const card = document.createElement("article");
       card.className = "subject-card";
       card.innerHTML = `
-        <h3 class="subject-title">${sub.name}</h3>
-        <p class="subject-info">0 đề - Độ khó: Trung bình</p>
-        <button class="primary-btn btn-view-quizzes">Xem đề</button>
-      `;
+    <h3 class="subject-title">${sub.name}</h3>
+    <p class="subject-info">${count} đề - Độ khó: Trung bình</p>
+    <button class="primary-btn btn-view-quizzes">Xem đề</button>
+  `;
       grid.appendChild(card);
     });
 
