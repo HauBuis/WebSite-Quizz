@@ -581,3 +581,18 @@ body.overlay-open #landing {
 .btn-back-home:active {
   transform: translateY(-1px);
 }
+.header.exam-mode .menu > :not(#menu-user):not([href="#settings"]) {
+  display: none !important;
+}
+
+.header.exam-mode .menu > :not(#menu-user):not([href="#settings"]) {
+  display: none !important;
+}
+
+.header.exam-mode .logo {
+  display: block !important;
+}
+
+.header.exam-mode #btn-logout {
+  display: none !important;
+}

@@ -787,6 +787,7 @@ async function submitCurrentQuiz(e) {
     questions: currentRenderedQuestions,
     createdAt: new Date().toISOString(),
   };
+  console.log("Attempt data to send:", attempt);
 
   try {
     const res = await fetch(`${API_BASE}/attempts`, {
@@ -2101,4 +2102,84 @@ async function loadQuizCount(subjectName) {
   );
   const data = await res.json();
   return data.count;
+}
+const header = document.querySelector(".header");
+
+/**
+ * Kiểm tra hash hiện tại để áp dụng lớp exam-mode vào Header.
+ */
+function checkExamMode() {
+  // 1. Dừng timer (nếu có) khi rời khỏi #quiz (Hàm stopPerQuestionTimers đã được bổ sung trước đó)
+  if (window.location.hash !== "#quiz") {
+    // Dừng timer tổng và timer từng câu hỏi khi rời khỏi trang quiz
+    stopPerQuestionTimers();
+  }
+
+  // 2. Áp dụng/Xóa lớp CSS ẩn nút
+  if (window.location.hash === "#quiz") {
+    // Đang làm bài thi: Thêm lớp exam-mode để ẩn các nút điều hướng
+    if (header) {
+      header.classList.add("exam-mode");
+    }
+  } else {
+    // Không làm bài thi (ở #history, #home, #login...): Xóa lớp exam-mode
+    if (header) {
+      header.classList.remove("exam-mode");
+    }
+  }
+}
+function stopPerQuestionTimers() {
+  console.debug("Stopping all per-question timers.");
+  Object.values(perQuestionTimers).forEach((timer) => {
+    clearInterval(timer);
+  });
+  perQuestionTimers = {}; // Đảm bảo reset lại object
+}
+
+// Bổ sung: Dừng timer tổng của bài thi (thanh màu đỏ/xanh lá trên cùng)
+function stopTotalQuizTimer() {
+  const fill = document.querySelector(".quiz-timer-fill");
+  if (fill) {
+    fill.style.animation = "none";
+    // Nếu bạn có một global timer interval cho bài thi, hãy xóa nó ở đây.
+    // Hiện tại code chỉ dùng CSS animation, nên không cần clearInterval.
+  }
+}
+
+// Gọi hàm checkExamMode khi trang tải và khi hash thay đổi
+document.addEventListener("DOMContentLoaded", () => {
+  // ... (Các code DOMContentLoaded khác của bạn)
+
+  // Khởi tạo trạng thái ban đầu
+  checkExamMode();
+});
+
+// Lắng nghe sự kiện thay đổi hash (chuyển trang)
+window.addEventListener("hashchange", checkExamMode);
+async function setupEditButtons() {
+  document.querySelectorAll(".btn-edit-question").forEach((btn) => {
+    btn.addEventListener("click", async (e) => {
+      const questionId = e.currentTarget.dataset.id; // Cần có data-id trên nút
+      if (!questionId) return;
+
+      // 1. Lấy dữ liệu câu hỏi hiện tại từ API
+      const auth = getAuth();
+      if (!auth || auth.role !== "admin") {
+        alert("Bạn không có quyền này.");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/questions/${questionId}`);
+        if (!res.ok) throw new Error("Không tìm thấy câu hỏi.");
+        const questionData = await res.json();
+
+        // 2. Hiển thị form/modal chỉnh sửa và điền dữ liệu (Cần có mã HTML cho modal này)
+        openEditQuestionModal(questionData);
+      } catch (error) {
+        console.error("Lỗi khi tải câu hỏi để sửa:", error);
+        alert("Lỗi: " + error.message);
+      }
+    });
+  });
 }

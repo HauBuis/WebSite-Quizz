@@ -480,6 +480,81 @@ app.delete("/api/questions/:id", async (req, res) => {
   }
 });
 
+// Sửa câu hỏi (Update Question)
+app.put("/api/questions/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const {
+      subject,
+      questionText,
+      options,
+      correctAnswer,
+      difficulty,
+      quizTitle,
+    } = req.body;
+
+    // Kiểm tra thông tin bắt buộc
+    if (
+      !subject ||
+      !questionText ||
+      !options ||
+      !correctAnswer ||
+      !difficulty
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Thiếu thông tin bắt buộc để cập nhật." });
+    }
+
+    // Tạo object chứa các trường cần cập nhật
+    const updateData = {
+      subject,
+      questionText,
+      options,
+      correctAnswer,
+      difficulty,
+      quizTitle: quizTitle || null,
+    };
+
+    // Tìm và cập nhật câu hỏi bằng ID
+    const question = await Question.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true, runValidators: true } // new: true trả về document mới, runValidators: chạy kiểm tra dữ liệu
+    );
+
+    if (!question) {
+      return res
+        .status(404)
+        .json({ message: "Không tìm thấy câu hỏi để cập nhật." });
+    }
+
+    res.json(question); // Trả về câu hỏi đã được cập nhật
+  } catch (e) {
+    console.error("Lỗi khi cập nhật câu hỏi:", e.message);
+    res
+      .status(500)
+      .json({ message: "Lỗi Server khi cập nhật câu hỏi: " + e.message });
+  }
+});
+app.get("/api/questions/id/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    // Sử dụng findById để tìm câu hỏi dựa trên MongoDB ID
+    const question = await Question.findById(id);
+
+    if (!question) {
+      return res.status(404).json({ message: "Không tìm thấy câu hỏi." });
+    }
+
+    res.json(question);
+  } catch (e) {
+    console.error("Lỗi khi lấy chi tiết câu hỏi:", e.message);
+    // Trả về 400 nếu ID không hợp lệ (ví dụ: ID không đúng định dạng ObjectId)
+    res.status(400).json({ message: "ID câu hỏi không hợp lệ." });
+  }
+});
+
 // 4️⃣ CHẠY SERVER
 const PORT = 5500;
 app.listen(PORT, () =>
