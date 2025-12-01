@@ -1093,22 +1093,26 @@ function navigateToHash() {
   const quizzes = document.getElementById("quizzes");
   const quiz = document.getElementById("quiz");
   const historySec = document.getElementById("history");
-  const adminSec = document.getElementById("admin"); // ⭐ trang admin
+  const adminSec = document.getElementById("admin");
+  const loginSec = document.getElementById("login");
+  const registerSec = document.getElementById("register");
 
   // Ẩn tất cả trước
-  [home, quizzes, quiz, historySec, adminSec].forEach((el) => {
-    if (el) el.style.display = "none";
-  });
+  [home, quizzes, quiz, historySec, adminSec, loginSec, registerSec].forEach(
+    (el) => {
+      if (el) el.style.display = "none";
+    }
+  );
 
   const h = location.hash || "#home";
 
-  // ❗ Nếu chưa đăng nhập → không cho vào bất kỳ trang nào
+  // ❗ Nếu chưa đăng nhập → không hiển thị gì, chỉ overlay background
   if (!auth) {
     updateOverlayBodyClass();
     return;
   }
 
-  // ⭐ Điều hướng theo hash
+  // ⭐ Điều hướng theo hash (khi đã đăng nhập)
   if (h === "" || h === "#" || h === "#home") {
     if (home) home.style.display = "block";
   } else if (h.startsWith("#quizzes")) {
@@ -1125,6 +1129,10 @@ function navigateToHash() {
       location.hash = "#home";
       if (home) home.style.display = "block";
     }
+  } else if (h === "#login") {
+    if (loginSec) loginSec.style.display = "block";
+  } else if (h === "#register") {
+    if (registerSec) registerSec.style.display = "block";
   }
   if (h === "#admin") {
     if (adminSec) adminSec.style.display = "block";
