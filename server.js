@@ -294,6 +294,17 @@ app.get("/api/attempts/:email", async (req, res) => {
   const list = await Attempt.find({ userEmail: req.params.email });
   res.json(list);
 });
+// Đếm số lượng đề theo môn
+app.get("/api/quizzes/count/:subject", async (req, res) => {
+  try {
+    const subject = req.params.subject;
+    const count = await Quiz.countDocuments({ subject });
+    return res.json({ subject, count });
+  } catch (err) {
+    console.error("Lỗi count quiz:", err);
+    res.status(500).json({ error: "Lỗi server" });
+  }
+});
 
 // Admin: đồng bộ lại DB từ các file JSON (an toàn: yêu cầu secret trong body)
 // app.post("/api/admin/reseed", async (req, res) => {
