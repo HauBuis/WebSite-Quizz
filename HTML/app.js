@@ -479,6 +479,10 @@ function setupStartButtons() {
 // PHẦN SỬA: RENDER QUIZ (dòng 540-600)
 // ====================================
 
+// ====================================
+// PHẦN ĐÃ FIX: RENDER QUIZ
+// ====================================
+
 function renderQuiz(quiz) {
   const quizSection = document.getElementById("quiz");
   const titleEl = quizSection.querySelector(".section-title");
@@ -489,10 +493,40 @@ function renderQuiz(quiz) {
   // Xóa hết câu hỏi cũ
   quizSection.querySelectorAll(".question-card").forEach((e) => e.remove());
 
-  // Lọc câu hỏi đã được gán cho quiz này
-  const assigned = ALL_QUESTIONS.filter(
-    (q) => q.quizTitle && q.quizTitle === quiz.title
-  );
+  // 🔍 LOG DEBUG - Kiểm tra dữ liệu
+  console.log("=== DEBUG renderQuiz ===");
+  console.log("Current quiz:", quiz);
+  console.log("Quiz title:", quiz.title);
+  console.log("Total questions in ALL_QUESTIONS:", ALL_QUESTIONS.length);
+
+  // ✅ FIX: Chuẩn hóa và so sánh chính xác
+  function normalizeString(str) {
+    if (!str) return "";
+    return str.toString().trim().toLowerCase().replace(/\s+/g, " ");
+  }
+
+  const normalizedQuizTitle = normalizeString(quiz.title);
+
+  console.log("Normalized quiz title:", normalizedQuizTitle);
+
+  // ✅ FIX: Lọc câu hỏi với normalize
+  const assigned = ALL_QUESTIONS.filter((q) => {
+    if (!q.quizTitle) return false;
+
+    const normalizedQTitle = normalizeString(q.quizTitle);
+    const match = normalizedQTitle === normalizedQuizTitle;
+
+    // Log để debug
+    if (match) {
+      console.log(
+        `✓ Matched: "${q.quizTitle}" (normalized: "${normalizedQTitle}")`
+      );
+    }
+
+    return match;
+  });
+
+  console.log(`Found ${assigned.length} questions for this quiz`);
 
   // Kiểm tra nếu không có câu hỏi
   if (assigned.length === 0) {
@@ -509,13 +543,16 @@ function renderQuiz(quiz) {
       quizSection.insertBefore(msg, submitArea);
     }
 
+    console.warn("⚠️ No questions found for this quiz!");
     return; // Dừng việc render nếu không có câu hỏi
   }
 
-  // ✅ FIX: Khai báo biến selected ở đây
+  // ✅ Lấy đúng số câu theo totalMarks
   const selected = assigned.slice(0, quiz.totalMarks || 10);
 
-  // ✅ FIX: Tạo currentRenderedQuestions ngay sau khi có selected
+  console.log(`Selected ${selected.length} questions to display`);
+
+  // ✅ Tạo currentRenderedQuestions
   function escapeRegExp(s) {
     return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   }
@@ -539,14 +576,14 @@ function renderQuiz(quiz) {
     return { text, options: opts };
   });
 
-  // ✅ FIX: Render câu hỏi ở đây (không phải trong validateSubmit)
+  // ✅ Render câu hỏi
   const submitArea = quizSection.querySelector(".submit-area");
   const settings = getSettings();
 
   currentRenderedQuestions.forEach((q, i) => {
     const card = document.createElement("article");
     card.className = "question-card";
-    card.dataset.qindex = i; // Thêm data-qindex cho observer
+    card.dataset.qindex = i;
 
     const timerHtml = settings.perQuestionTimer
       ? `<div class="question-timer" data-qindex="${i}" style="font-weight:600;color:#d32f2f;margin-bottom:8px;">30s</div>`
@@ -590,8 +627,38 @@ function renderQuiz(quiz) {
   if (settings.perQuestionTimer) {
     startPerQuestionTimers();
   }
+
+  console.log("=== Render quiz completed ===");
 }
 
+// ====================================
+// ✅ FIX: Cải thiện hàm findQuizByTitle
+// ====================================
+
+function findQuizByTitle(title) {
+  function normalizeString(str) {
+    if (!str) return "";
+    return str.toString().trim().toLowerCase().replace(/\s+/g, " ");
+  }
+
+  const normalized = normalizeString(title);
+
+  console.log("Finding quiz with title:", title);
+  console.log("Normalized:", normalized);
+
+  const found = ALL_QUIZZES.find((q) => {
+    const qNormalized = normalizeString(q.title);
+    return qNormalized === normalized;
+  });
+
+  if (found) {
+    console.log("✓ Found quiz:", found);
+  } else {
+    console.warn("⚠️ Quiz not found!");
+  }
+
+  return found;
+}
 // ====================================
 // FUNCTION: START PER-QUESTION TIMERS
 // ====================================
