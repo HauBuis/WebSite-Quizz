@@ -94,14 +94,27 @@ function stopBackgroundMusic() {
 
 function getAuth() {
   try {
-    return JSON.parse(localStorage.getItem(AUTH_KEY));
-  } catch {
-    return null;
+    const storedAuth = localStorage.getItem(AUTH_KEY);
+    if (storedAuth) {
+      return JSON.parse(storedAuth);
+    }
+    return null; // nếu không có dữ liệu auth
+  } catch (e) {
+    console.error("Lỗi khi lấy auth từ localStorage:", e);
+    return null; // nếu có lỗi
   }
 }
+
 function setAuth(auth) {
-  if (auth) localStorage.setItem(AUTH_KEY, JSON.stringify(auth));
-  else localStorage.removeItem(AUTH_KEY);
+  try {
+    if (auth) {
+      localStorage.setItem(AUTH_KEY, JSON.stringify(auth));
+    } else {
+      localStorage.removeItem(AUTH_KEY);
+    }
+  } catch (e) {
+    console.error("Lỗi khi lưu auth vào localStorage:", e);
+  }
 }
 
 function updateHeaderAuthUI() {
@@ -114,8 +127,11 @@ function updateHeaderAuthUI() {
   const elAvatar = document.getElementById("menu-user-avatar");
   const elAdminMenu = document.getElementById("menu-admin");
 
-  // Không cần avatar ở đây – tránh bị return sớm
-  if (!elLogin || !elReg || !elUser || !elEmail) return;
+  // Thay vì return sớm, kiểm tra đầy đủ
+  if (!elLogin || !elReg || !elUser || !elEmail) {
+    console.warn("Một hoặc nhiều phần tử không tồn tại.");
+    return; // Nếu cần thiết, vẫn có thể giữ return nếu thiếu phần tử
+  }
 
   if (auth && auth.email) {
     // Hiển thị user menu
@@ -171,20 +187,33 @@ async function registerUser({ name, email, password }) {
 }
 
 async function loginUser({ email, password }) {
-  const res = await fetch(`${API_BASE}/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message || "Lỗi đăng nhập.");
-  setAuth({
-    name: data.name,
-    email: data.email,
-    avatar: data.avatar || "🙂",
-    role: data.role || "user",
-  });
-  return data;
+  try {
+    const res = await fetch(`${API_BASE}/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    console.log("Đã gửi yêu cầu đăng nhập", email, password); // Debug log
+
+    const data = await res.json();
+    console.log("Dữ liệu trả về từ server:", data); // Debug log
+
+    if (!res.ok) throw new Error(data.message || "Lỗi đăng nhập.");
+
+    // Lưu thông tin người dùng vào localStorage
+    setAuth({
+      name: data.name,
+      email: data.email,
+      avatar: data.avatar || "🙂",
+      role: data.role || "user",
+    });
+
+    return data; // Trả về thông tin người dùng đăng nhập
+  } catch (e) {
+    console.error("Lỗi khi đăng nhập:", e.message); // Log lỗi
+    throw e; // Ném lỗi để có thể hiển thị thông báo cho người dùng
+  }
 }
 
 function logoutUser() {
@@ -201,10 +230,12 @@ function setupAuthForms() {
 
   const loginBtn = document.getElementById("btn-login");
   if (loginBtn)
-    loginBtn.addEventListener("click", async () => {
+    loginBtn.addEventListener("click", async (e) => {
+      e.preventDefault();
       const email = document.getElementById("login-email")?.value.trim();
       const pass = document.getElementById("login-password")?.value;
       const msgEl = document.getElementById("login-msg");
+
       try {
         await loginUser({ email, password: pass });
         msgEl.textContent = "Đăng nhập thành công.";
@@ -215,7 +246,6 @@ function setupAuthForms() {
         msgEl.className = "form-msg";
       }
     });
-
   const regBtn = document.getElementById("btn-register");
   if (regBtn)
     regBtn.addEventListener("click", async () => {
@@ -241,13 +271,14 @@ async function renderHistory() {
   const auth = getAuth();
   const wrap = document.getElementById("history-list");
   const empty = document.getElementById("history-empty");
-  if (!wrap || !empty) return;
+  if (!wrap || !empty) return; // Điều kiện ngắn gọn nhưng không gây lỗi
+
   wrap.innerHTML = "";
 
   if (!auth) {
     empty.style.display = "block";
     empty.innerHTML = 'Vui lòng <a href="#login">đăng nhập</a> để xem lịch sử.';
-    return;
+    return; // Trả về khi chưa đăng nhập
   }
 
   let list = [];
@@ -278,7 +309,7 @@ async function renderHistory() {
     empty.style.display = "block";
     empty.textContent = "Chưa có lịch sử làm bài.";
     MERGED_ATTEMPTS = [];
-    return;
+    return; // Dừng nếu không có dữ liệu
   }
 
   // Chuẩn hoá các attempt đã gộp và đảm bảo mỗi mục có một _localId ổn định để xem lại
@@ -444,43 +475,101 @@ function setupStartButtons() {
   );
 }
 
+// ====================================
+// PHẦN SỬA: RENDER QUIZ (dòng 540-600)
+// ====================================
+
 function renderQuiz(quiz) {
   const quizSection = document.getElementById("quiz");
   const titleEl = quizSection.querySelector(".section-title");
-  // Hiển thị chỉ tên môn (loại bỏ tiền tố số trong quiz.title)
+
+  // Hiển thị tên môn
   titleEl.textContent = quiz.subject || quiz.title;
 
+  // Xóa hết câu hỏi cũ
   quizSection.querySelectorAll(".question-card").forEach((e) => e.remove());
-  // Ưu tiên câu hỏi đã gán cho quiz này (quizTitle). Nếu không đủ,
-  // dùng kho câu hỏi theo môn làm dự phòng, đồng thời tránh trùng lặp.
-  const normalize = (s) =>
-    (s || "").toString().trim().replace(/\s+/g, " ").normalize();
-  // Lấy đúng câu hỏi thuộc về đề thi này
+
+  // Lọc câu hỏi đã được gán cho quiz này
   const assigned = ALL_QUESTIONS.filter(
-    (q) => q.quizTitle && normalize(q.quizTitle) === normalize(quiz.title)
+    (q) => q.quizTitle && q.quizTitle === quiz.title
   );
 
-  // ❗ Không lấy câu hỏi từ đề khác – nếu rỗng thì báo luôn
+  // Kiểm tra nếu không có câu hỏi
   if (assigned.length === 0) {
-    const quizSection = document.getElementById("quiz");
-
-    quizSection.querySelectorAll(".question-card").forEach((e) => e.remove());
-
     const submitArea = quizSection.querySelector(".submit-area");
-
     const msg = document.createElement("div");
+
     msg.style.padding = "16px";
     msg.style.fontSize = "18px";
     msg.style.color = "#555";
     msg.style.textAlign = "center";
     msg.textContent = "Chưa có câu hỏi cho đề thi này.";
-    quizSection.insertBefore(msg, submitArea);
 
-    return; // ⛔ STOP — không render gì thêm
+    if (submitArea) {
+      quizSection.insertBefore(msg, submitArea);
+    }
+
+    return; // Dừng việc render nếu không có câu hỏi
   }
 
+  // ✅ FIX: Khai báo biến selected ở đây
   const selected = assigned.slice(0, quiz.totalMarks || 10);
 
+  // ✅ FIX: Tạo currentRenderedQuestions ngay sau khi có selected
+  function escapeRegExp(s) {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  const quizTitleEsc = escapeRegExp((quiz.title || "").trim());
+  const quizPrefixRegex = quizTitleEsc
+    ? new RegExp("^\\s*" + quizTitleEsc + "\\s*[-–—:]?\\s*", "i")
+    : null;
+
+  currentRenderedQuestions = selected.map((q) => {
+    let text = (q.questionText || "").toString();
+    if (quizPrefixRegex) text = text.replace(quizPrefixRegex, "");
+    text = text.replace(/^\s*Câu\s*\d+\s*[:.\-]?\s*/i, "");
+
+    const opts = (q.options || []).map((t) => ({
+      text: t,
+      isCorrect: t === q.correctAnswer,
+    }));
+
+    shuffleArray(opts);
+    return { text, options: opts };
+  });
+
+  // ✅ FIX: Render câu hỏi ở đây (không phải trong validateSubmit)
+  const submitArea = quizSection.querySelector(".submit-area");
+  const settings = getSettings();
+
+  currentRenderedQuestions.forEach((q, i) => {
+    const card = document.createElement("article");
+    card.className = "question-card";
+    card.dataset.qindex = i; // Thêm data-qindex cho observer
+
+    const timerHtml = settings.perQuestionTimer
+      ? `<div class="question-timer" data-qindex="${i}" style="font-weight:600;color:#d32f2f;margin-bottom:8px;">30s</div>`
+      : "";
+
+    card.innerHTML = `
+      <div class="question-number">Câu ${i + 1}</div>
+      ${timerHtml}
+      <div class="question-text">${q.text}</div>
+      <ul class="answer-list" data-qindex="${i}">
+        ${q.options
+          .map(
+            (opt, j) =>
+              `<li class="answer-option"><label><input type="radio" name="q${i}" value="${j}" /> ${opt.text}</label></li>`
+          )
+          .join("")}
+      </ul>
+    `;
+
+    quizSection.insertBefore(card, submitArea);
+  });
+
+  // Cập nhật timer và thông tin trong topbar
   const topbar = quizSection.querySelector(".quiz-topbar");
   if (topbar) {
     const chips = topbar.querySelectorAll(".quiz-chip");
@@ -497,65 +586,15 @@ function renderQuiz(quiz) {
     }
   }
 
-  // Tạo danh sách câu hỏi hiển thị với options đã xáo (giữ flag isCorrect)
-  // Ngoài ra loại bỏ các tiền tố vô tình (quiz title hoặc "Câu N:") trong questionText
-  function escapeRegExp(s) {
-    return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  }
-  const quizTitleEsc = escapeRegExp((quiz.title || "").trim());
-  const quizPrefixRegex = quizTitleEsc
-    ? new RegExp("^\\s*" + quizTitleEsc + "\\s*[-–—:]?\\s*", "i")
-    : null;
-  currentRenderedQuestions = selected.map((q) => {
-    let text = (q.questionText || "").toString();
-    if (quizPrefixRegex) text = text.replace(quizPrefixRegex, "");
-    // remove leading 'Câu 1:', 'Câu 1 -', etc.
-    text = text.replace(/^\s*Câu\s*\d+\s*[:.-]?\s*/i, "");
-    const opts = (q.options || []).map((t) => ({
-      text: t,
-      isCorrect: t === q.correctAnswer,
-    }));
-    shuffleArray(opts);
-    return { text, options: opts };
-  });
-
-  const submitArea = quizSection.querySelector(".submit-area");
-  if (selected.length === 0) {
-    const msg = document.createElement("div");
-    msg.style.padding = "12px";
-    msg.style.color = "#555";
-    msg.textContent = "Không có câu hỏi cho đề này.";
-    quizSection.insertBefore(msg, submitArea);
-    return;
-  }
-  currentRenderedQuestions.forEach((q, i) => {
-    const card = document.createElement("article");
-    card.className = "question-card";
-    const settings = getSettings();
-    const timerHtml = settings.perQuestionTimer
-      ? `<div class="question-timer" data-qindex="${i}" style="font-weight:600;color:#d32f2f;margin-bottom:8px;">30s</div>`
-      : "";
-    card.innerHTML = `
-      <div class="question-number">Câu ${i + 1}</div>
-      ${timerHtml}
-      <div class="question-text">${q.text}</div>
-      <ul class="answer-list" data-qindex="${i}">
-        ${q.options
-          .map(
-            (opt, j) =>
-              `<li class="answer-option"><label><input type="radio" name="q${i}" value="${j}" /> ${opt.text}</label></li>`
-          )
-          .join("")}
-      </ul>`;
-    quizSection.insertBefore(card, submitArea);
-  });
-
-  // Start per-question timers if enabled
-  const settings = getSettings();
+  // ✅ Khởi động timer từng câu nếu được bật
   if (settings.perQuestionTimer) {
     startPerQuestionTimers();
   }
 }
+
+// ====================================
+// FUNCTION: START PER-QUESTION TIMERS
+// ====================================
 
 let perQuestionTimers = {}; // Track active timers
 
@@ -565,8 +604,6 @@ function startPerQuestionTimers() {
   const timerElements = quizSection.querySelectorAll(".question-timer");
 
   if (timerElements.length === 0) return;
-
-  let currentQuestionIndex = 0;
 
   function startTimerForQuestion(qIndex) {
     // Clear previous timer for this question
@@ -599,7 +636,6 @@ function startPerQuestionTimers() {
         // Auto-advance to next question
         const nextIndex = qIndex + 1;
         if (nextIndex < currentRenderedQuestions.length) {
-          // Scroll to next question
           const nextCard = questionCards[nextIndex];
           if (nextCard) {
             nextCard.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -612,7 +648,7 @@ function startPerQuestionTimers() {
     perQuestionTimers[qIndex] = timerInterval;
   }
 
-  // Scroll observer to detect which question is in view and start its timer
+  // Scroll observer
   const observerOptions = {
     root: null,
     rootMargin: "-50% 0px -50% 0px",
@@ -623,7 +659,6 @@ function startPerQuestionTimers() {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         const qIndex = parseInt(entry.target.dataset.qindex || "0", 10);
-        // Stop other timers and start this one
         Object.keys(perQuestionTimers).forEach((idx) => {
           if (idx != qIndex) {
             clearInterval(perQuestionTimers[idx]);
@@ -638,10 +673,16 @@ function startPerQuestionTimers() {
   const observer = new IntersectionObserver(observerCallback, observerOptions);
   questionCards.forEach((card) => observer.observe(card));
 
-  // Start timer for first visible question
   if (questionCards.length > 0) {
     startTimerForQuestion(0);
   }
+}
+
+function stopPerQuestionTimers() {
+  Object.values(perQuestionTimers).forEach((timer) => {
+    clearInterval(timer);
+  });
+  perQuestionTimers = {};
 }
 
 function controlAccessUI() {
@@ -1285,6 +1326,7 @@ function setupSettings() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+  localStorage.removeItem(AUTH_KEY);
   updateHeaderAuthUI();
   setupAuthForms();
   setupSettings();

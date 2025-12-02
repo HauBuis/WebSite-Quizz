@@ -116,7 +116,7 @@
     </section>
 
     <!-- ====== LOGIN ====== -->
-    <section id="login" class="overlay" style="display: none;">
+    <section id="login" class="overlay" style="display: none">
       <div class="overlay-card">
         <h3 class="overlay-title">Đăng nhập</h3>
         <form id="login-form" class="login-form" onsubmit="return false;">
@@ -167,7 +167,7 @@
             <div style="margin-bottom: 6px; font-weight: 600">
               Chọn hoặc Upload Avatar
             </div>
-            <!-- <div
+            <div
               id="avatar-options"
               style="
                 display: flex;
@@ -180,7 +180,7 @@
               <button type="button" class="avatar-choice">😎</button>
               <button type="button" class="avatar-choice">🧑‍💻</button>
               <button type="button" class="avatar-choice">👩‍💻</button>
-              <button type="button" class="avatar-choice">🤖</button> -->
+              <button type="button" class="avatar-choice">🤖</button>
             </div>
             <label style="display: block; font-size: 13px; color: #666">
               <!-- Hoặc tải ảnh từ máy: -->
@@ -202,7 +202,7 @@
     </section>
 
     <!-- ====== REGISTER ====== -->
-    <section id="register" class="overlay" style="display: none;">
+    <section id="register" class="overlay" style="display: none">
       <div class="overlay-card overlay-large">
         <div class="overlay-top">
           <div>
@@ -299,12 +299,22 @@
         <h3 class="overlay-title">Thêm Đề thi</h3>
 
         <div style="margin-bottom: 12px">
-          <label style="display: block; margin-bottom: 6px; font-weight: 600">Tiêu đề</label>
-          <input id="new-quiz-title" class="input-box" type="text" placeholder="Nhập tiêu đề đề thi" required />
+          <label style="display: block; margin-bottom: 6px; font-weight: 600"
+            >Tiêu đề</label
+          >
+          <input
+            id="new-quiz-title"
+            class="input-box"
+            type="text"
+            placeholder="Nhập tiêu đề đề thi"
+            required
+          />
         </div>
 
         <div style="margin-bottom: 12px">
-          <label style="display: block; margin-bottom: 6px; font-weight: 600">Môn học</label>
+          <label style="display: block; margin-bottom: 6px; font-weight: 600"
+            >Môn học</label
+          >
           <select id="new-quiz-subject" class="input-box" required>
             <option value="">-- Chọn môn học --</option>
           </select>
@@ -312,19 +322,31 @@
 
         <div style="display: flex; gap: 12px; margin-bottom: 12px">
           <div style="flex: 1">
-            <label style="display: block; margin-bottom: 6px; font-weight: 600">Thời gian (phút)</label>
-            <input id="new-quiz-duration" class="input-box" type="number" placeholder="30" min="1" required />
+            <label style="display: block; margin-bottom: 6px; font-weight: 600"
+              >Thời gian (phút)</label
+            >
+            <input
+              id="new-quiz-duration"
+              class="input-box"
+              type="number"
+              placeholder="30"
+              min="1"
+              required
+            />
           </div>
           <div style="flex: 1">
-            <label style="display: block; margin-bottom: 6px; font-weight: 600">Điểm</label>
-           <input id="new-quiz-marks" 
-       class="input-box" 
-       type="number" 
-       placeholder="10" 
-       min="0" 
-       max="10" 
-       required />
-
+            <label style="display: block; margin-bottom: 6px; font-weight: 600"
+              >Điểm</label
+            >
+            <input
+              id="new-quiz-marks"
+              class="input-box"
+              type="number"
+              placeholder="10"
+              min="0"
+              max="10"
+              required
+            />
           </div>
         </div>
 
@@ -341,58 +363,119 @@
         <h3 class="overlay-title">Thêm Câu hỏi</h3>
 
         <div style="margin-bottom: 12px">
-          <label style="display: block; margin-bottom: 6px; font-weight: 600">Loại câu hỏi</label>
+          <label style="display: block; margin-bottom: 6px; font-weight: 600"
+            >Loại câu hỏi</label
+          >
           <div style="display: flex; gap: 16px">
             <label>
-              <input type="radio" name="new-question-type" value="multiple" checked /> Trắc nghiệm 4 lựa chọn
+              <input
+                type="radio"
+                name="new-question-type"
+                value="multiple"
+                checked
+              />
+              Trắc nghiệm 4 lựa chọn
             </label>
             <label>
-              <input type="radio" name="new-question-type" value="truefalse" /> Đúng/Sai
+              <input type="radio" name="new-question-type" value="truefalse" />
+              Đúng/Sai
             </label>
           </div>
         </div>
 
         <div style="margin-bottom: 12px">
-          <label style="display: block; margin-bottom: 6px; font-weight: 600">Môn học</label>
+          <label style="display: block; margin-bottom: 6px; font-weight: 600"
+            >Môn học</label
+          >
           <select id="new-question-subject" class="input-box" required>
             <option value="">-- Chọn môn học --</option>
           </select>
         </div>
         <div style="margin-bottom: 12px">
-  <label style="display:block; margin-bottom:6px; font-weight:600">Chọn đề</label>
-  <select id="new-question-quiz" class="input-box" required>
-    <option value="">-- Chọn đề --</option>
-  </select>
-</div>
+          <label style="display: block; margin-bottom: 6px; font-weight: 600"
+            >Chọn đề</label
+          >
+          <select id="new-question-quiz" class="input-box" required>
+            <option value="">-- Chọn đề --</option>
+          </select>
+        </div>
 
         <div style="margin-bottom: 12px">
-          <label style="display: block; margin-bottom: 6px; font-weight: 600">Câu hỏi</label>
-          <textarea id="new-question-text" class="input-box" placeholder="Nhập nội dung câu hỏi" rows="3" required></textarea>
+          <label style="display: block; margin-bottom: 6px; font-weight: 600"
+            >Câu hỏi</label
+          >
+          <textarea
+            id="new-question-text"
+            class="input-box"
+            placeholder="Nhập nội dung câu hỏi"
+            rows="3"
+            required
+          ></textarea>
         </div>
 
         <div id="new-question-multiple-section" style="margin-bottom: 12px">
-          <label style="display: block; margin-bottom: 6px; font-weight: 600">Các lựa chọn</label>
-          <input id="new-question-a" class="input-box" type="text" placeholder="Lựa chọn A" required />
-          <input id="new-question-b" class="input-box" type="text" placeholder="Lựa chọn B" style="margin-top: 6px" required />
-          <input id="new-question-c" class="input-box" type="text" placeholder="Lựa chọn C" style="margin-top: 6px" required />
-          <input id="new-question-d" class="input-box" type="text" placeholder="Lựa chọn D" style="margin-top: 6px" required />
+          <label style="display: block; margin-bottom: 6px; font-weight: 600"
+            >Các lựa chọn</label
+          >
+          <input
+            id="new-question-a"
+            class="input-box"
+            type="text"
+            placeholder="Lựa chọn A"
+            required
+          />
+          <input
+            id="new-question-b"
+            class="input-box"
+            type="text"
+            placeholder="Lựa chọn B"
+            style="margin-top: 6px"
+            required
+          />
+          <input
+            id="new-question-c"
+            class="input-box"
+            type="text"
+            placeholder="Lựa chọn C"
+            style="margin-top: 6px"
+            required
+          />
+          <input
+            id="new-question-d"
+            class="input-box"
+            type="text"
+            placeholder="Lựa chọn D"
+            style="margin-top: 6px"
+            required
+          />
         </div>
 
-        <div id="new-question-truefalse-section" style="margin-bottom: 12px; display: none">
-          <label style="display: block; margin-bottom: 6px; font-weight: 600">Đáp án</label>
+        <div
+          id="new-question-truefalse-section"
+          style="margin-bottom: 12px; display: none"
+        >
+          <label style="display: block; margin-bottom: 6px; font-weight: 600"
+            >Đáp án</label
+          >
           <div style="display: flex; gap: 16px">
             <label>
-              <input type="radio" name="new-question-tf-answer" value="Đúng" /> Đúng
+              <input type="radio" name="new-question-tf-answer" value="Đúng" />
+              Đúng
             </label>
             <label>
-              <input type="radio" name="new-question-tf-answer" value="Sai" /> Sai
+              <input type="radio" name="new-question-tf-answer" value="Sai" />
+              Sai
             </label>
           </div>
         </div>
 
-        <div style="margin-bottom: 12px;" id="new-question-multiple-answer-section">
-
-          <label style="display: block; margin-bottom: 6px; font-weight: 600">Đáp án đúng</label>
+        <div
+          style="margin-bottom: 12px"
+          id="new-question-multiple-answer-section"
+        >
+          <label style="display: block; margin-bottom: 6px; font-weight: 600"
+            >Đáp án đúng</label
+          >
           <select id="new-question-correct-answer" class="input-box" required>
             <option value="">-- Chọn đáp án --</option>
             <option value="A">A</option>
@@ -403,7 +486,9 @@
         </div>
 
         <div style="margin-bottom: 12px">
-          <label style="display: block; margin-bottom: 6px; font-weight: 600">Độ khó</label>
+          <label style="display: block; margin-bottom: 6px; font-weight: 600"
+            >Độ khó</label
+          >
           <select id="new-question-difficulty" class="input-box" required>
             <option value="easy">Dễ</option>
             <option value="medium">Trung bình</option>
@@ -459,8 +544,16 @@
           <button class="primary-btn" id="btn-add-question">
             + Thêm câu hỏi mới
           </button>
-          <div style="margin-top: 12px; border-top: 1px solid #e5e7eb; padding-top: 12px">
-            <p style="font-size: 13px; color: #666; margin-bottom: 8px">Chọn đề thi để xem/chỉnh sửa câu hỏi:</p>
+          <div
+            style="
+              margin-top: 12px;
+              border-top: 1px solid #e5e7eb;
+              padding-top: 12px;
+            "
+          >
+            <p style="font-size: 13px; color: #666; margin-bottom: 8px">
+              Chọn đề thi để xem/chỉnh sửa câu hỏi:
+            </p>
             <ul id="admin-question-list" class="admin-list"></ul>
           </div>
         </article>
@@ -468,21 +561,32 @@
     </section>
 
     <!-- ====== QUIZ QUESTIONS MODAL ====== -->
-    <section id="quiz-questions" class="overlay" style="display: none;">
+    <section id="quiz-questions" class="overlay" style="display: none">
       <div class="overlay-card overlay-large">
         <div class="overlay-top">
           <div>
-            <h3 id="quiz-questions-title" class="overlay-title">Câu hỏi của đề thi</h3>
-            <div id="quiz-questions-info" class="overlay-sub">Môn: -- | Số câu: --</div>
+            <h3 id="quiz-questions-title" class="overlay-title">
+              Câu hỏi của đề thi
+            </h3>
+            <div id="quiz-questions-info" class="overlay-sub">
+              Môn: -- | Số câu: --
+            </div>
           </div>
           <a class="overlay-close" href="#admin">Đóng</a>
         </div>
 
         <div style="margin-bottom: 12px">
-          <button class="primary-btn" id="btn-add-to-quiz" style="margin-bottom: 12px">
+          <button
+            class="primary-btn"
+            id="btn-add-to-quiz"
+            style="margin-bottom: 12px"
+          >
             + Thêm câu hỏi cho đề này
           </button>
-          <div id="quiz-questions-content" style="max-height: 400px; overflow-y: auto">
+          <div
+            id="quiz-questions-content"
+            style="max-height: 400px; overflow-y: auto"
+          >
             <!-- Danh sách câu hỏi sẽ render ở đây -->
           </div>
         </div>
