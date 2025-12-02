@@ -1852,6 +1852,7 @@ function setupAdminEvents() {
         'input[name="new-question-type"]:checked'
       ).value;
       const subject = document.getElementById("new-question-subject").value;
+      const quizTitle = document.getElementById("new-question-quiz").value;
       const questionText = document
         .getElementById("new-question-text")
         .value.trim();
@@ -1859,7 +1860,8 @@ function setupAdminEvents() {
         "new-question-difficulty"
       ).value;
 
-      if (!subject || !questionText || !difficulty) {
+      // Kiểm tra thông tin cơ bản
+      if (!subject || !questionText || !difficulty || !quizTitle) {
         alert("Vui lòng điền đầy đủ tất cả thông tin.");
         return;
       }
@@ -1867,13 +1869,13 @@ function setupAdminEvents() {
       let options = [];
       let correctAnswer = "";
 
+      // XỬ LÝ TRẮC NGHIỆM 4 LỰA CHỌN
       if (questionType === "multiple") {
         const a = document.getElementById("new-question-a").value.trim();
         const b = document.getElementById("new-question-b").value.trim();
         const c = document.getElementById("new-question-c").value.trim();
         const d = document.getElementById("new-question-d").value.trim();
 
-        // A/B/C/D
         const selectedCorrect = document.getElementById(
           "new-question-correct-answer"
         ).value;
@@ -1885,46 +1887,96 @@ function setupAdminEvents() {
 
         options = [a, b, c, d];
 
-        try {
-          const res = await fetch(`${API_BASE}/questions/add`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              subject,
-              questionText,
-              options,
-              correctAnswer,
-              difficulty,
-              quizTitle: document.getElementById("new-question-quiz").value,
-            }),
-          });
-
-          if (!res.ok) throw new Error("Lỗi thêm câu hỏi");
-
-          alert("✅ Thêm câu hỏi thành công!");
-          document.getElementById("new-question-text").value = "";
-          document.getElementById("new-question-a").value = "";
-          document.getElementById("new-question-b").value = "";
-          document.getElementById("new-question-c").value = "";
-          document.getElementById("new-question-d").value = "";
-          document.getElementById("new-question-subject").value = "";
-          document.getElementById("new-question-difficulty").value = "easy";
-
-          // Nếu đang xem quiz modal, reload lại
-          if (window.currentViewingQuiz) {
-            await viewQuizQuestions(window.currentViewingQuiz);
-            location.hash = "#quiz-questions";
-          } else {
-            location.hash = "#admin";
-            loadAdminData();
-          }
-        } catch (e) {
-          alert(`❌ ${e.message}`);
+        // ✅ GÁN ĐÚNG GIÁ TRỊ CHO correctAnswer
+        switch (selectedCorrect) {
+          case "A":
+            correctAnswer = a;
+            break;
+          case "B":
+            correctAnswer = b;
+            break;
+          case "C":
+            correctAnswer = c;
+            break;
+          case "D":
+            correctAnswer = d;
+            break;
+          default:
+            alert("Vui lòng chọn đáp án đúng.");
+            return;
         }
+      }
+      // XỬ LÝ CÂU HỎI ĐÚNG/SAI
+      else if (questionType === "truefalse") {
+        const tfAnswer = document.querySelector(
+          'input[name="new-question-tf-answer"]:checked'
+        );
+
+        if (!tfAnswer) {
+          alert("Vui lòng chọn đáp án Đúng hoặc Sai.");
+          return;
+        }
+
+        correctAnswer = tfAnswer.value; // "Đúng" hoặc "Sai"
+        options = ["Đúng", "Sai"];
+      }
+
+      // GỬI DỮ LIỆU LÊN SERVER
+      try {
+        const res = await fetch(`${API_BASE}/questions/add`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            subject,
+            questionText,
+            options,
+            correctAnswer,
+            difficulty,
+            quizTitle,
+          }),
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.message || "Lỗi thêm câu hỏi");
+        }
+
+        alert("✅ Thêm câu hỏi thành công!");
+
+        // RESET FORM
+        document.getElementById("new-question-text").value = "";
+        document.getElementById("new-question-a").value = "";
+        document.getElementById("new-question-b").value = "";
+        document.getElementById("new-question-c").value = "";
+        document.getElementById("new-question-d").value = "";
+        document.getElementById("new-question-subject").value = "";
+        document.getElementById("new-question-quiz").value = "";
+        document.getElementById("new-question-difficulty").value = "easy";
+        document.getElementById("new-question-correct-answer").value = "";
+
+        // Reset radio buttons
+        document.querySelector(
+          'input[name="new-question-type"][value="multiple"]'
+        ).checked = true;
+        const tfRadios = document.querySelectorAll(
+          'input[name="new-question-tf-answer"]'
+        );
+        tfRadios.forEach((r) => (r.checked = false));
+
+        // QUAY VỀ TRANG ADMIN
+        if (window.currentViewingQuiz) {
+          await viewQuizQuestions(window.currentViewingQuiz);
+          location.hash = "#quiz-questions";
+        } else {
+          location.hash = "#admin";
+          loadAdminData();
+        }
+      } catch (e) {
+        console.error("Lỗi khi thêm câu hỏi:", e);
+        alert(`❌ ${e.message}`);
       }
     });
   }
-
   // ==========================
   // ⭐ THÊM MÔN HỌC
   // ==========================
